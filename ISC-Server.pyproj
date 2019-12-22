@@ -40,11 +40,20 @@
     <Compile Include="ISC_Server\MainApp\__init__.py" />
     <Compile Include="ISC_Server\UsersApp\admin.py" />
     <Compile Include="ISC_Server\UsersApp\apps.py" />
+    <Compile Include="ISC_Server\UsersApp\ErrorCodes.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ISC_Server\UsersApp\forms.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ISC_Server\UsersApp\migrations\__init__.py" />
     <Compile Include="ISC_Server\UsersApp\models.py" />
+    <Compile Include="ISC_Server\UsersApp\PasswordManager.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ISC_Server\UsersApp\RegisterManager.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ISC_Server\UsersApp\tests.py" />
     <Compile Include="ISC_Server\UsersApp\views.py" />
     <Compile Include="ISC_Server\UsersApp\__init__.py" />

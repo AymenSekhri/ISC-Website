@@ -11,6 +11,11 @@
         {% csrf_token %}
         <table>
             <tr>
+            {% if error == 1 %}
+                    <td>User already exists!!</td>
+            {%endif%}
+            </tr>
+            <tr>
                 <td>First Name</td>
                 <td><input type="text" name="firstName" value="" /></td>
             </tr>
@@ -21,10 +26,16 @@
             <tr>
                 <td>Email</td>
                 <td><input type="email" name="email" value="" /></td>
+                {% if error == 2 %}
+                    <td>email already exists!!</td>
+                {%endif%}
             </tr>
             <tr>
                 <td>Password</td>
                 <td><input type="password" name="pass1" value="" /></td>
+                {% if error == 3 %}
+                    <td>password mismatch!!</td>
+                {%endif%}
             </tr>
             <tr>
                 <td>Password Confirmation</td>
@@ -34,6 +45,9 @@
             <tr>
                 <td>Registration Number</td>
                 <td><input type="number" name="number" value="" /></td>
+                {% if error == 4 %}
+                    <td>not valid Number</td>
+                {%endif%}
             </tr>
             <tr>
                 <td>Scholar Year</td>
