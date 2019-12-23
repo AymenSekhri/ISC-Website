@@ -104,6 +104,8 @@ class UsersManager(object):
         if tokenQuery.count() != 1:
            return ErrorCodes.FORGOT_INPUTS.INVALID_TOKEN
         if tokenQuery.first().expiration_date < timezone.now():
+           #TODO: should i delete it ?
+           #tokenQuery.first().delete() 
            return ErrorCodes.FORGOT_INPUTS.INVALID_TOKEN
         return ErrorCodes.FORGOT_INPUTS.NONE
     

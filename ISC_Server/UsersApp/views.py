@@ -74,7 +74,7 @@ def Logout(request):
     response.delete_cookie('user_id','')
     return response
 
-def ForgetPassword(request):
+def forgotPassword(request):
     if request.method == "POST":
         myform = ForgotForm(request.POST)
         if myform.is_valid():
@@ -88,9 +88,9 @@ def ForgetPassword(request):
             elif result == ErrorCodes.FORGOT_INPUTS.EMAIL_NOT_FOUND :
                  error = 1
                  printf("Email does not exists",Fore.RED)
-                 return render(request,"UsersApp/forgetPass.html",{'error':error})
+                 return render(request,"UsersApp/forgotPass.html",{'error':error})
 
-    return render(request,"UsersApp/forgetPass.html")
+    return render(request,"UsersApp/forgotPass.html")
 
 
 def ResetPassword(request):
