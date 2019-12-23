@@ -1,33 +1,70 @@
-﻿<!DOCTYPE html>
+{% extends "UsersApp/base.html" %}
+{% block content %}
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
-    <title>Login Page</title>
-</head>
-<body>
 
-    <p>Login Page</p>
-    <form action="{% url 'login-page' %}" method="post">
-        {% csrf_token %}
-        <table>
-            <tr>
-                <td>Email</td>
-                <td><input type="email" name="email" value="" /></td>
-                {% if error == 1 %}
-                    <td>email does not exists</td>
-                {%endif%}
-            </tr>
-            <tr>
-                <td>Password</td>
-                <td><input type="password" name="password" value="" /></td>
-                {% if error == 2 %}
-                    <td>wrong password</td>
-                {%endif%}
-            </tr>
-            
-        </table>
-        <button type="submit">Sign Up</button>
-    </form>
-</body>
-</html>
+  <main>
+    <h1>Join Us</h1>
+    <section class="section-join-isc container">
+        <div class="row">
+            <div class="container">
+                <div class="col s12 m12">
+                    <form class="bottom-form sign-in " action="{% url 'login-page' %}" method="post">
+						{% csrf_token %}
+                        <div class="card-panel gray lighten-3">
+                            <h5>Sign In</h5>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <i class="material-icons prefix">account_circle</i>
+                                    <input name="email" id="email" type="email" class="validate">
+                                    <label for="email">Email</label>
+									
+									
+									
+									{% if error == 1 %}
+										<td>email does not exists</td>
+									{%endif%}
+									<span class="helper-text" data-error="this email is not valid" data-success="right"></span>
+									
+                                    
+									
+									
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="input-field col s12" >
+                                    <i class="material-icons prefix">lock</i>
+                                  <input name="password" id="password" type="password" class="validate">
+                                  <label  for="password">Password</label >
+								  {% if error == 2 %}
+										<td>wrong password</td>
+								  {%endif%}
+                                </div>
+                              </div>
+                            <button  class="btn  waves-effect waves-dark" type="submit" name="action">Log In</button>
+                            <a href="#" >Forget Password ?</a>
+                            
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+          
+        </div>
+        <div class="row">
+            <div class="container">
+
+                <div class="col s12 m12">
+                    <div class="card-panel top-form white-text ">
+                        <h5>Sign Up</h5>
+                        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quia dicta neque assumenda laboriosam quisquam at, aliquam ipsum hic eligendi sint.</p>
+                        <a href="#">Already have an account ?</a>
+                </div>
+            </div>
+        </div>   
+        </div>
+    </section>
+  </main>
+
+
+   
+{% endblock content %}

@@ -11,10 +11,25 @@ def printf(text,color):
      print(color + text)
      print(Style.RESET_ALL)
 # Create your views here.
+
+def Home(request):
+    
+    if 'user_id' in request.COOKIES:
+        user_id  = request.COOKIES['user_id']
+        session_id = request.COOKIES['session_id']
+        userAgent = request.META['HTTP_USER_AGENT']
+        if UsersManager.checkSession(user_id,session_id,userAgent) :
+            userQuery = UsersManager.getUserFromId(user_id)
+            return render(request,"UsersApp/index.html",{'login':1,'userName':userQuery.firstName})
+    return render(request,"UsersApp/index.html",{'login':0})
+
+
 def Register(request):
     if request.method == "POST":
+        
         myform = RegisterForm(request.POST)
         if myform.is_valid():
+            printf("Gotcha ...",Fore.GREEN)
             newUser = UsersManager.getModelFromRegisterForm(myform.cleaned_data)
             result = UsersManager.validateInputFrom(newUser,myform.cleaned_data['pass1'],myform.cleaned_data['pass2'])
             if result == ErrorCodes.REGISTER_INPUTS.NONE:

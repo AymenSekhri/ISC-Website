@@ -27,6 +27,7 @@ DEBUG = True #TODO: SECURITY WARNING: don't run with debug turned on in producti
 
 ALLOWED_HOSTS = ['*']
 
+
 # Application references
 # https://docs.djangoproject.com/en/2.1/ref/settings/#std:setting-INSTALLED_APPS
 INSTALLED_APPS = [
