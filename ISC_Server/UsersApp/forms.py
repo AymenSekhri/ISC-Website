@@ -12,3 +12,10 @@ class RegisterForm(forms.Form):
 class LoginForm(forms.Form):
     email = forms.EmailField()
     password = forms.CharField()
+
+class ForgotForm(forms.Form):
+    email = forms.EmailField()
+
+class ResetForm(forms.Form):
+    password = forms.CharField()
+    token = forms.CharField()

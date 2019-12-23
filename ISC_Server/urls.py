@@ -14,5 +14,7 @@ urlpatterns = [
     path('admin', admin.site.urls, name='admin-page'),
     path('register', UsersApp_views.Register, name='register-page'),
     path('login', UsersApp_views.Login, name='login-page'),
-    path('logout', UsersApp_views.Logout, name='logout-page')
+    path('logout', UsersApp_views.Logout, name='logout-page'),
+    path('forgetpassword', UsersApp_views.ForgetPassword, name='forget-pass-page'),
+    path('resetpassword', UsersApp_views.ResetPassword, name='reset-pass-page'),
 ]

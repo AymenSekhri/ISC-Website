@@ -29,3 +29,8 @@ class SessionsDB(models.Model):
             return False
         else:
             return True
+
+class PassResetDB(models.Model):
+    uid = models.ForeignKey(UsersDB, on_delete=models.CASCADE)
+    token = models.CharField(max_length=128)
+    expiration_date = models.DateTimeField()

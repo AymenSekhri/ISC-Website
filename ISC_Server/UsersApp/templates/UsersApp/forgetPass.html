@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Login Page</title>
+</head>
+<body>
+
+    <p>Password Reset</p>
+    <form action="{% url 'forget-pass-page' %}" method="post">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td>Email</td>
+                <td><input type="email" name="email" value="" /></td>
+                {% if error == 1 %}
+                    <td>email does not exists</td>
+                {%endif%}
+            </tr>
+        </table>
+        <button type="submit">Send me confirmation link</button>
+    </form>
+</body>
+</html>

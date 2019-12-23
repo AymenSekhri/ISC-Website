@@ -78,8 +78,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ISC_Server\MainApp\templates\MainApp\index.html" />
+    <Content Include="ISC_Server\UsersApp\templates\UsersApp\forgetPass.html" />
     <Content Include="ISC_Server\UsersApp\templates\UsersApp\register.html" />
     <Content Include="ISC_Server\UsersApp\templates\UsersApp\login.html" />
+    <Content Include="ISC_Server\UsersApp\templates\UsersApp\resetpass.html" />
     <Content Include="requirements.txt" />
     <Content Include="db.sqlite3" />
   </ItemGroup>

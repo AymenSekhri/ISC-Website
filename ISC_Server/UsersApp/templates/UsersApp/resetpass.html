@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Login Page</title>
+</head>
+<body>
+
+    <p>Password Reset</p>
+    <form action="{% url 'reset-pass-page' %}" method="post">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td>Token</td>
+                <td><input type="text" name="token" value="" /></td>
+                {% if error == 1 %}
+                    <td>invalid token</td>
+                {%endif%}
+            </tr>
+            <tr>
+                <td>New Password</td>
+                <td><input type="password" name="password" value="" /></td>
+            </tr>
+        </table>
+        <button type="submit">Change My Password</button>
+    </form>
+</body>
+</html>

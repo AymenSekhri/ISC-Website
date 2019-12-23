@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .forms import RegisterForm,LoginForm
+from .forms import RegisterForm,LoginForm, ForgotForm,ResetForm
 from .UsersManager import UsersManager
 from .ErrorCodes import ErrorCodes
 from colorama import Fore, Back, Style,init
@@ -16,7 +16,7 @@ def Register(request):
         myform = RegisterForm(request.POST)
         if myform.is_valid():
             newUser = UsersManager.getModelFromRegisterForm(myform.cleaned_data)
-            result = UsersManager.validateInputFrom(newUser,myform.cleaned_data)
+            result = UsersManager.validateInputFrom(newUser,myform.cleaned_data['pass1'],myform.cleaned_data['pass2'])
             if result == ErrorCodes.REGISTER_INPUTS.NONE:
                 UsersManager.addNewUser(newUser)
                 printf("All Good",Fore.GREEN)
@@ -42,8 +42,8 @@ def Login(request):
         myform = LoginForm(request.POST)
         
         if myform.is_valid():
-            userQuery = UsersManager.getModelFromLoginForm(myform.cleaned_data)
-            result = UsersManager.checkUser(userQuery,myform.cleaned_data)
+            userQuery = UsersManager.getModelFromLoginForm(myform.cleaned_data['email'])
+            result = UsersManager.checkUser(userQuery,myform.cleaned_data['password'])
             if result ==  ErrorCodes.LOGIN_INPUTS.NONE:
                 
                 newToken = UsersManager.saveSession(userQuery,request.META['HTTP_USER_AGENT'])
@@ -73,4 +73,43 @@ def Logout(request):
     response.delete_cookie('session_id','')
     response.delete_cookie('user_id','')
     return response
+
+def ForgetPassword(request):
+    if request.method == "POST":
+        myform = ForgotForm(request.POST)
+        if myform.is_valid():
+            userQuery = UsersManager.getModelFromLoginForm(myform.cleaned_data['email'])
+            result = UsersManager.checkEmail(userQuery)
+            if result == ErrorCodes.FORGOT_INPUTS.NONE:
+                Token = UsersManager.savePassResetToken(userQuery)
+                printf("Password reset link = " + Token,Fore.GREEN)
+                #TODO: send token to the email
+                return redirect("reset-pass-page")
+            elif result == ErrorCodes.FORGOT_INPUTS.EMAIL_NOT_FOUND :
+                 error = 1
+                 printf("Email does not exists",Fore.RED)
+                 return render(request,"UsersApp/forgetPass.html",{'error':error})
+
+    return render(request,"UsersApp/forgetPass.html")
+
+
+def ResetPassword(request):
+    if request.method == "POST":
+        myform = ResetForm(request.POST)
+        if myform.is_valid():
+            fromToken = myform.cleaned_data['token']
+            fromPass = myform.cleaned_data['password']
+            result  = UsersManager.isValidResetToken(fromToken)
+            if  result == ErrorCodes.FORGOT_INPUTS.NONE:
+                UsersManager.changePassword(fromToken,fromPass)
+                UsersManager.deleteToken(fromToken)
+                return redirect("login-page")
+            elif result == ErrorCodes.FORGOT_INPUTS.INVALID_TOKEN:
+                error = 1
+                printf("Email does not exists",Fore.RED)
+                return render(request,"UsersApp/resetPass.html",{'error':error})
+
+                
+
+    return render(request,"UsersApp/resetPass.html")
 
