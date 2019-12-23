@@ -17,7 +17,7 @@
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
-    <WebBrowserUrl>http://41.104.41.29:8045/</WebBrowserUrl>
+    <WebBrowserUrl>http://localhost:8045/</WebBrowserUrl>
     <LaunchProvider>Django launcher</LaunchProvider>
     <DjangoSettingsModule>ISC_Server.settings</DjangoSettingsModule>
     <OutputPath>.</OutputPath>
