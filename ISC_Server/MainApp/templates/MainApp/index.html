@@ -2,10 +2,17 @@
 <head><title></title></head>
 
 <body>
-    Welcome to the home page !<br />
+   
+    {% if login == 1 %}
+        welcome {{username}} !<br />
+    {%else %}
+         Welcome to the home page !<br />
+    {% endif %}
     <a href="{% url 'register-page' %}">Register</a><br />
     <a href="{% url 'login-page' %}">Login</a><br />
-    <a href="{% url 'login-page' %}">Admin</a>
+    <a href="{% url 'logout-page' %}">Logout</a><br />
+    <a href="{% url 'login-page' %}">Admin</a><br />
+    
 
 
 

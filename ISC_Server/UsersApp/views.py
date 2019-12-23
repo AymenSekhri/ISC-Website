@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from .forms import RegisterForm,LoginForm
-from .RegisterManager import UsersManager
+from .UsersManager import UsersManager
 from .ErrorCodes import ErrorCodes
 from colorama import Fore, Back, Style,init
 from django.shortcuts import redirect
+from django.http import HttpResponseRedirect
 
 init()
 def printf(text,color):
@@ -44,9 +45,13 @@ def Login(request):
             userQuery = UsersManager.getModelFromLoginForm(myform.cleaned_data)
             result = UsersManager.checkUser(userQuery,myform.cleaned_data)
             if result ==  ErrorCodes.LOGIN_INPUTS.NONE:
-                UsersManager.saveSession(userQuery)
+                
+                newToken = UsersManager.saveSession(userQuery,request.META['HTTP_USER_AGENT'])
                 printf("Login: all Good",Fore.GREEN)
-                return redirect("home-page")
+                response = redirect("home-page")
+                response.set_cookie('session_id',newToken)
+                response.set_cookie('user_id',userQuery.first().id)
+                return response
             else:
                 error = 0
                 if result ==  ErrorCodes.LOGIN_INPUTS.EMAIL_NOT_FOUND:
@@ -63,5 +68,9 @@ def Login(request):
     return render(request,"UsersApp/login.html")
 
 
-
+def Logout(request):
+    response = HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    response.delete_cookie('session_id','')
+    response.delete_cookie('user_id','')
+    return response
 

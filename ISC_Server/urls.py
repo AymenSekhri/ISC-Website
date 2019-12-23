@@ -13,5 +13,6 @@ urlpatterns = [
     path('', MainApp_views.Home, name='home-page'),
     path('admin', admin.site.urls, name='admin-page'),
     path('register', UsersApp_views.Register, name='register-page'),
-    path('login', UsersApp_views.Login, name='login-page')
+    path('login', UsersApp_views.Login, name='login-page'),
+    path('logout', UsersApp_views.Logout, name='logout-page')
 ]

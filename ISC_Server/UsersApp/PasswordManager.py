@@ -4,8 +4,8 @@ import base64
 WORKING_FACTOR = 10
 class PasswordManager(object):
 
-    def hashPassword(password):
-        myHash = bcrypt.gensalt(WORKING_FACTOR)
+    def hashPassword(password,work = WORKING_FACTOR):
+        myHash = bcrypt.gensalt(work)
         encoded_pass = bytes(password, 'utf-8')
         hashedPassBytes = bcrypt.hashpw(encoded_pass,myHash)
         return str(base64.b64encode(hashedPassBytes),'utf-8')

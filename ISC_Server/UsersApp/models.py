@@ -16,12 +16,14 @@ class UsersDB(models.Model):
     def __str__(self):
         return self.firstName + " " + self.familyName
 
-class SessionDB(models.Model):
+class SessionsDB(models.Model):
     uid = models.ForeignKey(UsersDB, on_delete=models.CASCADE)
     token = models.CharField(max_length=128)
     key = models.CharField(max_length=128)
     expiration_date = models.DateTimeField()
     
+    def __str__(self):
+        return self.token
     def is_expired(self):
         if slef.expiration_date > datetime.now:
             return False
