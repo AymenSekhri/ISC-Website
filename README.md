@@ -7,14 +7,14 @@ python pip install -r requirements.txt
 python manage.py runserver 0.0.0.0:80
 ```
 
-##TODO list
+## TODO list
 
 Client Side :
 
 - Frontend  for "Forgot password" page.
 - Frontend  for "Reset password" page.
 - Frontend  for "Thank your for registration" page.
-- Frontend  for "Edit User Informations" page.
+- Frontend  for "Edit User Information" page.
 - Frontend  for "User Profile" page.
 - Frontend  for "Home page" page.
 - Frontend  for "Download Study Materials" page.
