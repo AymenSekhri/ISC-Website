@@ -14,13 +14,13 @@ Client Side :
 - Frontend  for "Forgot password" page.
 - Frontend  for "Reset password" page.
 - Frontend  for "Thank your for registration" page.
+- Frontend  for "Your password has been reset, login now" page.
 - Frontend  for "Edit User Information" page.
 - Frontend  for "User Profile" page.
 - Frontend  for "Home page" page.
 - Frontend  for "Download Study Materials" page.
-- Adding more styles to the error returen by the server when there is error with signup and login form.
-- Fixing the Navigation bar (there is a little more margin in the right)
-- 
+- Adding more styles to the error retured by the server when there is an error with signup and login forms.
+- Fixing the navigation bar (there is a little more margin in the left)
 
 Server Side :
 
@@ -28,7 +28,7 @@ Server Side :
 - Backend for "User Profile" page.
 - Backenend  for "Download Study Materials" page.
 - Setup email server to send the Password Reset Token
-- Creating New Admin Page instead of Django's
+- Creating new admin page instead of Django's
 
 
 ## Information
