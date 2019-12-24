@@ -33,12 +33,13 @@ Server Side :
 
 ## Information
 
-HTML files are in the path 
+- HTML files are in the path 
 ```
 ISC-Server/ISC_Server/UsersApp/templates/UsersApp/
 ```
 
-CSS/JS files are in the path 
+- CSS/JS files are in the path 
 ```
 ISC-Server/ISC_Server/UsersApp/static/UsersApp/
 ```
+- When you issue a password reset the token will be printed in the console screen (green color) since i have not setup the the email server yet.
