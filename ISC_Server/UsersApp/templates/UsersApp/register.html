@@ -14,6 +14,9 @@
 						<div class="input-field col s6">
 						<input id="first_name" name = "firstName" type="text" class="validate"  required="">
 						<label for="first_name">First Name</label>
+						 {% if error == 1 %}
+							User already exists!
+						{%endif%}
 						</div>
 						<div class="input-field col s6">
 						<input id="last_name" name="familyName" type="text" class="validate"  required="">
@@ -24,13 +27,18 @@
 						<div class="input-field col s12">
 							<input id="email" name="email" type="email" class="validate" required="">
 						<label for="email">Email</label>
+						{% if error == 2 %}
+							email already exists!!
+						{%endif%}
 						</div>
 					</div>
 					<div class="row">
 						<div class="input-field col s12">
 						<input id="password" name="pass1" type="password" class="validate"  required="" >
 						<label for="password">Password</label>
-						
+						{% if error == 3 %}
+							password mismatch!
+						{%endif%}
 						</div>
 					</div>
 					<div class="row">
@@ -44,6 +52,9 @@
 						<div class="input-field col s12">
 						<input id="number" name="number" type="number" class="validate"  required="" >
 						<label for="number">Registration Number</label>
+						{% if error == 4 %}
+							<td>not valid Number</td>
+						{%endif%}
 						</div>
 					</div>
 					<div class="row">
