@@ -70,7 +70,7 @@ def Login(request):
             else:
                 error = 0
                 if result ==  ErrorCodes.LOGIN_INPUTS.EMAIL_NOT_FOUND:
-                    printf("Email does not exists",Fore.RED)
+                    printf("Email does not exist",Fore.RED)
                     error = 1
                 elif result ==  ErrorCodes.LOGIN_INPUTS.EMAIL_NOT_FOUND:
                     printf("Multiple Emails in database !!",Fore.RED)
@@ -102,7 +102,7 @@ def forgotPassword(request):
                 return redirect("reset-pass-page")
             elif result == ErrorCodes.FORGOT_INPUTS.EMAIL_NOT_FOUND :
                  error = 1
-                 printf("Email does not exists",Fore.RED)
+                 printf("Email does not exist",Fore.RED)
                  return render(request,"UsersApp/forgotPass.html",{'error':error})
 
     return render(request,"UsersApp/forgotPass.html")
