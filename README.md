@@ -26,7 +26,7 @@ Server Side :
 
 - Backend for "Edit User Informations" page.
 - Backend for "User Profile" page.
-- Backenend  for "Download Study Materials" page.
+- Backend for "Download Study Materials" page.
 - Setup email server to send the Password Reset Token
 - Creating new admin page instead of Django's
 
