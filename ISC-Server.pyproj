@@ -5,7 +5,7 @@
     <Name>ISC-Server</Name>
     <RootNamespace>ISC-Server</RootNamespace>
     <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
-    <WebBrowserPort>8045</WebBrowserPort>
+    <WebBrowserPort>80</WebBrowserPort>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -17,7 +17,7 @@
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
-    <WebBrowserUrl>http://localhost:8045/</WebBrowserUrl>
+    <WebBrowserUrl>http://localhost/</WebBrowserUrl>
     <LaunchProvider>Django launcher</LaunchProvider>
     <DjangoSettingsModule>ISC_Server.settings</DjangoSettingsModule>
     <OutputPath>.</OutputPath>
