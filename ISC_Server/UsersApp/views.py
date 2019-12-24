@@ -97,7 +97,7 @@ def forgotPassword(request):
             result = UsersManager.checkEmail(userQuery)
             if result == ErrorCodes.FORGOT_INPUTS.NONE:
                 Token = UsersManager.savePassResetToken(userQuery)
-                printf("Password reset link = " + Token,Fore.GREEN)
+                printf("Password reset token = " + Token,Fore.GREEN)
                 #TODO: send token to the email
                 return redirect("reset-pass-page")
             elif result == ErrorCodes.FORGOT_INPUTS.EMAIL_NOT_FOUND :
