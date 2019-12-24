@@ -2,7 +2,7 @@
 
 ## Information
 
-- The is just one app for the whole site which is `UsersApp` , `MainApp` was used just for testing.
+- it is just one app for the whole website which is `UsersApp`. The app `MainApp` was used just for testing.
 - You can access admin page and view/edit/delete database's items via the link `localhost/admin`
 use the following information to login
 ```
