@@ -29,3 +29,16 @@ Server Side :
 - Backenend  for "Download Study Materials" page.
 - Setup email server to send the Password Reset Token
 - Creating New Admin Page instead of Django's
+
+
+## Information
+
+HTML files are in the path 
+```
+ISC-Server/ISC_Server/UsersApp/templates/UsersApp/
+```
+
+CSS/JS files are in the path 
+```
+ISC-Server/ISC_Server/UsersApp/static/UsersApp/
+```
