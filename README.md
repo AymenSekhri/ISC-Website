@@ -31,7 +31,10 @@ python manage.py runserver 0.0.0.0:80
 ## TODO list
 
 Client Side :
-
+- Fixing the lag in the sliding bar on the home page.
+- Fixing high processor useage in the home page when the slide bar changes its image, also uses 500MB of RAM (facebook uses 200MB lol) not sure if this is from frontend or backend
+- Adding more styles to the error retured by the server when there is an error with signup and login forms.
+- Fixing the navigation bar (there is a little more margin in the left)
 - Frontend  for "Forgot password" page.
 - Frontend  for "Reset password" page.
 - Frontend  for "Thank your for registration" page.
@@ -40,9 +43,8 @@ Client Side :
 - Frontend  for "User Profile" page.
 - Frontend  for "Home page" page.
 - Frontend  for "Download Study Materials" page.
-- Adding more styles to the error retured by the server when there is an error with signup and login forms.
-- Fixing the navigation bar (there is a little more margin in the left)
-- Fixing the lag in the siliding bar on the home page
+
+
 
 Server Side :
 
