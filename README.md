@@ -21,7 +21,7 @@ Client Side :
 - Frontend  for "Download Study Materials" page.
 - Adding more styles to the error retured by the server when there is an error with signup and login forms.
 - Fixing the navigation bar (there is a little more margin in the left)
-
+- Fixing the lag in the siliding bar on the home page
 Server Side :
 
 - Backend for "Edit User Informations" page.
