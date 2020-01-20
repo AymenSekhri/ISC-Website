@@ -6,8 +6,9 @@ Replace this with more appropriate tests for your application.
 """
 
 import django
+django.setup()
 from django.test import TestCase
-
+import ISC_Server.UsersApp.views
 # TODO: Configure your database in settings.py and sync before running tests.
 
 class SimpleTest(TestCase):
@@ -19,8 +20,8 @@ class SimpleTest(TestCase):
         super(SimpleTest, cls).setUpClass()
         django.setup()
 
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
+    def setUp(cls):
+        pass
+
+    def test_basic_addition3(self):
         self.assertEqual(1 + 1, 2)
