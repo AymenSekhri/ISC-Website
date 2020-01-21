@@ -53,6 +53,9 @@
     <Compile Include="ISC_Server\UsersApp\PasswordManager.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ISC_Server\UsersApp\UnitTests\test_forms.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ISC_Server\UsersApp\UnitTests\test_models.py">
       <SubType>Code</SubType>
     </Compile>
