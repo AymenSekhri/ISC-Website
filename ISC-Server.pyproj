@@ -38,7 +38,6 @@
     <Compile Include="ISC_Server\MainApp\apps.py" />
     <Compile Include="ISC_Server\MainApp\migrations\__init__.py" />
     <Compile Include="ISC_Server\MainApp\models.py" />
-    <Compile Include="ISC_Server\MainApp\tests.py" />
     <Compile Include="ISC_Server\MainApp\views.py" />
     <Compile Include="ISC_Server\MainApp\__init__.py" />
     <Compile Include="ISC_Server\UsersApp\admin.py" />
@@ -54,10 +53,22 @@
     <Compile Include="ISC_Server\UsersApp\PasswordManager.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ISC_Server\UsersApp\UnitTests\test_forms.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ISC_Server\UsersApp\UnitTests\test_models.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ISC_Server\UsersApp\UnitTests\test_UsersManager.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ISC_Server\UsersApp\UnitTests\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ISC_Server\UsersApp\UsersManager.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ISC_Server\UsersApp\tests.py" />
+    <Compile Include="ISC_Server\UsersApp\UnitTests\test_views.py" />
     <Compile Include="ISC_Server\UsersApp\views.py" />
     <Compile Include="ISC_Server\UsersApp\__init__.py" />
     <Compile Include="manage.py" />
@@ -74,6 +85,7 @@
     <Folder Include="ISC_Server\MainApp\templates\MainApp\" />
     <Folder Include="ISC_Server\UsersApp\" />
     <Folder Include="ISC_Server\UsersApp\migrations\" />
+    <Folder Include="ISC_Server\UsersApp\UnitTests\" />
     <Folder Include="ISC_Server\UsersApp\static\" />
     <Folder Include="ISC_Server\UsersApp\static\UsersApp\" />
     <Folder Include="ISC_Server\UsersApp\static\UsersApp\css\" />
