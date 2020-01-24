@@ -29,6 +29,7 @@ def Register(request):
         myform = RegisterForm(request.POST)
         if myform.is_valid():
             printf("Registration Request..",Fore.GREEN)
+            myform.toLower()
             myform_cleaned = myform.cleaned_data
             newUser = UsersManager.getModelFromRegisterForm(myform_cleaned)
             result = UsersManager.validateInputFrom(newUser,myform_cleaned['pass1'],myform_cleaned['pass2'])
@@ -59,6 +60,7 @@ def Login(request):
         myform = LoginForm(request.POST)
         
         if myform.is_valid():
+            myform.toLower()
             myform_cleaned = myform.cleaned_data
             userQuery = UsersManager.getModelFromLoginForm(myform_cleaned['email'])
             result = UsersManager.checkUser(userQuery,myform_cleaned['password'])
@@ -91,6 +93,7 @@ def forgotPassword(request):
     if request.method == "POST":
         myform = ForgotForm(request.POST)
         if myform.is_valid():
+            myform.toLower()
             userQuery = UsersManager.getModelFromLoginForm(myform.cleaned_data['email'])
             result = UsersManager.checkEmail(userQuery)
             if result == ErrorCodes.FORGOT_INPUTS.NONE:

@@ -75,7 +75,7 @@ class LoginAndRegisterTest(TestCase):
         cls.assertRedirects(loginResponse,reverse("home-page"),status_code=302,target_status_code=200)
         homeResponse = cls.getHome(cls.test_userAgent,loginResponse.cookies)
         cls.assertEqual(homeResponse.context['login'],1)
-        cls.assertEqual(homeResponse.context['userName'],cls.test_name)
+        cls.assertEqual(homeResponse.context['userName'],cls.test_name.lower())
 
     def test_RegisterInvalidRequests(cls):
         form_data = {'firstName':cls.test_name,'familyName':"TestLastName",'email':cls.test_email,
