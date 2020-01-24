@@ -48,29 +48,59 @@ class LoginAndRegisterTest(TestCase):
         pass
 
     test_email= "test@gmail.com"
+    test_name = "TestName"
     test_password = "pass_test/test_123456"
     test_userAgent = "TestUserAgent//Firefox."
 
-    def test_LoginUrlExists(cls):
+    def test_LoginURLExists(cls):
         response = cls.client.get("/login")
         cls.assertEqual(response.status_code,200)
 
-    def test_LoginUrlNameExists(cls):
+    def test_LoginURLNameExists(cls):
         response = cls.client.get(reverse("login-page"))
         cls.assertEqual(response.status_code,200)
 
-    def test_RegisterUrlExists(cls):
+    def test_RegisterURLExists(cls):
         response = cls.client.get("/register")
         cls.assertEqual(response.status_code,200)
 
-    def test_RegisterUrlNameExists(cls):
+    def test_RegisterURLNameExists(cls):
         response = cls.client.get(reverse("register-page"))
         cls.assertEqual(response.status_code,200)
     
     def test_RegisterAndSucessLogin(cls):
         cls.addUser(cls.test_email,cls.test_password)
-        loginResponse = cls.userLogin(cls.test_email, cls.test_password, cls.test_userAgent,"")
+        loginResponse = cls.userLogin(cls.test_email, cls.test_password, cls.test_userAgent,cls.test_userAgent)
         cls.assertRedirects(loginResponse,reverse("home-page"),status_code=302,target_status_code=200)
+        homeResponse = cls.getHome(cls.test_userAgent,loginResponse.cookies)
+        cls.assertEqual(homeResponse.context['login'],1)
+        cls.assertEqual(homeResponse.context['userName'],cls.test_name)
+
+    def test_StayLoginWithInvalidSessionToken(cls):
+        cls.addUser(cls.test_email,cls.test_password)
+        loginResponse = cls.userLogin(cls.test_email, cls.test_password, cls.test_userAgent,cls.test_userAgent)
+        cls.assertRedirects(loginResponse,reverse("home-page"),status_code=302,target_status_code=200)
+        wrongCookie = loginResponse.cookies
+        wrongCookie["session_id"] = "THIS_WRONG_SESSION_ID"
+        homeResponse = cls.getHome(cls.test_userAgent,wrongCookie)
+        cls.assertEqual(homeResponse.context['login'],0)
+
+    def test_StayLoginWithInvalidUserID(cls):
+        cls.addUser(cls.test_email,cls.test_password)
+        loginResponse = cls.userLogin(cls.test_email, cls.test_password, cls.test_userAgent,cls.test_userAgent)
+        cls.assertRedirects(loginResponse,reverse("home-page"),status_code=302,target_status_code=200)
+        wrongCookie = loginResponse.cookies
+        wrongCookie["user_id"] = "123456"
+        homeResponse = cls.getHome(cls.test_userAgent,wrongCookie)
+        cls.assertEqual(homeResponse.context['login'],0)
+
+    def test_StayLoginWithInvalidUserAgent(cls):
+        cls.addUser(cls.test_email,cls.test_password)
+        loginResponse = cls.userLogin(cls.test_email, cls.test_password, cls.test_userAgent,cls.test_userAgent)
+        cls.assertRedirects(loginResponse,reverse("home-page"),status_code=302,target_status_code=200)
+        homeResponse = cls.getHome("THIS_WRONG_USERAGENT",loginResponse.cookies)
+        cls.assertEqual(homeResponse.context['login'],0)
+
 
     def test_RegisterAndFaildLoginPassword(cls):
         cls.addUser(cls.test_email,cls.test_password)
@@ -78,7 +108,7 @@ class LoginAndRegisterTest(TestCase):
         cls.assertEqual(loginResponse.status_code,200)
         cls.assertEqual(loginResponse.context['error'],ErrorCodes.LOGIN_INPUTS.PASS_MISMATCH)
 
-    def test_RegisterAndFaildLoginPassword(cls):
+    def test_RegisterAndFaildLoginEmail(cls):
         cls.addUser(cls.test_email,cls.test_password)
         loginResponse = cls.userLogin("WrongEmail@live.com", cls.test_password, cls.test_userAgent,"")
         cls.assertEqual(loginResponse.status_code,200)
@@ -90,9 +120,14 @@ class LoginAndRegisterTest(TestCase):
         cls.assertEqual(loginResponse.status_code,200)
         cls.assertEqual(loginResponse.context["error"], ErrorCodes.LOGIN_INPUTS.EMAIL_NOT_FOUND)
 
-    
+    def getHome(cls,userAgent,cookies):
+        newClient = Client(HTTP_USER_AGENT=userAgent)
+        newClient.cookies = cookies
+        response = newClient.get(reverse("home-page"))
+        return response
+
     def addUser(cls,email,password):
-        form_data = {'firstName':"TestFirstName",'familyName':"TestLastName",'email':email,
+        form_data = {'firstName':cls.test_name,'familyName':"TestLastName",'email':email,
                 'pass1':password,'pass2':password,'number':"100",'year':"2020"}
         response = cls.client.post("/register",data=form_data)
 
