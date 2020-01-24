@@ -18,6 +18,9 @@ def Home(request):
         user_id = request.COOKIES['user_id']
         session_id = request.COOKIES['session_id']
         userAgent = request.META['HTTP_USER_AGENT']
+        printf("UserID: " + user_id, Fore.GREEN)
+        printf("session_id: " + session_id, Fore.GREEN)
+        printf("userAgent: " + userAgent, Fore.GREEN)
         if UsersManager.checkSession(user_id,session_id,userAgent) :
             userQuery = UsersManager.getUserFromId(user_id)
             return render(request,"UsersApp/index.html",{'login':1,'userName':userQuery.firstName})
