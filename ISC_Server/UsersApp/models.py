@@ -25,7 +25,7 @@ class SessionsDB(models.Model):
     def __str__(self):
         return self.token
     def is_expired(self):
-        if slef.expiration_date > datetime.now:
+        if slef.expiration_date > timezone.now:
             return False
         else:
             return True

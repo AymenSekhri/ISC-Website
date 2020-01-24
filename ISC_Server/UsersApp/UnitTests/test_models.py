@@ -44,7 +44,7 @@ class UsersDBTest(TestCase):
         newUserQuery = UsersDB.objects.filter(firstName = cls.test_firstName,familyName = cls.test_familyName)
         cls.assertEqual(newUserQuery.count(), 1)
 
-    def test_UserFields(cls):
+    def test_UserFieldsAreOkay(cls):
         newUser = UsersDB.objects.filter(firstName = cls.test_firstName,familyName = cls.test_familyName).first()
         cls.assertEqual(newUser.email, cls.test_email)
         cls.assertEqual(newUser.password, cls.test_password)
@@ -73,7 +73,7 @@ class SessionsDBTest(TestCase):
     #Test Session
     test_token = "this_session_token_123456"
     test_token = "this_session_key_123456"
-    test_expiration = datetime.now() + timedelta(minutes=5)
+    test_expiration = timezone.now() + timedelta(minutes=5)
 
     def setUp(cls):
         NewUser = UsersDB.objects.create(firstName = cls.test_firstName,familyName = cls.test_familyName,email= cls.test_email,password = cls.test_password,

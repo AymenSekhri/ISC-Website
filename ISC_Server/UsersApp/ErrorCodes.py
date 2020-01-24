@@ -8,8 +8,7 @@ class ErrorCodes(object):
     class LOGIN_INPUTS(object):
         NONE = 0
         EMAIL_NOT_FOUND = 1
-        EMAIL_MULTIPLES = 2
-        PASS_MISMATCH = 3
+        PASS_MISMATCH = 2
     class FORGOT_INPUTS(object):
         NONE = 0
         EMAIL_NOT_FOUND = 1
