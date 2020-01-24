@@ -69,12 +69,60 @@ class LoginAndRegisterTest(TestCase):
         cls.assertEqual(response.status_code,200)
     
     def test_RegisterAndSucessLogin(cls):
-        cls.addUser(cls.test_email,cls.test_password)
+        registrationResponse = cls.addUser(cls.test_email,cls.test_password)
+        cls.assertRedirects(registrationResponse,reverse("login-page"),status_code=302,target_status_code=200)
         loginResponse = cls.userLogin(cls.test_email, cls.test_password, cls.test_userAgent,cls.test_userAgent)
         cls.assertRedirects(loginResponse,reverse("home-page"),status_code=302,target_status_code=200)
         homeResponse = cls.getHome(cls.test_userAgent,loginResponse.cookies)
         cls.assertEqual(homeResponse.context['login'],1)
         cls.assertEqual(homeResponse.context['userName'],cls.test_name)
+
+    def test_RegisterInvalidRequests(cls):
+        form_data = {'firstName':cls.test_name,'familyName':"TestLastName",'email':cls.test_email,
+                'pass1':cls.test_password,'pass2':cls.test_password,'number':"100",'year':"2020"}
+        temp_form_data = form_data.copy()
+        temp_form_data['firstName'] = "NotValidUser123"
+        response = cls.client.post("/register",data=temp_form_data)
+        cls.assertEqual(response.status_code,400)
+
+        temp_form_data = form_data.copy()
+        temp_form_data['familyName'] = "NotValidUser123"
+        response = cls.client.post("/register",data=temp_form_data)
+        cls.assertEqual(response.status_code,400)
+
+        temp_form_data = form_data.copy()
+        temp_form_data['email'] = "NotValidEmail"
+        response = cls.client.post("/register",data=temp_form_data)
+        cls.assertEqual(response.status_code,400)
+
+        temp_form_data = form_data.copy()
+        temp_form_data['number'] = "NotValidNumber"
+        response = cls.client.post("/register",data=temp_form_data)
+        cls.assertEqual(response.status_code,400)
+
+        temp_form_data = form_data.copy()
+        temp_form_data['year'] = "NotValidYear"
+        response = cls.client.post("/register",data=temp_form_data)
+        cls.assertEqual(response.status_code,400)
+
+    def test_RegisterPasswordMissmatch(cls):
+        form_data = {'firstName':cls.test_name,'familyName':"TestLastName",'email':cls.test_email,
+                'pass1':cls.test_password,'pass2':cls.test_password,'number':"100",'year':"2020"}
+        temp_form_data = form_data.copy()
+        temp_form_data['pass1'] = "First----Pass123"
+        temp_form_data['pass2'] = "DifferentPass123"
+        response = cls.client.post("/register",data=temp_form_data)
+        cls.assertEqual(response.context['error'],ErrorCodes.REGISTER_INPUTS.PASSMISSMATCH) 
+
+    def test_RegisterUserDoesExistBofore(cls):
+        cls.addUser2("TestName","myFirstEmail@gmail.com",cls.test_password)#register the user first
+        response = cls.addUser2("TestName","mySecondEmail@gmail.com",cls.test_password)#register again
+        cls.assertEqual(response.context['error'],ErrorCodes.REGISTER_INPUTS.USEREXISTS)
+
+    def test_RegisterUserDoesExistBofore(cls):
+        cls.addUser2("TestNameOne","SameEmail@gmail.com",cls.test_password)#register the user first
+        response = cls.addUser2("TestNameTwo","SameEmail@gmail.com",cls.test_password)#register again
+        cls.assertEqual(response.context['error'],ErrorCodes.REGISTER_INPUTS.EMAILEXISTS)
 
     def test_StayLoginWithInvalidSessionToken(cls):
         cls.addUser(cls.test_email,cls.test_password)
@@ -126,10 +174,15 @@ class LoginAndRegisterTest(TestCase):
         response = newClient.get(reverse("home-page"))
         return response
 
+    def addUser2(cls,firstName,email,password):
+        form_data = {'firstName':firstName,'familyName':"TestLastName",'email':email,
+                'pass1':password,'pass2':password,'number':"100",'year':"2020"}
+        return cls.client.post("/register",data=form_data)
+
     def addUser(cls,email,password):
         form_data = {'firstName':cls.test_name,'familyName':"TestLastName",'email':email,
                 'pass1':password,'pass2':password,'number':"100",'year':"2020"}
-        response = cls.client.post("/register",data=form_data)
+        return cls.client.post("/register",data=form_data)
 
     def userLogin(cls,emaill,password,userAgent,cookies):
         form_data = {"email":emaill,"password":password}
