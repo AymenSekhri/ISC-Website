@@ -18,9 +18,6 @@ def Home(request):
         user_id = request.COOKIES['user_id']
         session_id = request.COOKIES['session_id']
         userAgent = request.META['HTTP_USER_AGENT']
-        printf("UserID: " + user_id, Fore.GREEN)
-        printf("session_id: " + session_id, Fore.GREEN)
-        printf("userAgent: " + userAgent, Fore.GREEN)
         if UsersManager.checkSession(user_id,session_id,userAgent) :
             userQuery = UsersManager.getUserFromId(user_id)
             return render(request,"UsersApp/index.html",{'login':1,'userName':userQuery.firstName})
@@ -31,14 +28,13 @@ def Register(request):
     if request.method == "POST":
         myform = RegisterForm(request.POST)
         if myform.is_valid():
-            printf("Gotcha ...",Fore.GREEN)
-            
+            printf("Registration Request..",Fore.GREEN)
             myform_cleaned = myform.cleaned_data
             newUser = UsersManager.getModelFromRegisterForm(myform_cleaned)
             result = UsersManager.validateInputFrom(newUser,myform_cleaned['pass1'],myform_cleaned['pass2'])
             if result == ErrorCodes.REGISTER_INPUTS.NONE:
                 UsersManager.addNewUser(newUser)
-                printf("All Good",Fore.GREEN)
+                printf("Registration Completed",Fore.GREEN)
                 return redirect("login-page")
             else:
                 error = 0
@@ -67,7 +63,7 @@ def Login(request):
             userQuery = UsersManager.getModelFromLoginForm(myform_cleaned['email'])
             result = UsersManager.checkUser(userQuery,myform_cleaned['password'])
             if result == ErrorCodes.LOGIN_INPUTS.NONE:
-                printf("Login: all Good",Fore.GREEN)
+                printf("Successful Login.",Fore.GREEN)
                 newToken = UsersManager.saveSession(userQuery,request.META['HTTP_USER_AGENT'])
                 response = redirect("home-page")
                 response.set_cookie('session_id',newToken)
@@ -76,9 +72,9 @@ def Login(request):
             else:
                 error = 0
                 if result == ErrorCodes.LOGIN_INPUTS.EMAIL_NOT_FOUND:
-                    printf("Email does not exist",Fore.RED)
+                    printf("Email does not exist!",Fore.RED)
                 elif result == ErrorCodes.LOGIN_INPUTS.PASS_MISMATCH:
-                    printf("Wrong password",Fore.RED)
+                    printf("Wrong password!",Fore.RED)
                 return render(request,"UsersApp/login.html",{'error':result})
         else:
             return HttpResponse(status=400)
@@ -104,7 +100,7 @@ def forgotPassword(request):
                 return redirect("reset-pass-page")
             elif result == ErrorCodes.FORGOT_INPUTS.EMAIL_NOT_FOUND :
                  error = 1
-                 printf("Email does not exist",Fore.RED)
+                 printf("Email does not exist.",Fore.RED)
                  return render(request,"UsersApp/forgotPass.html",{'error':error})
         else:
             return HttpResponse(status=400)
@@ -125,7 +121,7 @@ def ResetPassword(request):
                 return redirect("login-page")
             elif result == ErrorCodes.FORGOT_INPUTS.INVALID_TOKEN:
                 error = 1
-                printf("Email does not exists",Fore.RED)
+                printf("Email does not exists.",Fore.RED)
                 return render(request,"UsersApp/resetPass.html",{'error':error})
         else:
             return HttpResponse(status=400)

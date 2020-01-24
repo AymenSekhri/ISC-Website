@@ -7,7 +7,8 @@
     <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
     <WebBrowserPort>80</WebBrowserPort>
     <SuppressPackageInstallationPrompt>True</SuppressPackageInstallationPrompt>
-    <InterpreterArguments>django.test.utils.setup_test_environment()</InterpreterArguments>
+    <InterpreterArguments>
+    </InterpreterArguments>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
