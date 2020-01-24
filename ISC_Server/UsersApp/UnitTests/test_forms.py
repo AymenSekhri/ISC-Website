@@ -25,7 +25,7 @@ class RegisterFormTest(TestCase):
         pass
 
     form_data = {'firstName':"TestFirstName",'familyName':"TestLastName",'email':"MyEmail@gmail.com",
-                'pass1':"pass_123456",'pass2':"pass_123456",'privLevel':'0','number':"100",'year':"2020"}
+                'pass1':"pass_123456",'pass2':"pass_123456",'number':"100",'year':"2020"}
 
     def checkUserName(cls,fistName,lastName):
         temp_data = cls.form_data.copy()
@@ -45,9 +45,8 @@ class RegisterFormTest(TestCase):
         temp_data = cls.form_data.copy()
 
         temp_data['email'] = "blabla@gmail.com"
-        print(temp_data)
         cls.assertTrue(RegisterForm(data=temp_data).is_valid())
-
+        
         temp_data['email'] = "blablagmail.com"
         cls.assertFalse(RegisterForm(data=temp_data).is_valid())
 
@@ -75,7 +74,6 @@ class LoginFormTest(TestCase):
         temp_data = cls.form_data.copy()
 
         temp_data['email'] = "blabla@gmail.com"
-        print(temp_data)
         cls.assertTrue(LoginForm(data=temp_data).is_valid())
 
         temp_data['email'] = "blablagmail.com"

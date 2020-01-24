@@ -60,7 +60,7 @@ class UsersManager(object):
         newToken = UsersManager.generateRandomString(128)
         if userSession.count() == 0:
             newUserSession = SessionsDB(uid_id = userInfo.id, token = newToken, key = PasswordManager.hashPassword(userAgent,work=4) ,
-                                     expiration_date = datetime.now() + timedelta(minutes=5))
+                                     expiration_date = timezone.now() + timedelta(minutes=5))
             newUserSession.save()
         else:
             userSessionQuery = userSession.first()
