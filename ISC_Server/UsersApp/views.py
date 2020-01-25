@@ -85,6 +85,9 @@ def Login(request):
 
 def Logout(request):
     response = HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    user_id = request.COOKIES['user_id']
+    session_id = request.COOKIES['session_id']
+    UsersManager.deleteSession(user_id,session_id)
     response.delete_cookie('session_id','')
     response.delete_cookie('user_id','')
     return response

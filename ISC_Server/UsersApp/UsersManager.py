@@ -88,6 +88,10 @@ class UsersManager(object):
         if SessionQuery.first().expiration_date < timezone.now():
             return False
         return True 
+    def deleteSession(user_id,session_id):
+        Query = SessionsDB.objects.filter(uid_id = user_id, token=session_id)
+        if Query.exists() :
+            Query.delete()
     
     def savePassResetToken(userQuery):
         newToken = UsersManager.generateRandomString(128)
@@ -117,7 +121,9 @@ class UsersManager(object):
         sessionQuery = SessionsDB.objects.filter(uid_id = userToken.id).delete()
     
     def deleteToken(formToken):
-        tokenQuery = PassResetDB.objects.filter(token = formToken).delete()
+        tokenQuery = PassResetDB.objects.filter(token = formToken)
+        if tokenQuery.exists() :
+            tokenQuery.delete()
 
 
         
