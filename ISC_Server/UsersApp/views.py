@@ -85,6 +85,9 @@ def Login(request):
 
 def Logout(request):
     response = HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    user_id = request.COOKIES['user_id']
+    session_id = request.COOKIES['session_id']
+    UsersManager.deleteSession(user_id,session_id)
     response.delete_cookie('session_id','')
     response.delete_cookie('user_id','')
     return response
@@ -130,3 +133,4 @@ def ResetPassword(request):
             return HttpResponse(status=400)
     return render(request,"UsersApp/resetPass.html")
 
+#TODO: Do logs for all operations specially the ones with 400 error 'couse it's probably hacking attempts
