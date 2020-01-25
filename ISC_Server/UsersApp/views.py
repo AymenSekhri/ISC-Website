@@ -133,3 +133,4 @@ def ResetPassword(request):
             return HttpResponse(status=400)
     return render(request,"UsersApp/resetPass.html")
 
+#TODO: Do logs for all operations specially the ones with 400 error 'couse it's probably hacking attempts
