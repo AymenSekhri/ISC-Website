@@ -17,12 +17,14 @@ urlpatterns = [
     path('api/register', API.APIRegister, name='register-api'),
     path('api/login', API.APILogin, name='login-api'),
     path('api/logout', API.APILogout, name='logout-api'),
+    path('api/loginInfo', API.APIGetLoginInfo, name='loginInfo-api'),
     path('api/forgotpassword', API.APIForgotPassword, name='forgot-pass-api'),
     path('api/resetpassword', API.APIResetPassword, name='reset-pass-api'),
 
     path('', FrontPages.Home, name='home-page'),
     path('register', FrontPages.Register, name='register-page'),
     path('login', FrontPages.Login, name='login-page'),
+    
     path('forgotpassword', FrontPages.ForgotPassword, name='forgot-pass-page'),
     path('resetpassword', FrontPages.ResetPassword, name='reset-pass-page'),
 ]

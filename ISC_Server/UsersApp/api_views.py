@@ -15,6 +15,21 @@ def printf(text,color):
 # Create your views here.
 
 
+def APIGetLoginInfo(request):
+     if 'user_id' in request.COOKIES:
+        user_id = request.COOKIES['user_id']
+        session_id = request.COOKIES['session_id']
+        userAgent = request.META['HTTP_USER_AGENT']
+        if UsersManager.checkSession(user_id,session_id,userAgent) :
+            userQuery = UsersManager.getUserFromId(user_id)
+            return JsonResponse({'login':1,
+                                       'firstName':userQuery.firstName,
+                                       'familyName':userQuery.familyName,
+                                       'email':userQuery.email,
+                                       'number':userQuery.number,
+                                       'privLevel':userQuery.privLevel})
+     return JsonResponse({'login':0})
+
 
 def APIRegister(request):
     if request.method == "POST":
