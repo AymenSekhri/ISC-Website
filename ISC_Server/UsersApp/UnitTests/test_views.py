@@ -18,7 +18,7 @@ from django.urls import reverse
 from django.test import Client
 
 
-import ISC_Server.UsersApp.views
+
 
 from ISC_Server.UsersApp.ErrorCodes import ErrorCodes
 from ISC_Server.UsersApp.UsersManager import UsersManager

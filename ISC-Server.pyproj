@@ -55,6 +55,9 @@
     </Compile>
     <Compile Include="ISC_Server\UsersApp\migrations\__init__.py" />
     <Compile Include="ISC_Server\UsersApp\models.py" />
+    <Compile Include="ISC_Server\UsersApp\page_views.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ISC_Server\UsersApp\PasswordManager.py">
       <SubType>Code</SubType>
     </Compile>
@@ -74,7 +77,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ISC_Server\UsersApp\UnitTests\test_views.py" />
-    <Compile Include="ISC_Server\UsersApp\views.py" />
+    <Compile Include="ISC_Server\UsersApp\api_views.py" />
     <Compile Include="ISC_Server\UsersApp\__init__.py" />
     <Compile Include="manage.py" />
     <Compile Include="ISC_Server\__init__.py" />
@@ -148,6 +151,7 @@
     <Content Include="ISC_Server\UsersApp\static\UsersApp\js\materialize.min.js" />
     <Content Include="ISC_Server\UsersApp\static\UsersApp\official\materialize.css" />
     <Content Include="ISC_Server\UsersApp\static\UsersApp\official\materialize.js" />
+    <Content Include="ISC_Server\UsersApp\templates\UsersApp\base.html" />
     <Content Include="ISC_Server\UsersApp\templates\UsersApp\forgotPass.html" />
     <Content Include="ISC_Server\UsersApp\templates\UsersApp\index.html" />
     <Content Include="ISC_Server\UsersApp\templates\UsersApp\register.html" />
