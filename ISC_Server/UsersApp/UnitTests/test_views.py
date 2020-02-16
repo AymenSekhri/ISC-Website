@@ -117,7 +117,7 @@ class LoginAndRegisterTest(TestCase):
         cls.assertEqual(loginResponse.status_code,200)
         cls.assertEqual(loginResponse.json()['Status'],ErrorCodes.REGISTER_INPUTS.NONE)
 
-        homeResponse = cls.getHome(cls.test_userAgent,loginResponse.cookies)
+        homeResponse = cls.getLoginInfo(cls.test_userAgent,loginResponse.cookies)
         cls.assertEqual(homeResponse.json()['login'],1)
         cls.assertEqual(homeResponse.json()['firstName'],cls.test_name.lower())
 
@@ -145,7 +145,7 @@ class LoginAndRegisterTest(TestCase):
         newClient = Client(HTTP_USER_AGENT=cls.test_userAgent)
         newClient.cookies = loginResponse.cookies
         newClient.get(reverse("logout-api"))
-        homeResponse = cls.getHome(cls.test_userAgent,loginResponse.cookies)
+        homeResponse = cls.getLoginInfo(cls.test_userAgent,loginResponse.cookies)
         cls.assertEqual(homeResponse.json()['login'],0)
 
     def test_StayLoginWithInvalidSessionToken(cls):
@@ -156,7 +156,7 @@ class LoginAndRegisterTest(TestCase):
 
         wrongCookie = loginResponse.cookies
         wrongCookie["session_id"] = "THIS_WRONG_SESSION_ID"
-        homeResponse = cls.getHome(cls.test_userAgent,wrongCookie)
+        homeResponse = cls.getLoginInfo(cls.test_userAgent,wrongCookie)
         cls.assertEqual(homeResponse.json()['login'],0)
 
     def test_StayLoginWithInvalidUserID(cls):
@@ -167,7 +167,7 @@ class LoginAndRegisterTest(TestCase):
 
         wrongCookie = loginResponse.cookies
         wrongCookie["user_id"] = "123456"
-        homeResponse = cls.getHome(cls.test_userAgent,wrongCookie)
+        homeResponse = cls.getLoginInfo(cls.test_userAgent,wrongCookie)
         cls.assertEqual(homeResponse.json()['login'],0)
 
     def test_StayLoginWithInvalidUserAgent(cls):
@@ -176,10 +176,10 @@ class LoginAndRegisterTest(TestCase):
         cls.assertEqual(loginResponse.status_code,200)
         cls.assertEqual(loginResponse.json()['Status'],ErrorCodes.REGISTER_INPUTS.NONE)
         
-        homeResponse = cls.getHome("THIS_WRONG_USERAGENT",loginResponse.cookies)
+        homeResponse = cls.getLoginInfo("THIS_WRONG_USERAGENT",loginResponse.cookies)
         cls.assertEqual(homeResponse.json()['login'],0)
 
-    def getHome(cls,userAgent,cookies):
+    def getLoginInfo(cls,userAgent,cookies):
         newClient = Client(HTTP_USER_AGENT=userAgent)
         newClient.cookies = cookies
         response = newClient.get(reverse("loginInfo-api"))
