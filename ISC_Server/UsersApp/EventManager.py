@@ -18,8 +18,8 @@ class EventManager(object):
         Event.objects.create(eventName = formData['eventName'],
                              picture = "picturePath",#TODO: save picture in some path and edit this here.
                              description = formData['description'],
-                             enrolemntDeadline_date = timezone.now(),#TODO: convert this to datetime
-                             event_date = timezone.now(), #TODO: convert this to datetime
+                             enrolemntDeadline_date = timezone.datetime.strptime(formData['deadline_date']+ " 23:59", "%d-%m-%Y %H:%M"),
+                             event_date = timezone.datetime.strptime(formData['event_date'] + " 23:59", "%d-%m-%Y %H:%M"),
                              maxNumberOfEnrolment = formData['maxNumberOfEnrolment'],
                              eventEnrolmentData = formData['enrollmentData'])
 
@@ -52,8 +52,8 @@ class EventManager(object):
             eventInfo = {'name':x.eventName,
                          'picture': x.picture,
                          'description': x.description,
-                         'deadline_date': x.enrolemntDeadline_date,
-                         'event_date': x.event_date}
+                         'deadline_date': str(x.enrolemntDeadline_date),
+                         'event_date': str(x.event_date)}
             events.append(eventInfo)
         return events
 

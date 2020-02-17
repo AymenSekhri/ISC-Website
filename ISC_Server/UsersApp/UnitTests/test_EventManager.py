@@ -27,14 +27,16 @@ class EventsTest(TestCase):
                             'picturePath': '0.png',
                             'description': 'You will learn genetic algorithm in this bootcamp',
                             'deadline_date': '10-04-2020',
+                            'event_date': '20-04-2020',
                             'maxNumberOfEnrolment': 50,
-                            'eventEnrolmentData': ''}
+                            'enrollmentData': ''}
         newEventFormData2 = {'eventName': 'Malware Analysis Bootcamp',
                             'picturePath': '1.png',
                             'description': 'You will learn how to detect malwares',
                             'deadline_date': '20-04-2020',
+                            'event_date': '20-04-2020',
                             'maxNumberOfEnrolment': 50,
-                            'eventEnrolmentData': ''}
+                            'enrollmentData': ''}
 
         cls.assertEqual(EventManager.validateEvent(newEventFormData1),ErrorCodes.EVENT_INPUTS.NONE)
         EventManager.createNewEvent(newEventFormData1)
@@ -57,8 +59,9 @@ class EventsTest(TestCase):
                             'picturePath': '0.png',
                             'description': 'You will learn genetic algorithm in this bootcamp',
                             'deadline_date': '10-04-2020',
+                            'event_date': '20-04-2020',
                             'maxNumberOfEnrolment': 50,
-                            'eventEnrolmentData': ''}
+                            'enrollmentData': ''}
         EventManager.createNewEvent(newEventFormData1)
         newEnrollment1 = {'eventID': event_id,
                         'userID': user_id,
