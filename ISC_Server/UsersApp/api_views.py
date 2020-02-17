@@ -86,7 +86,7 @@ def APILogin(request):
 
 
 def APILogout(request):
-    response = JsonResponse({'Status':0})
+    response = JsonResponse({'Status':1})
     user_id = request.COOKIES['user_id']
     session_id = request.COOKIES['session_id']
     UsersManager.deleteSession(user_id,session_id)
