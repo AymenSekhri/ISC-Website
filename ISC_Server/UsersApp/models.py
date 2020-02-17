@@ -8,7 +8,7 @@ class UsersDB(models.Model):
     familyName = models.CharField(max_length=30)
     email = models.EmailField()
     password = models.CharField(max_length=256)
-    privLevel = models.IntegerField(default = 0)
+    privLevel = models.SmallIntegerField(default = 0)
     number = models.CharField(max_length=20)
     year = models.CharField(max_length=4)
     regDate = models.DateField(default=timezone.now)
@@ -34,3 +34,21 @@ class PassResetDB(models.Model):
     uid = models.ForeignKey(UsersDB, on_delete=models.CASCADE)
     token = models.CharField(max_length=128)
     expiration_date = models.DateTimeField()
+
+class Event(models.Model):
+    eventName = models.CharField(max_length=512)
+    picture = models.CharField(max_length=128)#path to the picture.
+    description = models.TextField()
+    posting_date = models.DateTimeField(default=timezone.now)
+    enrolemntDeadline_date = models.DateTimeField()
+    event_date = models.DateTimeField()
+    maxNumberOfEnrolment = models.IntegerField()
+    numberOfEnrolment = models.IntegerField(default = 0)
+    eventEnrolmentData = models.TextField()
+
+class EventEnrolment(models.Model):#Joint Many-To-Many Table.
+    eventID = models.ForeignKey(Event, on_delete=models.CASCADE)
+    userID = models.ForeignKey(UsersDB, on_delete=models.CASCADE)
+    enrolemnt_date = models.DateTimeField(default=timezone.now)
+    enrolmentResponse = models.TextField()
+    decision = models.SmallIntegerField(default = 0)# 0:pending/1:accepted/2:rejected.
