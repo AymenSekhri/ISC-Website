@@ -17,6 +17,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.test import Client
 from django.utils import timezone
+import json
 
 
 
@@ -215,9 +216,15 @@ class EventsTest(TestCase):
 
     def test_createEvent(cls):
         newEventFormData1 = {'eventName': 'Machine Learning Bootcamp',
-                            'event_date': '10-04-2020',
+                            'event_date': '10-04-2020 11:30',
                             'description': 'You will learn genetic algorithm in this bootcamp',
                             'deadline_date': '10-04-2020',
+                            'maxNumberOfEnrolment': 50,
+                            'enrollmentData': 'hello'}
+        newEventFormData2 = {'eventName': 'Malware Analysis Bootcamp',
+                            'event_date': '20-04-2020 11:30',
+                            'description': 'You will learn how to detect malwares',
+                            'deadline_date': '18-04-2020',
                             'maxNumberOfEnrolment': 50,
                             'enrollmentData': 'hello'}
         response = cls.client.post(reverse("create-event-api"),data=newEventFormData1)
@@ -226,6 +233,13 @@ class EventsTest(TestCase):
         response = cls.client.post(reverse("create-event-api"),data=newEventFormData1)
         cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.EVENTEXISTS)
 
+        response = cls.client.post(reverse("create-event-api"),data=newEventFormData2)
+        cls.assertEqual(response.status_code,200)
+
         response = cls.client.post(reverse("manage-event-api"),data={'command':"ls events"})
-        print(response.json())
-        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.NONE)
+        eventList = response.json()['Data']
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.NONE)        
+        cls.assertEqual(eventList[0]['name'],newEventFormData1['eventName'])
+        cls.assertEqual(eventList[1]['name'],newEventFormData2['eventName'])
+
+        #print(json.loads())

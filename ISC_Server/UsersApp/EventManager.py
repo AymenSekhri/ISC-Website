@@ -19,7 +19,7 @@ class EventManager(object):
                              picture = "picturePath",#TODO: save picture in some path and edit this here.
                              description = formData['description'],
                              enrolemntDeadline_date = timezone.datetime.strptime(formData['deadline_date']+ " 23:59", "%d-%m-%Y %H:%M"),
-                             event_date = timezone.datetime.strptime(formData['event_date'] + " 23:59", "%d-%m-%Y %H:%M"),
+                             event_date = timezone.datetime.strptime(formData['event_date'], "%d-%m-%Y %H:%M"),
                              maxNumberOfEnrolment = formData['maxNumberOfEnrolment'],
                              eventEnrolmentData = formData['enrollmentData'])
 

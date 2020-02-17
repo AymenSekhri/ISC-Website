@@ -155,7 +155,13 @@ def APIManageEvents(request):
             myform_cleaned = request.POST # should not be cleaned since it has dynamic paramters
             if myform_cleaned['command'] == 'ls events':
                 return JsonResponse(data = {'Status':0,
-                                            'Data':str(EventManager.getListOfEvents())})
+                                            'Data':EventManager.getListOfEvents()})
+            elif myform_cleaned['command'] == 'ls enrl-usr':
+                return JsonResponse(data = {'Status':0,
+                                            'Data':EventManager.GetEnrolmentOfUser(myform_cleaned['userID'])})
+            elif myform_cleaned['command'] == 'ls enrl-evt':
+                return JsonResponse(data = {'Status':0,
+                                            'Data':EventManager.getEnrolmentOfEvent(myform_cleaned['eventID'])})
             
     return HttpResponse(status=400)
 
