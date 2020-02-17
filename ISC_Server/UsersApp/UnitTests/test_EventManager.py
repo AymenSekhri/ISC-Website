@@ -9,6 +9,7 @@ except :
 from django.test import TestCase
 from ISC_Server.UsersApp.ErrorCodes import ErrorCodes
 from ISC_Server.UsersApp.EventManager import EventManager
+from ISC_Server.UsersApp.UsersManager import UsersManager
 
 class EventsTest(TestCase):
 
@@ -47,6 +48,46 @@ class EventsTest(TestCase):
         cls.assertEqual(len(listOfEvents),2)
         cls.assertEqual(listOfEvents[0]['name'],newEventFormData1['eventName'])
         cls.assertEqual(listOfEvents[1]['name'],newEventFormData2['eventName'])
+
+    def test_EnroleAnEvent(cls):
+        event_id = 0
+        user_id = cls.addUser("1")
+        user_id2 = cls.addUser("2")
+        newEventFormData1 = {'eventName': 'Machine Learning Bootcamp',
+                            'picturePath': '0.png',
+                            'description': 'You will learn genetic algorithm in this bootcamp',
+                            'deadline_date': '10-04-2020',
+                            'maxNumberOfEnrolment': 50,
+                            'eventEnrolmentData': ''}
+        EventManager.createNewEvent(newEventFormData1)
+        newEnrolment1 = {'eventID': event_id,
+                        'userID': user_id,
+                        'response': 'MachineLearningLevel:50,PythonLevel:30'}
+        newEnrolment2 = {'eventID': event_id,
+                        'userID': user_id2,
+                        'response': 'MachineLearningLevel:50,PythonLevel:30'}
+        cls.assertEqual(EventManager.validateEventEnrolment(newEnrolment1),ErrorCodes.EVENTENROLMENT_INPUTS.NONE)
+        EventManager.createNewEventEnrolment(newEnrolment1)
+        cls.assertEqual(EventManager.validateEventEnrolment(newEnrolment1),ErrorCodes.EVENTENROLMENT_INPUTS.DUPLICATES)
+        cls.assertEqual(EventManager.validateEventEnrolment(newEnrolment2),ErrorCodes.EVENTENROLMENT_INPUTS.NONE)
+        EventManager.createNewEventEnrolment(newEnrolment2)
+
+        listOfEnrolments = EventManager.getEnrolmentOfEvent(event_id)
+        cls.assertEqual(len(listOfEnrolments),2)
+        print(listOfEnrolments)
+
+    def addUser(cls,user):
+        
+        form_data = {'firstName': 'Aymen'+user,
+                     'familyName': "Sekhri"+user,
+                     'email': 'a11111@live.com',
+                     'pass1': "123456789",
+                     'pass2': "123456789",
+                     'number': "100",
+                     'year': "2020"}
+        newUser = UsersManager.getModelFromRegisterForm(form_data)
+        UsersManager.addNewUser(newUser)
+        return newUser.id
 
 
 

@@ -29,14 +29,14 @@ class EventManager(object):
         return ErrorCodes.EVENTENROLMENT_INPUTS.NONE
 
     def createNewEventEnrolment(formData):
-        Event.objects.create(eventID = formData['eventID'],
-                             userID = formData['userID'],
+        EventEnrolment.objects.create(eventID_id = formData['eventID'],
+                             userID_id = formData['userID'],
                              enrolmentResponse = formData['response'])
 
     def makeEnrolmentDecision(decision):
         enrolmentQuery = EventEnrolment.objects.filter(eventID = formData['eventID'],userID = formData['userID'])
         if enrolmentQuery.exists():
-            userQuery = query.first().eventID
+            userQuery = enrolmentQuery.first().eventID
             if userQuery.maxNumberOfEnrolment > userQuery.numberOfEnrolment:
                 query.first().decision = decision
                 userQuery.numberOfEnrolment =  userQuery.numberOfEnrolment + 1
@@ -60,9 +60,10 @@ class EventManager(object):
     def getEnrolmentOfEvent(EventID):
         enrolment = []
         for x in EventEnrolment.objects.filter(eventID_id = EventID):
-            enrolmentInfo = {'name':x.userID.firstName + " " + x.userID.familyName,
-                         'email': x.userID.email,
-                         'year': x.userID.year,
+            userQuery = x.userID
+            enrolmentInfo = {'name':userQuery.firstName + " " + x.userID.familyName,
+                         'email': userQuery.email,
+                         'year': userQuery.year,
                          'enrolemnt_date': x.enrolemnt_date,
                          'enrolmentResponse': x.enrolmentResponse,
                          'decision': x.decision}
