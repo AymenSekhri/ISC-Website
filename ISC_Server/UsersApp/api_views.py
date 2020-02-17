@@ -1,12 +1,14 @@
 from django.shortcuts import render
-from .forms import RegisterForm,LoginForm, ForgotForm,ResetForm
+from .forms import RegisterForm, LoginForm, ForgotForm, ResetForm, EnrollEventForm, CreateEventForm, ManageEventsForm
 from .UsersManager import UsersManager
+from .EventManager import EventManager
 from .ErrorCodes import ErrorCodes
 from colorama import Fore, Back, Style,init
 from django.shortcuts import redirect
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from django.http import JsonResponse
+import json
 
 init()
 def printf(text,color):
@@ -86,7 +88,7 @@ def APILogin(request):
 
 
 def APILogout(request):
-    response = JsonResponse({'Status':0})
+    response = JsonResponse({'Status':1})
     user_id = request.COOKIES['user_id']
     session_id = request.COOKIES['session_id']
     UsersManager.deleteSession(user_id,session_id)
@@ -134,5 +136,27 @@ def APIResetPassword(request):
             return HttpResponse(status=400)
     else:# other than POST request returns 404 error
         return HttpResponse(status=404)
+
+def APICreateEvent(request):
+    if request.method == "POST":
+        myform = CreateEventForm(request.POST)
+        if myform.is_valid():
+            myform_cleaned = myform.cleaned_data
+            result = EventManager.validateEvent(myform_cleaned)
+            if result == ErrorCodes.EVENT_INPUTS.NONE:
+                EventManager.createNewEvent(myform_cleaned)
+            return JsonResponse({'Status':result})
+    return HttpResponse(status=400)
+
+def APIManageEvents(request):
+    if request.method == "POST":
+        myform = ManageEventsForm(request.POST)
+        if myform.is_valid():
+            myform_cleaned = request.POST # should not be cleaned since it has dynamic paramters
+            if myform_cleaned['command'] == 'ls events':
+                return JsonResponse(data = {'Status':0,
+                                            'Data':str(EventManager.getListOfEvents())})
+            
+    return HttpResponse(status=400)
 
 #TODO: Do logs for all operations specially the ones with 400 error 'couse it's probably hacking attempts

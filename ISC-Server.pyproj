@@ -50,6 +50,9 @@
     <Compile Include="ISC_Server\UsersApp\ErrorCodes.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ISC_Server\UsersApp\EventManager.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ISC_Server\UsersApp\forms.py">
       <SubType>Code</SubType>
     </Compile>
@@ -59,6 +62,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ISC_Server\UsersApp\PasswordManager.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ISC_Server\UsersApp\UnitTests\test_EventManager.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ISC_Server\UsersApp\UnitTests\test_forms.py">

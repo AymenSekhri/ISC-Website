@@ -20,6 +20,11 @@ urlpatterns = [
     path('api/loginInfo', API.APIGetLoginInfo, name='loginInfo-api'),
     path('api/forgotpassword', API.APIForgotPassword, name='forgot-pass-api'),
     path('api/resetpassword', API.APIResetPassword, name='reset-pass-api'),
+    path('api/createevent', API.APICreateEvent, name='create-event-api'),
+    path('api/enrollevent', API.APIResetPassword, name='enroll-event-api'),
+    path('api/manageevent', API.APIManageEvents, name='manage-event-api'),
+    
+    path('api/enrollmentdecision', API.APIResetPassword, name='enrollment-decision-api'),
 
     path('', FrontPages.Home, name='home-page'),
     path('register', FrontPages.Register, name='register-page'),

@@ -27,7 +27,6 @@ class LoginForm(forms.Form):
     def toLower(self):
         self.cleaned_data["email"] = self.cleaned_data["email"].lower()
 
-
 class ForgotForm(forms.Form):
     email = forms.EmailField()
 
@@ -37,3 +36,22 @@ class ForgotForm(forms.Form):
 class ResetForm(forms.Form):
     password = forms.CharField()
     token = forms.CharField()
+
+class CreateEventForm(forms.Form):
+    
+    eventName = forms.CharField()
+    description = forms.CharField()
+    deadline_date = forms.CharField()
+    event_date = forms.CharField()
+    maxNumberOfEnrolment = forms.IntegerField()
+    enrollmentData = forms.CharField()
+
+class EnrollEventForm(forms.Form):
+    
+    eventID = forms.IntegerField()
+    response = forms.CharField()
+
+class ManageEventsForm(forms.Form):
+    
+    command = forms.CharField()
+    
