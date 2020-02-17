@@ -49,7 +49,7 @@ class EventsTest(TestCase):
         cls.assertEqual(listOfEvents[0]['name'],newEventFormData1['eventName'])
         cls.assertEqual(listOfEvents[1]['name'],newEventFormData2['eventName'])
 
-    def test_EnroleAnEvent(cls):
+    def test_EnrollAnEvent(cls):
         event_id = 0
         user_id = cls.addUser("1")
         user_id2 = cls.addUser("2")
@@ -60,17 +60,17 @@ class EventsTest(TestCase):
                             'maxNumberOfEnrolment': 50,
                             'eventEnrolmentData': ''}
         EventManager.createNewEvent(newEventFormData1)
-        newEnrolment1 = {'eventID': event_id,
+        newEnrollment1 = {'eventID': event_id,
                         'userID': user_id,
                         'response': 'MachineLearningLevel:50,PythonLevel:30'}
-        newEnrolment2 = {'eventID': event_id,
+        newEnrollment2 = {'eventID': event_id,
                         'userID': user_id2,
                         'response': 'MachineLearningLevel:50,PythonLevel:30'}
-        cls.assertEqual(EventManager.validateEventEnrolment(newEnrolment1),ErrorCodes.EVENTENROLMENT_INPUTS.NONE)
-        EventManager.createNewEventEnrolment(newEnrolment1)
-        cls.assertEqual(EventManager.validateEventEnrolment(newEnrolment1),ErrorCodes.EVENTENROLMENT_INPUTS.DUPLICATES)
-        cls.assertEqual(EventManager.validateEventEnrolment(newEnrolment2),ErrorCodes.EVENTENROLMENT_INPUTS.NONE)
-        EventManager.createNewEventEnrolment(newEnrolment2)
+        cls.assertEqual(EventManager.validateEventEnrolment(newEnrollment1),ErrorCodes.EVENTENROLMENT_INPUTS.NONE)
+        EventManager.createNewEventEnrolment(newEnrollment1)
+        cls.assertEqual(EventManager.validateEventEnrolment(newEnrollment1),ErrorCodes.EVENTENROLMENT_INPUTS.DUPLICATES)
+        cls.assertEqual(EventManager.validateEventEnrolment(newEnrollment2),ErrorCodes.EVENTENROLMENT_INPUTS.NONE)
+        EventManager.createNewEventEnrolment(newEnrollment2)
 
         listOfEnrolments = EventManager.getEnrolmentOfEvent(event_id)
         cls.assertEqual(len(listOfEnrolments),2)

@@ -16,7 +16,7 @@ except :
 from django.test import TestCase
 from django.urls import reverse
 from django.test import Client
-
+from django.utils import timezone
 
 
 
@@ -199,3 +199,33 @@ class LoginAndRegisterTest(TestCase):
         form_data = {"email":emaill,"password":password}
         newClient = Client(HTTP_USER_AGENT=userAgent)
         return newClient.post(reverse("login-api"), data=form_data)
+
+
+class EventsTest(TestCase):
+    """Tests for the application views."""
+
+    # Django requires an explicit setup() when running tests in PTVS
+    @classmethod
+    def setUpClass(cls):
+        super(EventsTest, cls).setUpClass()
+        django.setup()
+
+    def setUp(cls):
+        pass
+
+    def test_createEvent(cls):
+        newEventFormData1 = {'eventName': 'Machine Learning Bootcamp',
+                            'event_date': '10-04-2020',
+                            'description': 'You will learn genetic algorithm in this bootcamp',
+                            'deadline_date': '10-04-2020',
+                            'maxNumberOfEnrolment': 50,
+                            'enrollmentData': 'hello'}
+        response = cls.client.post(reverse("create-event-api"),data=newEventFormData1)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.NONE)
+        response = cls.client.post(reverse("create-event-api"),data=newEventFormData1)
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.EVENTEXISTS)
+
+        response = cls.client.post(reverse("manage-event-api"),data={'command':"ls events"})
+        print(response.json())
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.NONE)

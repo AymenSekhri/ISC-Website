@@ -21,7 +21,7 @@ class EventManager(object):
                              enrolemntDeadline_date = timezone.now(),#TODO: convert this to datetime
                              event_date = timezone.now(), #TODO: convert this to datetime
                              maxNumberOfEnrolment = formData['maxNumberOfEnrolment'],
-                             eventEnrolmentData = formData['eventEnrolmentData'])
+                             eventEnrolmentData = formData['enrollmentData'])
 
     def validateEventEnrolment(formData):
         if EventEnrolment.objects.filter(eventID = formData['eventID'],userID = formData['userID']).exists():
