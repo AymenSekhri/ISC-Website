@@ -48,7 +48,7 @@ class EventManager(object):
 
     def getListOfEvents():
         events = []
-        for x in Event.objects:
+        for x in Event.objects.all():
             eventInfo = {'name':x.eventName,
                          'picture': x.picture,
                          'description': x.description,

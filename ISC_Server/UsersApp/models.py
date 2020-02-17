@@ -42,7 +42,7 @@ class Event(models.Model):
     posting_date = models.DateTimeField(default=timezone.now)
     enrolemntDeadline_date = models.DateTimeField()
     event_date = models.DateTimeField()
-    maxNumberOfEnrolment = models.IntegerField()
+    maxNumberOfEnrolment = models.IntegerField(default = 200)
     numberOfEnrolment = models.IntegerField(default = 0)
     eventEnrolmentData = models.TextField()
 
