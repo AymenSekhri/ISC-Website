@@ -256,6 +256,12 @@ class EventsTest(TestCase):
         response = cls.client.get(reverse("lsevents-api"))
         eventList = response.json()['Data']
 
+        response = cls.postRequest(reverse("manage-event-api",kwargs={'id':eventList[0]['id']}),
+                    {'cmd':'erll'},
+                    userAgent,loginCookie)
+        cls.assertEqual(response.json()['Status'], ErrorCodes.EVENTMANAGMENT_INPUTS.NONE, "failed to fetch data to manage-event-api")
+        EnrollmentCount = len(response.json()['Data'])
+
         response = cls.postRequest(reverse("enroll-event-api",kwargs={'id':eventList[0]['id']}),
                     {'response':'This is my response for your form'},
                     userAgent,loginCookie)
@@ -269,9 +275,9 @@ class EventsTest(TestCase):
                     {'cmd':'erll'},
                     userAgent,loginCookie)
         cls.assertEqual(response.json()['Status'], ErrorCodes.EVENTMANAGMENT_INPUTS.NONE, "failed to post data to manage-event-api")
-
         listOfEnrollments = response.json()['Data']
-        cls.assertEqual(len(listOfEnrollments)>0, 1, "No enrollment has been added")
+        cls.assertEqual(len(listOfEnrollments), EnrollmentCount + 1, "No enrollment has been added")
+
         userEnrollment = list(filter(lambda person: person['id'] == userID, listOfEnrollments))
         cls.assertEqual(len(userEnrollment), 1 , "The added enrollment has not been registered")
 
