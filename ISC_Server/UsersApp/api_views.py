@@ -16,20 +16,26 @@ def printf(text,color):
      print(Style.RESET_ALL)
 # Create your views here.
 
-
-def APIGetLoginInfo(request):
-     if 'user_id' in request.COOKIES:
+def checkSession(request):
+    if 'user_id' in request.COOKIES:
         user_id = request.COOKIES['user_id']
         session_id = request.COOKIES['session_id']
         userAgent = request.META['HTTP_USER_AGENT']
         if UsersManager.checkSession(user_id,session_id,userAgent) :
-            userQuery = UsersManager.getUserFromId(user_id)
-            return JsonResponse({'login':1,
-                                       'firstName':userQuery.firstName,
-                                       'familyName':userQuery.familyName,
-                                       'email':userQuery.email,
-                                       'number':userQuery.number,
-                                       'privLevel':userQuery.privLevel})
+            return ErrorCodes.SESSIONUSERS.VALID_USER
+    return ErrorCodes.SESSIONUSERS.NOT_VALID_USER
+
+def APIGetLoginInfo(request):
+     if checkSession(request) == ErrorCodes.SESSIONUSERS.VALID_USER:
+        user_id = request.COOKIES['user_id']
+        userQuery = UsersManager.getUserFromId(user_id)
+        return JsonResponse({'login':1,
+                                'id':userQuery.id,
+                                'firstName':userQuery.firstName,
+                                'familyName':userQuery.familyName,
+                                'email':userQuery.email,
+                                'number':userQuery.number,
+                                'privLevel':userQuery.privLevel})
      return JsonResponse({'login':0})
 
 
@@ -148,15 +154,56 @@ def APICreateEvent(request):
             return JsonResponse({'Status':result})
     return HttpResponse(status=400)
 
-def APIManageEvents(request):
-    if request.method == "POST":
-        myform = ManageEventsForm(request.POST)
-        if myform.is_valid():
-            myform_cleaned = request.POST # should not be cleaned since it has dynamic paramters
-            if myform_cleaned['command'] == 'ls events':
-                return JsonResponse(data = {'Status':0,
-                                            'Data':str(EventManager.getListOfEvents())})
-            
+def APIListEvents(request):
+    if request.method == "GET":
+        return JsonResponse(data = {'Status':0,
+                                            'Data':EventManager.getListOfEvents()})
     return HttpResponse(status=400)
+
+def APIEventInfo(request,id):
+    if request.method == "GET":
+        result, data = EventManager.getEventInfo(id)
+        if result == ErrorCodes.EVENTENROLMENT_INPUTS.NONE:
+            return JsonResponse(data = {'Status':0,'Data':data})
+        else:
+            return HttpResponse(status=404)
+    return HttpResponse(status=400)
+
+def APIManageEvent(request,id):
+   if request.method == "POST":
+        if checkSession(request) == ErrorCodes.SESSIONUSERS.VALID_USER:
+            user_id = request.COOKIES['user_id']
+            myform = ManageEventsForm(request.POST)
+            if myform.is_valid():
+                myform_cleaned = request.POST
+                if myform_cleaned['cmd'] == 'erll':
+                    #enrollment list
+                    return JsonResponse(data = {'Status':0,
+                                            'Data':EventManager.getEnrolmentOfEvent(id)})
+                elif myform_cleaned['cmd'] == 'rm':
+                    pass#remove event
+                elif myform_cleaned['cmd'] == 'cnl':
+                    pass#cancel event
+                elif myform_cleaned['cmd'] == 'psd':
+                    pass#postpone event
+                elif myform_cleaned['cmd'] == 'edl':
+                    pass#edit event's deadline
+                elif myform_cleaned['cmd'] == 'snd':
+                    pass#send email to accepted people
+                return JsonResponse({'Status':0})
+   return HttpResponse(status=400)
+
+def APIEnrollEvent(request,id):#id = the id of the event
+   if request.method == "POST":
+        if checkSession(request) == ErrorCodes.SESSIONUSERS.VALID_USER:
+            user_id = request.COOKIES['user_id']
+            myform = EnrollEventForm(request.POST)
+            if myform.is_valid():
+                myform_cleaned = request.POST
+                result = EventManager.validateEventEnrolment(id,user_id)
+                if result == ErrorCodes.EVENTENROLMENT_INPUTS.NONE:
+                    EventManager.createNewEventEnrolment(id,user_id,myform_cleaned['response'])
+                return JsonResponse({'Status':result})
+   return HttpResponse(status=400)
 
 #TODO: Do logs for all operations specially the ones with 400 error 'couse it's probably hacking attempts

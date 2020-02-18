@@ -27,6 +27,13 @@ class ErrorCodes(object):
         MAXNUMBEROFENROLMENTS = 2
         EVENTDOESNOTEXISTS = 3
 
+    class EVENTMANAGMENT_INPUTS(object):
+        NONE = 0
+        EVENTDOESNOTEXISTS = 1
+    class SESSIONUSERS(object):
+        VALID_USER = 0
+        NOT_VALID_USER = 1
+
     
 
 

@@ -17,6 +17,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.test import Client
 from django.utils import timezone
+import json
 
 
 
@@ -212,20 +213,93 @@ class EventsTest(TestCase):
 
     def setUp(cls):
         pass
-
-    def test_createEvent(cls):
-        newEventFormData1 = {'eventName': 'Machine Learning Bootcamp',
-                            'event_date': '10-04-2020',
+    newEventFormData1 = {'eventName': 'Machine Learning Bootcamp',
+                            'event_date': '10-04-2020 11:30',
                             'description': 'You will learn genetic algorithm in this bootcamp',
                             'deadline_date': '10-04-2020',
                             'maxNumberOfEnrolment': 50,
                             'enrollmentData': 'hello'}
-        response = cls.client.post(reverse("create-event-api"),data=newEventFormData1)
+    newEventFormData2 = {'eventName': 'Malware Analysis Bootcamp',
+                            'event_date': '20-04-2020 11:30',
+                            'description': 'You will learn how to detect malwares',
+                            'deadline_date': '18-04-2020',
+                            'maxNumberOfEnrolment': 50,
+                            'enrollmentData': 'hello'}
+    
+
+    def test_createEvent(cls):
+        response = cls.client.post(reverse("create-event-api"),data=cls.newEventFormData1)
         cls.assertEqual(response.status_code,200)
         cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.NONE)
-        response = cls.client.post(reverse("create-event-api"),data=newEventFormData1)
+        response = cls.client.post(reverse("create-event-api"),data=cls.newEventFormData1)
         cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.EVENTEXISTS)
 
-        response = cls.client.post(reverse("manage-event-api"),data={'command':"ls events"})
-        print(response.json())
+        response = cls.client.post(reverse("create-event-api"),data=cls.newEventFormData2)
+        cls.assertEqual(response.status_code,200)
+
+        response = cls.client.get(reverse("lsevents-api"))
+        eventList = response.json()['Data']
         cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.NONE)
+
+        event1info = cls.client.get(reverse("event-api",kwargs={'id':eventList[0]['id']}))
+        event2info = cls.client.get(reverse("event-api",kwargs={'id':eventList[1]['id']}))
+        cls.assertEqual(event1info.json()['Data']['name'],cls.newEventFormData1['eventName'])
+        cls.assertEqual(event2info.json()['Data']['name'],cls.newEventFormData2['eventName'])
+
+    def test_enrollEvent(cls):
+        #create user
+        loginCookie, userAgent, userID = cls.RegisterAndLogin()
+        #create event
+        response = cls.client.post(reverse("create-event-api"),data=cls.newEventFormData1)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.NONE, "should create event OK")
+        response = cls.client.get(reverse("lsevents-api"))
+        eventList = response.json()['Data']
+
+        response = cls.postRequest(reverse("enroll-event-api",kwargs={'id':eventList[0]['id']}),
+                    {'response':'This is my response for your form'},
+                    userAgent,loginCookie)
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENTENROLMENT_INPUTS.NONE , "should enroll OK")
+        response = cls.postRequest(reverse("enroll-event-api",kwargs={'id':eventList[0]['id']}),
+                    {'response':'This is my response for your form'},
+                    userAgent,loginCookie)
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENTENROLMENT_INPUTS.DUPLICATES, "should return deplicated enrollment")
+
+        response = cls.postRequest(reverse("manage-event-api",kwargs={'id':eventList[0]['id']}),
+                    {'cmd':'erll'},
+                    userAgent,loginCookie)
+        cls.assertEqual(response.json()['Status'], ErrorCodes.EVENTMANAGMENT_INPUTS.NONE, "failed to post data to manage-event-api")
+
+        listOfEnrollments = response.json()['Data']
+        cls.assertEqual(len(listOfEnrollments)>0, 1, "No enrollment has been added")
+        userEnrollment = list(filter(lambda person: person['id'] == userID, listOfEnrollments))
+        cls.assertEqual(len(userEnrollment), 1 , "The added enrollment has not been registered")
+
+    def RegisterAndLogin(cls):
+        test_email= "test@gmail.com"
+        test_password = "pass_test/test_123456"
+        test_userAgent = "TestUserAgent//Firefox."
+        registrationResponse = cls.addUser(test_email,test_password)
+        cls.assertEqual(registrationResponse.status_code,200)
+        cls.assertEqual(registrationResponse.json()['Status'],ErrorCodes.REGISTER_INPUTS.NONE)
+
+        form_data = {"email":test_email,"password":test_password}
+        newClient = Client(HTTP_USER_AGENT=test_userAgent)
+        loginResponse = newClient.post(reverse("login-api"), data=form_data)
+        cls.assertEqual(loginResponse.status_code,200)
+        cls.assertEqual(loginResponse.json()['Status'],ErrorCodes.LOGIN_INPUTS.NONE)
+
+        response = cls.postRequest(reverse("loginInfo-api"), {}, test_userAgent, loginResponse.cookies)
+        return loginResponse.cookies , test_userAgent, response.json()['id']
+
+    
+    def addUser(cls,email,passrd):
+        form_data = {'firstName':"thisismyfirstName",'familyName':"ThisMyFamName",'email':email,
+                'pass1':passrd,'pass2':passrd,'number':"100",'year':"2020"}
+        return cls.client.post(reverse("register-api"),data=form_data)
+
+    def postRequest(cls,url,data,userAgent,cookie):
+        newClient = Client(HTTP_USER_AGENT=userAgent)
+        newClient.cookies = cookie
+        response = newClient.post(url,data=data)
+        return response

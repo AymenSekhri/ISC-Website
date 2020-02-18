@@ -18,20 +18,20 @@ class EventManager(object):
         Event.objects.create(eventName = formData['eventName'],
                              picture = "picturePath",#TODO: save picture in some path and edit this here.
                              description = formData['description'],
-                             enrolemntDeadline_date = timezone.now(),#TODO: convert this to datetime
-                             event_date = timezone.now(), #TODO: convert this to datetime
+                             enrolemntDeadline_date = timezone.datetime.strptime(formData['deadline_date']+ " 23:59", "%d-%m-%Y %H:%M"),
+                             event_date = timezone.datetime.strptime(formData['event_date'], "%d-%m-%Y %H:%M"),
                              maxNumberOfEnrolment = formData['maxNumberOfEnrolment'],
                              eventEnrolmentData = formData['enrollmentData'])
 
-    def validateEventEnrolment(formData):
-        if EventEnrolment.objects.filter(eventID = formData['eventID'],userID = formData['userID']).exists():
+    def validateEventEnrolment(eventID,userID):
+        if EventEnrolment.objects.filter(eventID = eventID,userID = userID).exists():
             return ErrorCodes.EVENTENROLMENT_INPUTS.DUPLICATES
         return ErrorCodes.EVENTENROLMENT_INPUTS.NONE
 
-    def createNewEventEnrolment(formData):
-        EventEnrolment.objects.create(eventID_id = formData['eventID'],
-                             userID_id = formData['userID'],
-                             enrolmentResponse = formData['response'])
+    def createNewEventEnrolment(eventID,userID,response):
+        EventEnrolment.objects.create(eventID_id = eventID,
+                             userID_id = userID,
+                             enrolmentResponse = response)
 
     def makeEnrolmentDecision(decision):
         enrolmentQuery = EventEnrolment.objects.filter(eventID = formData['eventID'],userID = formData['userID'])
@@ -49,19 +49,37 @@ class EventManager(object):
     def getListOfEvents():
         events = []
         for x in Event.objects.all():
-            eventInfo = {'name':x.eventName,
+            eventInfo = {'id':x.id,
+                         'name':x.eventName,
                          'picture': x.picture,
                          'description': x.description,
-                         'deadline_date': x.enrolemntDeadline_date,
-                         'event_date': x.event_date}
+                         'deadline_date': str(x.enrolemntDeadline_date),
+                         'event_date': str(x.event_date)}
             events.append(eventInfo)
         return events
+
+    def getEventInfo(id):
+        eventQuery = Event.objects.filter(id = id)
+        if eventQuery.exists():
+             x = eventQuery.first()
+             return ErrorCodes.EVENTENROLMENT_INPUTS.NONE, {'name':x.eventName,
+                     'picture': x.picture,
+                     'description': x.description,
+                     'maxNumberOfEnrolment': x.maxNumberOfEnrolment,
+                     'numberOfEnrolment': x.numberOfEnrolment,
+                     'posting_date': str(x.posting_date),
+                     'event_date': str(x.event_date),
+                     'deadline_date': str(x.enrolemntDeadline_date),
+                     'eventEnrolmentData': x.eventEnrolmentData}
+        else:
+            return ErrorCodes.EVENTENROLMENT_INPUTS.EVENTDOESNOTEXISTS, {}
 
     def getEnrolmentOfEvent(EventID):
         enrolment = []
         for x in EventEnrolment.objects.filter(eventID_id = EventID):
             userQuery = x.userID
-            enrolmentInfo = {'name':userQuery.firstName + " " + x.userID.familyName,
+            enrolmentInfo = {'id':userQuery.id,
+                         'name':userQuery.firstName + " " + x.userID.familyName,
                          'email': userQuery.email,
                          'year': userQuery.year,
                          'enrolemnt_date': x.enrolemnt_date,
