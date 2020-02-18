@@ -252,29 +252,28 @@ class EventsTest(TestCase):
         #create event
         response = cls.client.post(reverse("create-event-api"),data=cls.newEventFormData1)
         cls.assertEqual(response.status_code,200)
-        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.NONE)
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.NONE, "should create event OK")
         response = cls.client.get(reverse("lsevents-api"))
         eventList = response.json()['Data']
 
         response = cls.postRequest(reverse("enroll-event-api",kwargs={'id':eventList[0]['id']}),
                     {'response':'This is my response for your form'},
                     userAgent,loginCookie)
-        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENTENROLMENT_INPUTS.NONE)
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENTENROLMENT_INPUTS.NONE , "should enroll OK")
         response = cls.postRequest(reverse("enroll-event-api",kwargs={'id':eventList[0]['id']}),
                     {'response':'This is my response for your form'},
                     userAgent,loginCookie)
-        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENTENROLMENT_INPUTS.DUPLICATES)
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENTENROLMENT_INPUTS.DUPLICATES, "should return deplicated enrollment")
 
         response = cls.postRequest(reverse("manage-event-api",kwargs={'id':eventList[0]['id']}),
                     {'cmd':'erll'},
                     userAgent,loginCookie)
-        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENTMANAGMENT_INPUTS.NONE)
+        cls.assertEqual(response.json()['Status'], ErrorCodes.EVENTMANAGMENT_INPUTS.NONE, "failed to post data to manage-event-api")
 
         listOfEnrollments = response.json()['Data']
-        cls.assertEqual(len(listOfEnrollments)>0,1)
+        cls.assertEqual(len(listOfEnrollments)>0, 1, "No enrollment has been added")
         userEnrollment = list(filter(lambda person: person['id'] == userID, listOfEnrollments))
-        print(listOfEnrollments)
-        cls.assertEqual(len(userEnrollment),1)
+        cls.assertEqual(len(userEnrollment), 1 , "The added enrollment has not been registered")
 
     def RegisterAndLogin(cls):
         test_email= "test@gmail.com"
@@ -289,7 +288,9 @@ class EventsTest(TestCase):
         loginResponse = newClient.post(reverse("login-api"), data=form_data)
         cls.assertEqual(loginResponse.status_code,200)
         cls.assertEqual(loginResponse.json()['Status'],ErrorCodes.LOGIN_INPUTS.NONE)
-        return loginResponse.cookies , test_userAgent, loginResponse.cookies['user_id']
+
+        response = cls.postRequest(reverse("loginInfo-api"), {}, test_userAgent, loginResponse.cookies)
+        return loginResponse.cookies , test_userAgent, response.json()['id']
 
     
     def addUser(cls,email,passrd):
