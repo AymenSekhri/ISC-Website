@@ -47,11 +47,9 @@ class CreateEventForm(forms.Form):
     enrollmentData = forms.CharField()
 
 class EnrollEventForm(forms.Form):
-    
-    eventID = forms.IntegerField()
     response = forms.CharField()
 
 class ManageEventsForm(forms.Form):
     
-    command = forms.CharField()
+    cmd = forms.CharField()
     
