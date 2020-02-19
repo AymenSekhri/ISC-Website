@@ -18,6 +18,7 @@ from django.urls import reverse
 from django.test import Client
 from django.utils import timezone
 import json
+import re
 
 
 
@@ -331,7 +332,44 @@ class EventsTest(TestCase):
 
 
 
+    def test_PostponeEvent(cls):
+        #create user
+        loginCookie, userAgent, userID = cls.RegisterAndLogin()
+        
+        #create event
+        response = cls.client.post(reverse("create-event-api"),data=cls.newEventFormData1)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.NONE, "should create event OK")
+        eventID = response.json()['Data']['eventID']
 
+        #postpone event
+        newEventDate = '10-04-2020 11:30'
+        newDeadline = '10-04-2020'
+        eventDateObject = timezone.datetime.strptime(newEventDate, "%d-%m-%Y %H:%M")
+        deadlineDateObject = timezone.datetime.strptime(newDeadline + " 23:59", "%d-%m-%Y %H:%M")
+        response = cls.postRequest(reverse("postpone-event-api",kwargs={'id':eventID}),
+                    {'cmd':'pse','newDate':newEventDate},
+                    userAgent,loginCookie)
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENTENROLMENT_INPUTS.NONE , "should postpone OK")
+
+        #shift deadline event
+        
+        response = cls.postRequest(reverse("postpone-event-api",kwargs={'id':eventID}),
+                    {'cmd':'pdl','newDate':newDeadline},
+                    userAgent,loginCookie)
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENTENROLMENT_INPUTS.NONE , "should shift deadline OK")
+
+        #get events list
+        response = cls.client.get(reverse("lsevents-api"))
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.NONE)
+        eventList = response.json()['Data']
+        myevent = list(filter(lambda person: person['id'] == eventID, eventList))
+        
+        #2020-04-10 11:30:00+00:00
+        newEventDate = myevent[0]['event_date'].split('+')[0]
+        newDeadlineDate = myevent[0]['deadline_date'].split('+')[0]
+        cls.assertEqual(newEventDate, str(eventDateObject), "make sure event date is changed")
+        cls.assertEqual(newDeadlineDate, str(deadlineDateObject), "make sure deadline is changed")
 
 
     def RegisterAndLogin(cls):

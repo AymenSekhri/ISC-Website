@@ -227,10 +227,10 @@ def APIPostponeEvent(request,id):
             myform = PostponeEventsForm(request.POST)
             if myform.is_valid():
                 myform_cleaned = myform.cleaned_data
-                if myform_cleaned['cmd'] == 'psd':
+                if myform_cleaned['cmd'] == 'pse':
                     #postpone event
                     return JsonResponse(data = {'Status':EventManager.postponeEvent(id,myform_cleaned['newDate'])})
-                elif myform_cleaned['cmd'] == 'edl':
+                elif myform_cleaned['cmd'] == 'pdl':
                     #postpone event's deadline
                     return JsonResponse(data = {'Status':EventManager.postponeDeadline(id,myform_cleaned['newDate'])})
    return HttpResponse(status=400)

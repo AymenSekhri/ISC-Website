@@ -28,7 +28,6 @@ urlpatterns = [
     path('api/events/<int:id>/postpone', API.APIPostponeEvent, name='postpone-event-api'),
     path('api/events/<int:id>/enroll', API.APIEnrollEvent, name='enroll-event-api'),
     path('api/events/<int:id>/decision', API.APIMakeDecision, name='make-decision-api'),
-    path('api/enrollmentdecision', API.APIResetPassword, name='enrollment-decision-api'),
 
     path('', FrontPages.Home, name='home-page'),
     path('register', FrontPages.Register, name='register-page'),
