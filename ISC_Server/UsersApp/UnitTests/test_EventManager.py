@@ -23,70 +23,9 @@ class EventsTest(TestCase):
 
 
     def test_CreateAnEvent(cls):
-        newEventFormData1 = {'eventName': 'Machine Learning Bootcamp',
-                            'picturePath': '0.png',
-                            'description': 'You will learn genetic algorithm in this bootcamp',
-                            'deadline_date': '10-04-2020',
-                            'event_date': '20-04-2020 10:30',
-                            'maxNumberOfEnrolment': 50,
-                            'enrollmentData': ''}
-        newEventFormData2 = {'eventName': 'Malware Analysis Bootcamp',
-                            'picturePath': '1.png',
-                            'description': 'You will learn how to detect malwares',
-                            'deadline_date': '20-04-2020',
-                            'event_date': '20-04-2020 10:30',
-                            'maxNumberOfEnrolment': 50,
-                            'enrollmentData': ''}
-
-        cls.assertEqual(EventManager.validateEvent(newEventFormData1),ErrorCodes.EVENT_INPUTS.NONE)
-        EventManager.createNewEvent(newEventFormData1)
-
-        cls.assertEqual(EventManager.validateEvent(newEventFormData1),ErrorCodes.EVENT_INPUTS.EVENTEXISTS)
-
-        cls.assertEqual(EventManager.validateEvent(newEventFormData2),ErrorCodes.EVENT_INPUTS.NONE)
-        EventManager.createNewEvent(newEventFormData2)
-
-        listOfEvents = EventManager.getListOfEvents()
-        cls.assertEqual(len(listOfEvents),2)
-        cls.assertEqual(listOfEvents[0]['name'],newEventFormData1['eventName'])
-        cls.assertEqual(listOfEvents[1]['name'],newEventFormData2['eventName'])
+        pass
 
     def test_EnrollAnEvent(cls):
-        event_id = 0
-        user_id = cls.addUser("1")
-        user_id2 = cls.addUser("2")
-        newEventFormData1 = {'eventName': 'Machine Learning Bootcamp',
-                            'picturePath': '0.png',
-                            'description': 'You will learn genetic algorithm in this bootcamp',
-                            'deadline_date': '10-04-2020',
-                            'event_date': '20-04-2020 10:30',
-                            'maxNumberOfEnrolment': 50,
-                            'enrollmentData': ''}
-        EventManager.createNewEvent(newEventFormData1)
-
-        cls.assertEqual(EventManager.validateEventEnrolment(event_id,user_id),ErrorCodes.EVENTENROLMENT_INPUTS.NONE)
-        EventManager.createNewEventEnrolment(event_id,user_id,'MachineLearningLevel:50,PythonLevel:30')
-        cls.assertEqual(EventManager.validateEventEnrolment(event_id,user_id),ErrorCodes.EVENTENROLMENT_INPUTS.DUPLICATES)
-        cls.assertEqual(EventManager.validateEventEnrolment(event_id,user_id2),ErrorCodes.EVENTENROLMENT_INPUTS.NONE)
-        EventManager.createNewEventEnrolment(event_id,user_id2,'MachineLearningLevel:50,PythonLevel:30')
-
-        listOfEnrolments = EventManager.getEnrolmentOfEvent(event_id)
-        cls.assertEqual(len(listOfEnrolments),2)
-        print(listOfEnrolments)
-
-    def addUser(cls,user):
-        
-        form_data = {'firstName': 'Aymen'+user,
-                     'familyName': "Sekhri"+user,
-                     'email': 'a11111@live.com',
-                     'pass1': "123456789",
-                     'pass2': "123456789",
-                     'number': "100",
-                     'year': "2020"}
-        newUser = UsersManager.getModelFromRegisterForm(form_data)
-        UsersManager.addNewUser(newUser)
-        return newUser.id
-
-
+        pass
 
 

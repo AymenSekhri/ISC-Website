@@ -45,11 +45,19 @@ class CreateEventForm(forms.Form):
     event_date = forms.CharField()
     maxNumberOfEnrolment = forms.IntegerField()
     enrollmentData = forms.CharField()
-
+    
 class EnrollEventForm(forms.Form):
     response = forms.CharField()
 
 class ManageEventsForm(forms.Form):
-    
     cmd = forms.CharField()
+
+class DecisionForm(forms.Form):
+    nums = RegexValidator(r'^[0-2]*$', 'Only alphanumeric characters are allowed.')
+    userID = forms.CharField()
+    decision = forms.IntegerField(validators=[nums])
+
+class PostponeEventsForm(forms.Form):
+    cmd = forms.CharField()
+    newDate = forms.CharField()
     

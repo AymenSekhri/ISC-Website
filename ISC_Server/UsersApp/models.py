@@ -45,6 +45,7 @@ class Event(models.Model):
     maxNumberOfEnrolment = models.IntegerField(default = 200)
     numberOfEnrolment = models.IntegerField(default = 0)
     eventEnrolmentData = models.TextField()
+    status = models.SmallIntegerField(default = 0)#0: ongoing/ 1:postponded/ 3:canceled
 
 class EventEnrolment(models.Model):#Joint Many-To-Many Table.
     eventID = models.ForeignKey(Event, on_delete=models.CASCADE)
