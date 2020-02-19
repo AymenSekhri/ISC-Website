@@ -29,6 +29,26 @@ urlpatterns = [
     path('api/events/<int:id>/enroll', API.APIEnrollEvent, name='enroll-event-api'),
     path('api/events/<int:id>/decision', API.APIMakeDecision, name='make-decision-api'),
 
+    path('api/news/create', API.APIMakeDecision, name=''),
+    path('api/news/<int:id>', API.APIMakeDecision, name=''),
+    path('api/news/<int:id>/edit', API.APIMakeDecision, name=''),
+    path('api/news/<int:id>/delete', API.APIMakeDecision, name=''),
+
+    path('api/projects/create', API.APIMakeDecision, name=''),
+    path('api/projects/<int:id>', API.APIMakeDecision, name=''),
+    path('api/projects/<int:id>/edit', API.APIMakeDecision, name=''),
+    path('api/projects/<int:id>/delete', API.APIMakeDecision, name=''),
+
+    path('api/team/add', API.APIMakeDecision, name=''),
+    path('api/team/<int:id>', API.APIMakeDecision, name=''),
+    path('api/team/<int:id>/edit', API.APIMakeDecision, name=''),
+    path('api/team/<int:id>/delete', API.APIMakeDecision, name=''),
+
+    path('api/users/', API.APIMakeDecision, name=''),
+    path('api/users/<int:id>', API.APIMakeDecision, name=''),
+    path('api/users/<int:id>/edit', API.APIMakeDecision, name=''),
+    path('api/users/<int:id>/delete', API.APIMakeDecision, name=''),
+
     path('', FrontPages.Home, name='home-page'),
     path('register', FrontPages.Register, name='register-page'),
     path('login', FrontPages.Login, name='login-page'),
