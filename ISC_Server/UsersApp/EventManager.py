@@ -56,7 +56,8 @@ class EventManager(object):
                          'picture': x.picture,
                          'description': x.description,
                          'deadline_date': str(x.enrolemntDeadline_date),
-                         'event_date': str(x.event_date)}
+                         'event_date': str(x.event_date),
+                         'eventStatus': x.status}
             events.append(eventInfo)
         return events
 
@@ -79,7 +80,8 @@ class EventManager(object):
                      'posting_date': str(x.posting_date),
                      'event_date': str(x.event_date),
                      'deadline_date': str(x.enrolemntDeadline_date),
-                     'eventEnrolmentData': x.eventEnrolmentData}
+                     'eventEnrolmentData': x.eventEnrolmentData,
+                     'eventStatus': x.status}
         else:
             return ErrorCodes.EVENTMANAGMENT_INPUTS.EVENTDOESNOTEXISTS, {}
 
@@ -140,7 +142,7 @@ class EventManager(object):
     def removeEvent(eventID):
         eventQuery = Event.objects.filter(id = eventID)
         if eventQuery.exists():
-            eventQuery.first().remove()
+            eventQuery.first().delete()
             return ErrorCodes.EVENTMANAGMENT_INPUTS.NONE
         else:
             return ErrorCodes.EVENTMANAGMENT_INPUTS.EVENTDOESNOTEXISTS

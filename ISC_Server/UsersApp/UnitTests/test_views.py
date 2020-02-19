@@ -350,6 +350,7 @@ class EventsTest(TestCase):
         response = cls.postRequest(reverse("postpone-event-api",kwargs={'id':eventID}),
                     {'cmd':'pse','newDate':newEventDate},
                     userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
         cls.assertEqual(response.json()['Status'],ErrorCodes.EVENTENROLMENT_INPUTS.NONE , "should postpone OK")
 
         #shift deadline event
@@ -357,6 +358,7 @@ class EventsTest(TestCase):
         response = cls.postRequest(reverse("postpone-event-api",kwargs={'id':eventID}),
                     {'cmd':'pdl','newDate':newDeadline},
                     userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
         cls.assertEqual(response.json()['Status'],ErrorCodes.EVENTENROLMENT_INPUTS.NONE , "should shift deadline OK")
 
         #get events list
@@ -371,6 +373,51 @@ class EventsTest(TestCase):
         cls.assertEqual(newEventDate, str(eventDateObject), "make sure event date is changed")
         cls.assertEqual(newDeadlineDate, str(deadlineDateObject), "make sure deadline is changed")
 
+    def test_ManageEvent(cls):
+        #create user
+        loginCookie, userAgent, userID = cls.RegisterAndLogin()
+        
+        #create event
+        response = cls.client.post(reverse("create-event-api"),data=cls.newEventFormData1)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.NONE, "should create event OK")
+        eventID = response.json()['Data']['eventID']
+
+        #get events list
+        response = cls.client.get(reverse("lsevents-api"))
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.NONE)
+        eventList = response.json()['Data']
+        myevent = list(filter(lambda person: person['id'] == eventID, eventList))
+        cls.assertEqual(myevent[0]['eventStatus'], EventStatus.ONGOING, "make sure event date is changed")
+
+        #cancel event
+        response = cls.postRequest(reverse("manage-event-api",kwargs={'id':eventID}),
+                    {'cmd':'cnl'},
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENTENROLMENT_INPUTS.NONE , "should cancel the event")
+
+        #get events list
+        response = cls.client.get(reverse("lsevents-api"))
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.NONE)
+        eventList = response.json()['Data']
+        myevent = list(filter(lambda person: person['id'] == eventID, eventList))
+        cls.assertEqual(myevent[0]['eventStatus'], EventStatus.CANCELED, "event should be canceled now")
+
+        #remove event
+        response = cls.postRequest(reverse("manage-event-api",kwargs={'id':eventID}),
+                    {'cmd':'rm'},
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENTENROLMENT_INPUTS.NONE , "should remove the event")
+
+        #get events list
+        response = cls.client.get(reverse("lsevents-api"))
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.NONE)
+        eventList = response.json()['Data']
+        myevent = list(filter(lambda person: person['id'] == eventID, eventList))
+        cls.assertEqual(len(myevent), 0, "no more event anymore")
+        
 
     def RegisterAndLogin(cls):
         test_email= "test@gmail.com"
