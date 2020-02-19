@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .forms import RegisterForm, LoginForm, ForgotForm, ResetForm, EnrollEventForm, CreateEventForm, ManageEventsForm
+from .forms import RegisterForm, LoginForm, ForgotForm, ResetForm, EnrollEventForm, CreateEventForm, ManageEventsForm, PostponeEventsForm, DecisionForm
 from .UsersManager import UsersManager
 from .EventManager import EventManager
 from .ErrorCodes import ErrorCodes
@@ -150,9 +150,23 @@ def APICreateEvent(request):
             myform_cleaned = myform.cleaned_data
             result = EventManager.validateEvent(myform_cleaned)
             if result == ErrorCodes.EVENT_INPUTS.NONE:
-                EventManager.createNewEvent(myform_cleaned)
-            return JsonResponse({'Status':result})
+                id = EventManager.createNewEvent(myform_cleaned)
+                return JsonResponse({'Status':result,'Data':{'eventID':id}})
+            return JsonResponse({'Status':result,'Data':{}})
     return HttpResponse(status=400)
+
+def APIEnrollEvent(request,id):#id = the id of the event
+   if request.method == "POST":
+        if checkSession(request) == ErrorCodes.SESSIONUSERS.VALID_USER:
+            user_id = request.COOKIES['user_id']
+            myform = EnrollEventForm(request.POST)
+            if myform.is_valid():
+                myform_cleaned = myform.cleaned_data
+                result = EventManager.validateEventEnrolment(id,user_id)
+                if result == ErrorCodes.EVENTENROLMENT_INPUTS.NONE:
+                    EventManager.createNewEventEnrolment(id,user_id,myform_cleaned['response'])
+                return JsonResponse({'Status':result})
+   return HttpResponse(status=400)
 
 def APIListEvents(request):
     if request.method == "GET":
@@ -175,35 +189,52 @@ def APIManageEvent(request,id):
             user_id = request.COOKIES['user_id']
             myform = ManageEventsForm(request.POST)
             if myform.is_valid():
-                myform_cleaned = request.POST
-                if myform_cleaned['cmd'] == 'erll':
-                    #enrollment list
-                    return JsonResponse(data = {'Status':0,
-                                            'Data':EventManager.getEnrolmentOfEvent(id)})
-                elif myform_cleaned['cmd'] == 'rm':
-                    pass#remove event
+                myform_cleaned = myform.cleaned_data
+                if myform_cleaned['cmd'] == 'rm':
+                    #remove event
+                    return JsonResponse(data = {'Status':EventManager.removeEvent(id)})
                 elif myform_cleaned['cmd'] == 'cnl':
-                    pass#cancel event
-                elif myform_cleaned['cmd'] == 'psd':
-                    pass#postpone event
-                elif myform_cleaned['cmd'] == 'edl':
-                    pass#edit event's deadline
+                    #cancel event
+                    return JsonResponse(data = {'Status':EventManager.cancelEvent(id)})
                 elif myform_cleaned['cmd'] == 'snd':
-                    pass#send email to accepted people
-                return JsonResponse({'Status':0})
+                    #send email to accepted people
+                    return JsonResponse({'Status':0})
+
    return HttpResponse(status=400)
 
-def APIEnrollEvent(request,id):#id = the id of the event
+def APIListEnrollmentsOfEvent(request,id):
+   if request.method == "GET":
+        if checkSession(request) == ErrorCodes.SESSIONUSERS.VALID_USER:
+            user_id = request.COOKIES['user_id']
+            return JsonResponse(data = {'Status':0,
+                                            'Data':EventManager.getEnrolmentOfEvent(id)})
+   return HttpResponse(status=400)
+
+def APIMakeDecision(request,id):
    if request.method == "POST":
         if checkSession(request) == ErrorCodes.SESSIONUSERS.VALID_USER:
             user_id = request.COOKIES['user_id']
-            myform = EnrollEventForm(request.POST)
+            myform = DecisionForm(request.POST)
             if myform.is_valid():
-                myform_cleaned = request.POST
-                result = EventManager.validateEventEnrolment(id,user_id)
-                if result == ErrorCodes.EVENTENROLMENT_INPUTS.NONE:
-                    EventManager.createNewEventEnrolment(id,user_id,myform_cleaned['response'])
-                return JsonResponse({'Status':result})
+                myform_cleaned = myform.cleaned_data
+                return JsonResponse(data = {'Status':EventManager.makeEnrolmentDecision(id,myform_cleaned['userID'], myform_cleaned['decision'])})
    return HttpResponse(status=400)
+
+def APIPostponeEvent(request,id):
+   if request.method == "POST":
+        if checkSession(request) == ErrorCodes.SESSIONUSERS.VALID_USER:
+            user_id = request.COOKIES['user_id']
+            myform = PostponeEventsForm(request.POST)
+            if myform.is_valid():
+                myform_cleaned = myform.cleaned_data
+                if myform_cleaned['cmd'] == 'psd':
+                    #postpone event
+                    return JsonResponse(data = {'Status':EventManager.postponeEvent(id,myform_cleaned['newDate'])})
+                elif myform_cleaned['cmd'] == 'edl':
+                    #postpone event's deadline
+                    return JsonResponse(data = {'Status':EventManager.postponeDeadline(id,myform_cleaned['newDate'])})
+   return HttpResponse(status=400)
+
+
 
 #TODO: Do logs for all operations specially the ones with 400 error 'couse it's probably hacking attempts

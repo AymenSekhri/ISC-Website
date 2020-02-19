@@ -231,18 +231,20 @@ class EventsTest(TestCase):
         response = cls.client.post(reverse("create-event-api"),data=cls.newEventFormData1)
         cls.assertEqual(response.status_code,200)
         cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.NONE)
+        eventID1 = response.json()['Data']['eventID']
         response = cls.client.post(reverse("create-event-api"),data=cls.newEventFormData1)
         cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.EVENTEXISTS)
 
         response = cls.client.post(reverse("create-event-api"),data=cls.newEventFormData2)
         cls.assertEqual(response.status_code,200)
+        eventID2 = response.json()['Data']['eventID']
 
         response = cls.client.get(reverse("lsevents-api"))
         eventList = response.json()['Data']
         cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.NONE)
 
-        event1info = cls.client.get(reverse("event-api",kwargs={'id':eventList[0]['id']}))
-        event2info = cls.client.get(reverse("event-api",kwargs={'id':eventList[1]['id']}))
+        event1info = cls.client.get(reverse("event-api",kwargs={'id':eventID1}))
+        event2info = cls.client.get(reverse("event-api",kwargs={'id':eventID2}))
         cls.assertEqual(event1info.json()['Data']['name'],cls.newEventFormData1['eventName'])
         cls.assertEqual(event2info.json()['Data']['name'],cls.newEventFormData2['eventName'])
 
@@ -253,33 +255,84 @@ class EventsTest(TestCase):
         response = cls.client.post(reverse("create-event-api"),data=cls.newEventFormData1)
         cls.assertEqual(response.status_code,200)
         cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.NONE, "should create event OK")
-        response = cls.client.get(reverse("lsevents-api"))
-        eventList = response.json()['Data']
-
-        response = cls.postRequest(reverse("manage-event-api",kwargs={'id':eventList[0]['id']}),
-                    {'cmd':'erll'},
+        eventID = response.json()['Data']['eventID']
+        
+        #get enrollment list
+        response = cls.getRequest(reverse("enrollment-list-api",kwargs={'id':eventID}),
                     userAgent,loginCookie)
-        cls.assertEqual(response.json()['Status'], ErrorCodes.EVENTMANAGMENT_INPUTS.NONE, "failed to fetch data to manage-event-api")
+        cls.assertEqual(response.json()['Status'], ErrorCodes.EVENTMANAGMENT_INPUTS.NONE, "failed to fetch data to enrollment-list-api")
         EnrollmentCount = len(response.json()['Data'])
 
-        response = cls.postRequest(reverse("enroll-event-api",kwargs={'id':eventList[0]['id']}),
+        #enroll event
+        response = cls.postRequest(reverse("enroll-event-api",kwargs={'id':eventID}),
                     {'response':'This is my response for your form'},
                     userAgent,loginCookie)
         cls.assertEqual(response.json()['Status'],ErrorCodes.EVENTENROLMENT_INPUTS.NONE , "should enroll OK")
-        response = cls.postRequest(reverse("enroll-event-api",kwargs={'id':eventList[0]['id']}),
+        response = cls.postRequest(reverse("enroll-event-api",kwargs={'id':eventID}),
                     {'response':'This is my response for your form'},
                     userAgent,loginCookie)
         cls.assertEqual(response.json()['Status'],ErrorCodes.EVENTENROLMENT_INPUTS.DUPLICATES, "should return deplicated enrollment")
-
-        response = cls.postRequest(reverse("manage-event-api",kwargs={'id':eventList[0]['id']}),
-                    {'cmd':'erll'},
+        #get enrollment list
+        response = cls.getRequest(reverse("enrollment-list-api",kwargs={'id':eventID}),
                     userAgent,loginCookie)
-        cls.assertEqual(response.json()['Status'], ErrorCodes.EVENTMANAGMENT_INPUTS.NONE, "failed to post data to manage-event-api")
+        cls.assertEqual(response.json()['Status'], ErrorCodes.EVENTMANAGMENT_INPUTS.NONE, "failed to post data to enrollment-list-api")
         listOfEnrollments = response.json()['Data']
         cls.assertEqual(len(listOfEnrollments), EnrollmentCount + 1, "No enrollment has been added")
 
         userEnrollment = list(filter(lambda person: person['id'] == userID, listOfEnrollments))
         cls.assertEqual(len(userEnrollment), 1 , "The added enrollment has not been registered")
+
+
+    def test_makeDecisionEvent(cls):
+        #create user
+        loginCookie, userAgent, userID = cls.RegisterAndLogin()
+        #create event
+        response = cls.client.post(reverse("create-event-api"),data=cls.newEventFormData1)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.NONE, "should create event OK")
+        eventID = response.json()['Data']['eventID']
+
+        #enroll event
+        response = cls.postRequest(reverse("enroll-event-api",kwargs={'id':eventID}),
+                    {'response':'This is my response for your form'},
+                    userAgent,loginCookie)
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENTENROLMENT_INPUTS.NONE , "should enroll OK")
+
+        #make decision
+        response = cls.postRequest(reverse("make-decision-api",kwargs={'id':eventID}),
+                    {'userID':userID,'decision':EnrolementDecision.ACCEPTED},
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENTENROLMENT_INPUTS.NONE , "should enroll OK")
+
+        #get enrollment list
+        response = cls.getRequest(reverse("enrollment-list-api",kwargs={'id':eventID}),
+                    userAgent,loginCookie)
+        cls.assertEqual(response.json()['Status'], ErrorCodes.EVENTMANAGMENT_INPUTS.NONE, "failed to post data to enrollment-list-api")
+        listOfEnrollments = response.json()['Data']
+        userEnrollment = list(filter(lambda person: person['id'] == userID, listOfEnrollments))
+        cls.assertEqual(userEnrollment[0]['decision'], EnrolementDecision.ACCEPTED, "make sure he is accpeted")
+
+        #make another decision
+        response = cls.postRequest(reverse("make-decision-api",kwargs={'id':eventID}),
+                    {'userID':userID,'decision':EnrolementDecision.REJECTED},
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENTENROLMENT_INPUTS.NONE , "should enroll OK")
+
+        #get enrollment list
+        response = cls.getRequest(reverse("enrollment-list-api",kwargs={'id':eventID}),
+                    userAgent,loginCookie)
+        cls.assertEqual(response.json()['Status'], ErrorCodes.EVENTMANAGMENT_INPUTS.NONE, "failed to post data to enrollment-list-api")
+        listOfEnrollments = response.json()['Data']
+        userEnrollment = list(filter(lambda person: person['id'] == userID, listOfEnrollments))
+        cls.assertEqual(userEnrollment[0]['decision'], EnrolementDecision.REJECTED, "make sure he is accpeted")
+
+
+
+
+
+
 
     def RegisterAndLogin(cls):
         test_email= "test@gmail.com"
@@ -309,3 +362,19 @@ class EventsTest(TestCase):
         newClient.cookies = cookie
         response = newClient.post(url,data=data)
         return response
+
+    def getRequest(cls,url,userAgent,cookie):
+        newClient = Client(HTTP_USER_AGENT=userAgent)
+        newClient.cookies = cookie
+        response = newClient.get(url)
+        return response
+
+class EnrolementDecision(object):
+    PENDING = 0
+    ACCEPTED = 1
+    REJECTED = 2
+
+class EventStatus(object):
+    ONGOING = 0
+    POSTPONED = 1
+    CANCELED = 2

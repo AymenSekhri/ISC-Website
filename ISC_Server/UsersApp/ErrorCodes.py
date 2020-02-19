@@ -24,12 +24,15 @@ class ErrorCodes(object):
     class EVENTENROLMENT_INPUTS(object):
         NONE = 0
         DUPLICATES = 1
-        MAXNUMBEROFENROLMENTS = 2
-        EVENTDOESNOTEXISTS = 3
+        EVENTDOESNOTEXISTS = 2
+        MAXNUMBEROFENROLMENTS = 3
+        ENROLLMENTDOESNOTEXISTS = 4
+        ENROLLMENTPASTDEADLINE = 4
 
     class EVENTMANAGMENT_INPUTS(object):
         NONE = 0
         EVENTDOESNOTEXISTS = 1
+
     class SESSIONUSERS(object):
         VALID_USER = 0
         NOT_VALID_USER = 1
