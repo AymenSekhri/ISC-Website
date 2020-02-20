@@ -30,36 +30,36 @@ python manage.py runserver 0.0.0.0:80
 
 ## API list
 
-# api/register
-# api/login
-# api/logout
-# api/loginInfo
-# api/forgotpassword
-# api/resetpassword
-# api/events
-# api/events/create
-# api/events/<int:id>
-# api/events/<int:id>/manage
-# api/events/<int:id>/list
-# api/events/<int:id>/postpone
-# api/events/<int:id>/enroll
-# api/events/<int:id>/decision
-# api/news/create
-# api/news/<int:id>
-# api/news/<int:id>/edit
-# api/news/<int:id>/delete
-# api/projects/create
-# api/projects/<int:id>
-# api/projects/<int:id>/edit
-# api/projects/<int:id>/delete
-# api/team/add
-# api/team/<int:id>
-# api/team/<int:id>/edit
-# api/team/<int:id>/delete
-# api/users
-# api/users/<int:id>
-# api/users/<int:id>/edit
-# api/users/<int:id>/delete
-# api/contact
+### api/register
+### api/login
+### api/logout
+### api/loginInfo
+### api/forgotpassword
+### api/resetpassword
+### api/events
+### api/events/create
+### api/events/<int:id>
+### api/events/<int:id>/manage
+### api/events/<int:id>/list
+### api/events/<int:id>/postpone
+### api/events/<int:id>/enroll
+### api/events/<int:id>/decision
+### api/news/create
+### api/news/<int:id>
+### api/news/<int:id>/edit
+### api/news/<int:id>/delete
+### api/projects/create
+### api/projects/<int:id>
+### api/projects/<int:id>/edit
+### api/projects/<int:id>/delete
+### api/team/add
+### api/team/<int:id>
+### api/team/<int:id>/edit
+### api/team/<int:id>/delete
+### api/users
+### api/users/<int:id>
+### api/users/<int:id>/edit
+### api/users/<int:id>/delete
+### api/contact
 
 
