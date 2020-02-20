@@ -27,8 +27,8 @@ class PostManager(object):
             posts.append(postInfo)
         return posts
 
-    def getPostDetails(id):
-        query = Posts.objects.filter(id = id)
+    def getPostDetails(id,postType):
+        query = Posts.objects.filter(id = id,type = postType)
         if query.exists():
             x = query.first()
             postInfo = {'id':x.id,

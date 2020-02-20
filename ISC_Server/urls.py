@@ -30,11 +30,11 @@ urlpatterns = [
     path('api/events/<int:id>/enroll', API.APIEnrollEvent, name='enroll-event-api'),
     path('api/events/<int:id>/decision', API.APIMakeDecision, name='make-decision-api'),
     
-    path('api/news/', API.APIGetPostsList, name='get-posts-list-api'),
-    path('api/news/create', API.APICreatePost, name='create-post-api'),
-    path('api/news/<int:id>', API.APIGetPostDetails, name='get-post-api'),
-    path('api/news/<int:id>/edit', API.APIEditPost, name='edit-post-api'),
-    path('api/news/<int:id>/delete', API.APIDeletePost, name='delete-post-api'),
+    path('api/news/', API.APIGetNewsPostsList, name='get-posts-list-api'),
+    path('api/news/create', API.APICreateNewsPost, name='create-post-api'),
+    path('api/news/<int:id>', API.APIGetNewsPostDetails, name='get-post-api'),
+    path('api/news/<int:id>/edit', API.APIEditNewsPost, name='edit-post-api'),
+    path('api/news/<int:id>/delete', API.APIDeleteNewsPost, name='delete-post-api'),
 
     path('api/projects', API.APIMakeDecision, name=''),
     path('api/projects/create', API.APIMakeDecision, name=''),

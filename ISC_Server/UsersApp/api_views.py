@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .API_Functionality import *
-from .PostsManager import *
+
 
 
 # Create your views here.
@@ -83,63 +83,31 @@ def APIPostponeEvent(request,id):
             return postponeEvent(id, request)
    return HttpResponse(status=400)
 
-def APICreatePost(request):
+def APICreateNewsPost(request):
    if request.method == "POST":
         if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
-            user_id = request.COOKIES['user_id']
-            myform = PostsForm(request.POST)
-            if myform.is_valid():
-                myform_cleaned = myform.cleaned_data
-                return JsonResponse(data = {'Status': 0,
-                                            'Data': PostManager.createPost(user_id,POST_TYPE.NEWS,
-                                                                                 myform_cleaned['title'],
-                                                                                 myform_cleaned['content'],
-                                                                                 myform_cleaned['tags'])})
-            return HttpResponse(status=400)
+            return createPost(request,POST_TYPE.NEWS)
    return HttpResponse(status=400)
 
-def APIGetPostsList(request):
+def APIGetNewsPostsList(request):
    if request.method == "GET":
-        return JsonResponse(data = {'Status': 0,
-                                        'Data': PostManager.getPostsList(POST_TYPE.NEWS)})
+        return getPostsList(POST_TYPE.NEWS)
    return HttpResponse(status=400)
 
-def APIGetPostDetails(request,id):
+def APIGetNewsPostDetails(request,id):
    if request.method == "GET":
-        result , data = PostManager.getPostDetails(id)
-        if result == ErrorCodes.POSTS.VALID_POST:
-            return JsonResponse(data = {'Status': 0,
-                                    'Data': data})
-        else:
-            return HttpResponse(status=404)
+        return getPostDetails(id,POST_TYPE.NEWS)
    return HttpResponse(status=400)
 
-def APIEditPost(request,id):
+def APIEditNewsPost(request,id):
    if request.method == "POST":
         if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
-            user_id = request.COOKIES['user_id']
-            myform = PostsForm(request.POST)
-            if myform.is_valid():
-                myform_cleaned = myform.cleaned_data
-                result , data = PostManager.getPostDetails(id)
-                if result == ErrorCodes.POSTS.VALID_POST:
-                    return JsonResponse(data = {'Status':PostManager.editPost( id,
-                                                                                myform_cleaned['title'],
-                                                                                myform_cleaned['content'],
-                                                                                myform_cleaned['tags'])})
-                else:
-                    return HttpResponse(status=404)
-            return HttpResponse(status=400)
+            return editPost(id,POST_TYPE.NEWS, request)
    return HttpResponse(status=400)
 
-def APIDeletePost(request,id):
+def APIDeleteNewsPost(request,id):
    if request.method == "GET":
         if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
-            user_id = request.COOKIES['user_id']
-            result , data = PostManager.getPostDetails(id)
-            if result == ErrorCodes.POSTS.VALID_POST:
-                return JsonResponse(data = {'Status':PostManager.deletePost(id)})
-            else:
-                return HttpResponse(status=404)
+            return deletePost(id, POST_TYPE.NEWS, request)
    return HttpResponse(status=400)
 
