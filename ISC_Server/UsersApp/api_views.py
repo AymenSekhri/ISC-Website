@@ -81,3 +81,73 @@ def APIPostponeEvent(request,id):
         if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
             return postponeEvent(id, request)
    return HttpResponse(status=400)
+
+def APICreatePost(request):
+   if request.method == "POST":
+        if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
+            user_id = request.COOKIES['user_id']
+            myform = PostsForm(request.POST)
+            if myform.is_valid():
+                myform_cleaned = myform.cleaned_data
+                return JsonResponse(data = {'Status': 0,
+                                            'Data': EventManager.createPost(user_id,POST_TYPE.NEWS,
+                                                                                 myform_cleaned['title'],
+                                                                                 myform_cleaned['content'],
+                                                                                 myform_cleaned['tags'])})
+            return HttpResponse(status=400)
+   return HttpResponse(status=400)
+
+def APIGetPostsList(request):
+   if request.method == "GET":
+        if myform.is_valid():
+            myform_cleaned = myform.cleaned_data
+            return JsonResponse(data = {'Status': 0,
+                                        'Data': EventManager.getPostsList(POST_TYPE.NEWS)})
+        return HttpResponse(status=400)
+   return HttpResponse(status=400)
+
+def APIGetPostDetails(request,id):
+   if request.method == "GET":
+        if myform.is_valid():
+            result , data = EventManager.getPostDetails(id)
+            if result == ErrorCodes.POSTS.VALID_POST:
+                return JsonResponse(data = {'Status': 0,
+                                        'Data': data})
+            else:
+                return HttpResponse(status=404)
+        return HttpResponse(status=400)
+   return HttpResponse(status=400)
+
+def APIEditPost(request,id):
+   if request.method == "POST":
+        if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
+            user_id = request.COOKIES['user_id']
+            myform = PostsForm(request.POST)
+            if myform.is_valid():
+                myform_cleaned = myform.cleaned_data
+                result , data = EventManager.getPostDetails(id)
+                if result == ErrorCodes.POSTS.VALID_POST:
+                    return JsonResponse(data = {'Status':EventManager.editPost( id,
+                                                                                myform_cleaned['title'],
+                                                                                myform_cleaned['content'],
+                                                                                myform_cleaned['tags'])})
+                else:
+                    return HttpResponse(status=404)
+            return HttpResponse(status=400)
+   return HttpResponse(status=400)
+
+def APIDeletePost(request,id):
+   if request.method == "POST":
+        if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
+            user_id = request.COOKIES['user_id']
+            myform = PostsForm(request.POST)
+            if myform.is_valid():
+                myform_cleaned = myform.cleaned_data
+                result , data = EventManager.getPostDetails(id)
+                if result == ErrorCodes.POSTS.VALID_POST:
+                    return JsonResponse(data = {'Status':EventManager.deletePost(id)})
+                else:
+                    return HttpResponse(status=404)
+            return HttpResponse(status=400)
+   return HttpResponse(status=400)
+

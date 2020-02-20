@@ -1,4 +1,4 @@
-from .models import UsersDB, SessionsDB, PassResetDB, Event, EventEnrolment
+from .models import *
 from .PasswordManager import PasswordManager
 from .ErrorCodes import ErrorCodes
 import random

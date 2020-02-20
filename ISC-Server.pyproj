@@ -67,6 +67,9 @@
     <Compile Include="ISC_Server\UsersApp\PasswordManager.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ISC_Server\UsersApp\PostsManager.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ISC_Server\UsersApp\UnitTests\test_EventManager.py">
       <SubType>Code</SubType>
     </Compile>

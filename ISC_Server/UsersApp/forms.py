@@ -12,8 +12,6 @@ class RegisterForm(forms.Form):
     pass2 = forms.CharField(min_length = 8)
     number = forms.CharField(max_length=20,validators=[nums])
     year = forms.CharField(max_length=4,validators=[nums])
-    
-    
 
     def toLower(self):
         self.cleaned_data["firstName"] = self.cleaned_data["firstName"].lower()
@@ -60,4 +58,13 @@ class DecisionForm(forms.Form):
 class PostponeEventsForm(forms.Form):
     cmd = forms.CharField()
     newDate = forms.CharField()
-    
+
+class PostsForm(forms.Form):
+    title = forms.CharField()
+    content = forms.CharField()
+    tags = forms.CharField()
+
+class AddToTeamFrom(forms.Form):
+    userID = forms.IntegerField()
+    title = forms.CharField()
+    bio = forms.CharField()

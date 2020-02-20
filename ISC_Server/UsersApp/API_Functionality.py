@@ -145,7 +145,7 @@ def getEventsList():
 
 def getEventInfo(id):
     result, data = EventManager.getEventInfo(id)
-    if result == ErrorCodes.EVENTENROLMENT_INPUTS.NONE:
+    if result == ErrorCodes.EVENT_INPUTS.NONE:
         return JsonResponse(data = {'Status':0,'Data':data})
     else:
         return HttpResponse(status=404)
@@ -231,4 +231,7 @@ PRIVILEGE_LEVEL_2 = 2
 PRIVILEGE_LEVEL_3 = 3
 PRIVILEGE_LEVEL_4 = 4
 
+class POST_TYPE(object):
+        PROJECT = 0
+        NEWS = 1
 #TODO: Do logs for all operations specially the ones with 400 error 'couse it's probably hacking attempts

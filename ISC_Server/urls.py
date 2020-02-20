@@ -52,6 +52,7 @@ urlpatterns = [
     path('api/users/<int:id>', API.APIMakeDecision, name=''),
     path('api/users/<int:id>/edit', API.APIMakeDecision, name=''),
     path('api/users/<int:id>/delete', API.APIMakeDecision, name=''),
+    path('api/users/<int:id>/upgrade', API.APIMakeDecision, name=''),
 
     path('api/contact', API.APIMakeDecision, name=''),
 
