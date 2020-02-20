@@ -36,11 +36,11 @@ urlpatterns = [
     path('api/news/<int:id>/edit', API.APIEditNewsPost, name='edit-post-api'),
     path('api/news/<int:id>/delete', API.APIDeleteNewsPost, name='delete-post-api'),
 
-    path('api/projects', API.APIMakeDecision, name=''),
-    path('api/projects/create', API.APIMakeDecision, name=''),
-    path('api/projects/<int:id>', API.APIMakeDecision, name=''),
-    path('api/projects/<int:id>/edit', API.APIMakeDecision, name=''),
-    path('api/projects/<int:id>/delete', API.APIMakeDecision, name=''),
+    path('api/projects', API.APIGetNewsPostsList, name='get-project-list-api'),
+    path('api/projects/create', API.APICreateNewsPost, name='create-project-api'),
+    path('api/projects/<int:id>', API.APIGetNewsPostDetails, name='get-project-api'),
+    path('api/projects/<int:id>/edit', API.APIEditNewsPost, name='edit-project-api'),
+    path('api/projects/<int:id>/delete', API.APIDeleteNewsPost, name='delete-project-api'),
 
     path('api/team/', API.APIMakeDecision, name=''),
     path('api/team/add', API.APIMakeDecision, name=''),
