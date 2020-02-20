@@ -229,14 +229,23 @@ class EventsTest(TestCase):
     
 
     def test_createEvent(cls):
-        response = cls.client.post(reverse("create-event-api"),data=cls.newEventFormData1)
+        #create user
+        loginCookie, userAgent, userID = cls.RegisterAndLogin()
+
+        response = cls.postRequest(reverse("create-event-api"),
+                    cls.newEventFormData1,
+                    userAgent,loginCookie)
         cls.assertEqual(response.status_code,200)
         cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.NONE)
         eventID1 = response.json()['Data']['eventID']
-        response = cls.client.post(reverse("create-event-api"),data=cls.newEventFormData1)
+        response = cls.postRequest(reverse("create-event-api"),
+                    cls.newEventFormData1,
+                    userAgent,loginCookie)
         cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.EVENTEXISTS)
 
-        response = cls.client.post(reverse("create-event-api"),data=cls.newEventFormData2)
+        response = cls.postRequest(reverse("create-event-api"),
+                    cls.newEventFormData2,
+                    userAgent,loginCookie)
         cls.assertEqual(response.status_code,200)
         eventID2 = response.json()['Data']['eventID']
 
@@ -253,7 +262,9 @@ class EventsTest(TestCase):
         #create user
         loginCookie, userAgent, userID = cls.RegisterAndLogin()
         #create event
-        response = cls.client.post(reverse("create-event-api"),data=cls.newEventFormData1)
+        response = cls.postRequest(reverse("create-event-api"),
+                    cls.newEventFormData1,
+                    userAgent,loginCookie)
         cls.assertEqual(response.status_code,200)
         cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.NONE, "should create event OK")
         eventID = response.json()['Data']['eventID']
@@ -288,7 +299,9 @@ class EventsTest(TestCase):
         #create user
         loginCookie, userAgent, userID = cls.RegisterAndLogin()
         #create event
-        response = cls.client.post(reverse("create-event-api"),data=cls.newEventFormData1)
+        response = cls.postRequest(reverse("create-event-api"),
+                    cls.newEventFormData1,
+                    userAgent,loginCookie)
         cls.assertEqual(response.status_code,200)
         cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.NONE, "should create event OK")
         eventID = response.json()['Data']['eventID']
@@ -337,7 +350,9 @@ class EventsTest(TestCase):
         loginCookie, userAgent, userID = cls.RegisterAndLogin()
         
         #create event
-        response = cls.client.post(reverse("create-event-api"),data=cls.newEventFormData1)
+        response = cls.postRequest(reverse("create-event-api"),
+                    cls.newEventFormData1,
+                    userAgent,loginCookie)
         cls.assertEqual(response.status_code,200)
         cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.NONE, "should create event OK")
         eventID = response.json()['Data']['eventID']
@@ -378,7 +393,9 @@ class EventsTest(TestCase):
         loginCookie, userAgent, userID = cls.RegisterAndLogin()
         
         #create event
-        response = cls.client.post(reverse("create-event-api"),data=cls.newEventFormData1)
+        response = cls.postRequest(reverse("create-event-api"),
+                    cls.newEventFormData1,
+                    userAgent,loginCookie)
         cls.assertEqual(response.status_code,200)
         cls.assertEqual(response.json()['Status'],ErrorCodes.EVENT_INPUTS.NONE, "should create event OK")
         eventID = response.json()['Data']['eventID']
@@ -433,7 +450,8 @@ class EventsTest(TestCase):
         cls.assertEqual(loginResponse.status_code,200)
         cls.assertEqual(loginResponse.json()['Status'],ErrorCodes.LOGIN_INPUTS.NONE)
 
-        response = cls.postRequest(reverse("loginInfo-api"), {}, test_userAgent, loginResponse.cookies)
+        response = cls.getRequest(reverse("loginInfo-api"), test_userAgent, loginResponse.cookies)
+        cls.assertEqual(response.status_code,200)
         return loginResponse.cookies , test_userAgent, response.json()['id']
 
     
