@@ -53,3 +53,21 @@ class EventEnrolment(models.Model):#Joint Many-To-Many Table.
     enrolemnt_date = models.DateTimeField(default=timezone.now)
     enrolmentResponse = models.TextField()
     decision = models.SmallIntegerField(default = 0)# 0:pending/1:accepted/2:rejected.
+
+
+class Posts(models.Model):
+    title = models.CharField(max_length=128)
+    type = models.SmallIntegerField()
+    user = models.ForeignKey(UsersDB, on_delete=models.CASCADE)
+    posting_date = models.DateTimeField(default=timezone.now)
+    tags = models.CharField(max_length=128)
+    content = models.TextField()
+
+    
+
+class TeamMembers(models.Model):
+    user = models.ForeignKey(UsersDB, on_delete=models.CASCADE)
+    title = models.CharField(max_length=128)
+    date = models.DateTimeField(default=timezone.now)
+    bio = models.TextField()
+    contacts = models.TextField()

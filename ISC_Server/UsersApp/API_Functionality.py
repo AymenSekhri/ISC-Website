@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .forms import *
 from .UsersManager import UsersManager
 from .EventManager import EventManager
+from .PostsManager import *
 from .ErrorCodes import ErrorCodes
 from colorama import Fore, Back, Style,init
 from django.shortcuts import redirect
@@ -145,7 +146,7 @@ def getEventsList():
 
 def getEventInfo(id):
     result, data = EventManager.getEventInfo(id)
-    if result == ErrorCodes.EVENTENROLMENT_INPUTS.NONE:
+    if result == ErrorCodes.EVENT_INPUTS.NONE:
         return JsonResponse(data = {'Status':0,'Data':data})
     else:
         return HttpResponse(status=404)
@@ -193,6 +194,52 @@ def postponeEvent(id, request):
             return JsonResponse(data = {'Status':EventManager.postponeDeadline(id,myform_cleaned['newDate'])})
     return HttpResponse(status=400)
 
+def createPost(request,type):
+    user_id = request.COOKIES['user_id']
+    myform = PostsForm(request.POST)
+    if myform.is_valid():
+        myform_cleaned = myform.cleaned_data
+        return JsonResponse(data = {'Status': 0,
+                                    'Data': PostManager.createPost(user_id,type,
+                                                                         myform_cleaned['title'],
+                                                                         myform_cleaned['content'],
+                                                                         myform_cleaned['tags'])})
+    return HttpResponse(status=400)
+
+def getPostsList(type):
+    return JsonResponse(data = {'Status': 0,
+                                    'Data': PostManager.getPostsList(type)})
+
+def getPostDetails(id,type):
+    result , data = PostManager.getPostDetails(id,type)
+    if result == ErrorCodes.POSTS.VALID_POST:
+        return JsonResponse(data = {'Status': 0,
+                                'Data': data})
+    else:
+        return HttpResponse(status=404)
+
+def editPost(id,type, request):
+    user_id = request.COOKIES['user_id']
+    myform = PostsForm(request.POST)
+    if myform.is_valid():
+        myform_cleaned = myform.cleaned_data
+        result , data = PostManager.getPostDetails(id,type)
+        if result == ErrorCodes.POSTS.VALID_POST:
+            return JsonResponse(data = {'Status':PostManager.editPost( id,
+                                                                        myform_cleaned['title'],
+                                                                        myform_cleaned['content'],
+                                                                        myform_cleaned['tags'])})
+        else:
+            return HttpResponse(status=404)
+    return HttpResponse(status=400)
+
+def deletePost(id, type, request):
+    user_id = request.COOKIES['user_id']
+    result , data = PostManager.getPostDetails(id, type)
+    if result == ErrorCodes.POSTS.VALID_POST:
+        return JsonResponse(data = {'Status':PostManager.deletePost(id)})
+    else:
+        return HttpResponse(status=404)
 def checkPrivLevel(request,level):
     if ('user_id' in request.COOKIES) and ('session_id' in request.COOKIES) and ('HTTP_USER_AGENT' in request.META):
         user_id = request.COOKIES['user_id']
@@ -231,4 +278,7 @@ PRIVILEGE_LEVEL_2 = 2
 PRIVILEGE_LEVEL_3 = 3
 PRIVILEGE_LEVEL_4 = 4
 
+class POST_TYPE(object):
+        PROJECT = 0
+        NEWS = 1
 #TODO: Do logs for all operations specially the ones with 400 error 'couse it's probably hacking attempts

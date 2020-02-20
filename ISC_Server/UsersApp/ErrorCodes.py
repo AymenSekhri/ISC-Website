@@ -41,6 +41,11 @@ class ErrorCodes(object):
         USER_PRIV_LEVEL2 = 4
         USER_PRIV_LEVEL3 = 5
         USER_PRIV_LEVEL4 = 6
+
+    class POSTS(object):
+        VALID_POST = 0
+        INVALID_POST = 1
+
     
 
 

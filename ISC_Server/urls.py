@@ -29,18 +29,18 @@ urlpatterns = [
     path('api/events/<int:id>/postpone', API.APIPostponeEvent, name='postpone-event-api'),
     path('api/events/<int:id>/enroll', API.APIEnrollEvent, name='enroll-event-api'),
     path('api/events/<int:id>/decision', API.APIMakeDecision, name='make-decision-api'),
+    
+    path('api/news/', API.APIGetNewsPostsList, name='get-posts-list-api'),
+    path('api/news/create', API.APICreateNewsPost, name='create-post-api'),
+    path('api/news/<int:id>', API.APIGetNewsPostDetails, name='get-post-api'),
+    path('api/news/<int:id>/edit', API.APIEditNewsPost, name='edit-post-api'),
+    path('api/news/<int:id>/delete', API.APIDeleteNewsPost, name='delete-post-api'),
 
-    path('api/news/', API.APIMakeDecision, name=''),
-    path('api/news/create', API.APIMakeDecision, name=''),
-    path('api/news/<int:id>', API.APIMakeDecision, name=''),
-    path('api/news/<int:id>/edit', API.APIMakeDecision, name=''),
-    path('api/news/<int:id>/delete', API.APIMakeDecision, name=''),
-
-    path('api/projects', API.APIMakeDecision, name=''),
-    path('api/projects/create', API.APIMakeDecision, name=''),
-    path('api/projects/<int:id>', API.APIMakeDecision, name=''),
-    path('api/projects/<int:id>/edit', API.APIMakeDecision, name=''),
-    path('api/projects/<int:id>/delete', API.APIMakeDecision, name=''),
+    path('api/projects', API.APIGetNewsPostsList, name='get-project-list-api'),
+    path('api/projects/create', API.APICreateNewsPost, name='create-project-api'),
+    path('api/projects/<int:id>', API.APIGetNewsPostDetails, name='get-project-api'),
+    path('api/projects/<int:id>/edit', API.APIEditNewsPost, name='edit-project-api'),
+    path('api/projects/<int:id>/delete', API.APIDeleteNewsPost, name='delete-project-api'),
 
     path('api/team/', API.APIMakeDecision, name=''),
     path('api/team/add', API.APIMakeDecision, name=''),
@@ -52,6 +52,7 @@ urlpatterns = [
     path('api/users/<int:id>', API.APIMakeDecision, name=''),
     path('api/users/<int:id>/edit', API.APIMakeDecision, name=''),
     path('api/users/<int:id>/delete', API.APIMakeDecision, name=''),
+    path('api/users/<int:id>/upgrade', API.APIMakeDecision, name=''),
 
     path('api/contact', API.APIMakeDecision, name=''),
 

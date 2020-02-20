@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from .API_Functionality import *
 
 
+
 # Create your views here.
 
 def APIGetLoginInfo(request):
@@ -81,3 +82,60 @@ def APIPostponeEvent(request,id):
         if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
             return postponeEvent(id, request)
    return HttpResponse(status=400)
+
+def APICreateNewsPost(request):
+   if request.method == "POST":
+        if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
+            return createPost(request,POST_TYPE.NEWS)
+   return HttpResponse(status=400)
+
+def APIGetNewsPostsList(request):
+   if request.method == "GET":
+        return getPostsList(POST_TYPE.NEWS)
+   return HttpResponse(status=400)
+
+def APIGetNewsPostDetails(request,id):
+   if request.method == "GET":
+        return getPostDetails(id,POST_TYPE.NEWS)
+   return HttpResponse(status=400)
+
+def APIEditNewsPost(request,id):
+   if request.method == "POST":
+        if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
+            return editPost(id,POST_TYPE.NEWS, request)
+   return HttpResponse(status=400)
+
+def APIDeleteNewsPost(request,id):
+   if request.method == "GET":
+        if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
+            return deletePost(id, POST_TYPE.NEWS, request)
+   return HttpResponse(status=400)
+
+def APICreateProjectPost(request):
+   if request.method == "POST":
+        if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
+            return createPost(request,POST_TYPE.PROJECT)
+   return HttpResponse(status=400)
+
+def APIGetProjectPostsList(request):
+   if request.method == "GET":
+        return getPostsList(POST_TYPE.PROJECT)
+   return HttpResponse(status=400)
+
+def APIGetProjectPostDetails(request,id):
+   if request.method == "GET":
+        return getPostDetails(id,POST_TYPE.PROJECT)
+   return HttpResponse(status=400)
+
+def APIEditProjectPost(request,id):
+   if request.method == "POST":
+        if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
+            return editPost(id,POST_TYPE.PROJECT, request)
+   return HttpResponse(status=400)
+
+def APIDeleteProjectPost(request,id):
+   if request.method == "GET":
+        if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
+            return deletePost(id, POST_TYPE.PROJECT,request)
+   return HttpResponse(status=400)
+
