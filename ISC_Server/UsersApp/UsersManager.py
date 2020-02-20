@@ -75,19 +75,32 @@ class UsersManager(object):
 
     def checkSession(user_id,session_id,userAgent):
         if str.isdigit(user_id) == False:
-            return False
+            return ErrorCodes.SESSIONUSERS.NOT_VALID_USER
         if session_id == '':
-            return False
+            return ErrorCodes.SESSIONUSERS.NOT_VALID_USER
         SessionQuery = SessionsDB.objects.filter(token=session_id)
         if SessionQuery.count() != 1:
-            return False
+            return ErrorCodes.SESSIONUSERS.NOT_VALID_USER
         if SessionQuery.first().uid_id != int(user_id):
-            return False
+            return ErrorCodes.SESSIONUSERS.NOT_VALID_USER
         if PasswordManager.chekPassword(userAgent,SessionQuery.first().key) == False:
-            return False
+            return ErrorCodes.SESSIONUSERS.NOT_VALID_USER
         if SessionQuery.first().expiration_date < timezone.now():
-            return False
-        return True 
+            return ErrorCodes.SESSIONUSERS.NOT_VALID_USER
+        userPriv = SessionQuery.first().uid.privLevel
+        print("User Level : " + str(userPriv))
+        if userPriv == 0:
+            return ErrorCodes.SESSIONUSERS.USER_PRIV_LEVEL0
+        elif userPriv == 1:
+            return ErrorCodes.SESSIONUSERS.USER_PRIV_LEVEL1
+        elif userPriv == 2:
+            return ErrorCodes.SESSIONUSERS.USER_PRIV_LEVEL2
+        elif userPriv == 3:
+            return ErrorCodes.SESSIONUSERS.USER_PRIV_LEVEL3
+        elif userPriv == 4:
+            return ErrorCodes.SESSIONUSERS.USER_PRIV_LEVEL4
+        return ErrorCodes.SESSIONUSERS.NOT_VALID_USER 
+    
     def deleteSession(user_id,session_id):
         Query = SessionsDB.objects.filter(uid_id = user_id, token=session_id)
         if Query.exists() :

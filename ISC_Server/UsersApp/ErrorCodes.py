@@ -36,7 +36,11 @@ class ErrorCodes(object):
     class SESSIONUSERS(object):
         VALID_USER = 0
         NOT_VALID_USER = 1
-
+        USER_PRIV_LEVEL0 = 2
+        USER_PRIV_LEVEL1 = 3
+        USER_PRIV_LEVEL2 = 4
+        USER_PRIV_LEVEL3 = 5
+        USER_PRIV_LEVEL4 = 6
     
 
 

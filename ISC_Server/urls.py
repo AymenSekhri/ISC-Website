@@ -20,8 +20,9 @@ urlpatterns = [
     path('api/loginInfo', API.APIGetLoginInfo, name='loginInfo-api'),
     path('api/forgotpassword', API.APIForgotPassword, name='forgot-pass-api'),
     path('api/resetpassword', API.APIResetPassword, name='reset-pass-api'),
-    path('api/createevent', API.APICreateEvent, name='create-event-api'),
+
     path('api/events', API.APIListEvents, name='lsevents-api'),
+    path('api/events/create', API.APICreateEvent, name='create-event-api'),
     path('api/events/<int:id>', API.APIEventInfo, name='event-api'),
     path('api/events/<int:id>/manage', API.APIManageEvent, name='manage-event-api'),
     path('api/events/<int:id>/list', API.APIListEnrollmentsOfEvent, name='enrollment-list-api'),
@@ -29,10 +30,32 @@ urlpatterns = [
     path('api/events/<int:id>/enroll', API.APIEnrollEvent, name='enroll-event-api'),
     path('api/events/<int:id>/decision', API.APIMakeDecision, name='make-decision-api'),
 
+    path('api/news/create', API.APIMakeDecision, name=''),
+    path('api/news/<int:id>', API.APIMakeDecision, name=''),
+    path('api/news/<int:id>/edit', API.APIMakeDecision, name=''),
+    path('api/news/<int:id>/delete', API.APIMakeDecision, name=''),
+
+    path('api/projects/create', API.APIMakeDecision, name=''),
+    path('api/projects/<int:id>', API.APIMakeDecision, name=''),
+    path('api/projects/<int:id>/edit', API.APIMakeDecision, name=''),
+    path('api/projects/<int:id>/delete', API.APIMakeDecision, name=''),
+
+    path('api/team/add', API.APIMakeDecision, name=''),
+    path('api/team/<int:id>', API.APIMakeDecision, name=''),
+    path('api/team/<int:id>/edit', API.APIMakeDecision, name=''),
+    path('api/team/<int:id>/delete', API.APIMakeDecision, name=''),
+
+    path('api/users', API.APIMakeDecision, name=''),
+    path('api/users/<int:id>', API.APIMakeDecision, name=''),
+    path('api/users/<int:id>/edit', API.APIMakeDecision, name=''),
+    path('api/users/<int:id>/delete', API.APIMakeDecision, name=''),
+
+    path('api/contact', API.APIMakeDecision, name=''),
+
+    ###   Pages
     path('', FrontPages.Home, name='home-page'),
     path('register', FrontPages.Register, name='register-page'),
     path('login', FrontPages.Login, name='login-page'),
-    
     path('forgotpassword', FrontPages.ForgotPassword, name='forgot-pass-page'),
     path('resetpassword', FrontPages.ResetPassword, name='reset-pass-page'),
 ]

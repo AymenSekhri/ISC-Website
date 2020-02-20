@@ -46,6 +46,9 @@
     <Compile Include="ISC_Server\MainApp\views.py" />
     <Compile Include="ISC_Server\MainApp\__init__.py" />
     <Compile Include="ISC_Server\UsersApp\admin.py" />
+    <Compile Include="ISC_Server\UsersApp\API_Functionality.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ISC_Server\UsersApp\apps.py" />
     <Compile Include="ISC_Server\UsersApp\ErrorCodes.py">
       <SubType>Code</SubType>
