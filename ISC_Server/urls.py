@@ -30,16 +30,19 @@ urlpatterns = [
     path('api/events/<int:id>/enroll', API.APIEnrollEvent, name='enroll-event-api'),
     path('api/events/<int:id>/decision', API.APIMakeDecision, name='make-decision-api'),
 
+    path('api/news/', API.APIMakeDecision, name=''),
     path('api/news/create', API.APIMakeDecision, name=''),
     path('api/news/<int:id>', API.APIMakeDecision, name=''),
     path('api/news/<int:id>/edit', API.APIMakeDecision, name=''),
     path('api/news/<int:id>/delete', API.APIMakeDecision, name=''),
 
+    path('api/projects', API.APIMakeDecision, name=''),
     path('api/projects/create', API.APIMakeDecision, name=''),
     path('api/projects/<int:id>', API.APIMakeDecision, name=''),
     path('api/projects/<int:id>/edit', API.APIMakeDecision, name=''),
     path('api/projects/<int:id>/delete', API.APIMakeDecision, name=''),
 
+    path('api/team/', API.APIMakeDecision, name=''),
     path('api/team/add', API.APIMakeDecision, name=''),
     path('api/team/<int:id>', API.APIMakeDecision, name=''),
     path('api/team/<int:id>/edit', API.APIMakeDecision, name=''),
