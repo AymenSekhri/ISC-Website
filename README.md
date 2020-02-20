@@ -30,36 +30,73 @@ python manage.py runserver 0.0.0.0:80
 
 ## API list
 
-# api/register
-# api/login
-# api/logout
-# api/loginInfo
-# api/forgotpassword
-# api/resetpassword
-# api/events
-# api/events/create
-# api/events/<int:id>
-# api/events/<int:id>/manage
-# api/events/<int:id>/list
-# api/events/<int:id>/postpone
-# api/events/<int:id>/enroll
-# api/events/<int:id>/decision
-# api/news/create
-# api/news/<int:id>
-# api/news/<int:id>/edit
-# api/news/<int:id>/delete
-# api/projects/create
-# api/projects/<int:id>
-# api/projects/<int:id>/edit
-# api/projects/<int:id>/delete
-# api/team/add
-# api/team/<int:id>
-# api/team/<int:id>/edit
-# api/team/<int:id>/delete
-# api/users
-# api/users/<int:id>
-# api/users/<int:id>/edit
-# api/users/<int:id>/delete
-# api/contact
+### api/register
+Register new user.
+### api/login
+Signin.
+### api/logout
+Signout.
+### api/loginInfo
+Get information about the user of current session.
+### api/forgotpassword
+Forgot password form.
+### api/resetpassword
+Resetpassword form.
+### api/events
+Get list of all events.
+### api/events/create
+Create new event.
+### api/events/<int:id>
+Get information about an event.
+### api/events/<int:id>/manage
+Cancel/delete event or send email to accepted users.
+### api/events/<int:id>/list
+Get list of users who enrolled the event.
+### api/events/<int:id>/postpone
+Postpone an event or postpone enrollment deadline.
+### api/events/<int:id>/enroll
+Enroll an event.
+### api/events/<int:id>/decision
+Make decision about an enrollment.
+### api/news
+Get a list of the news.
+### api/news/create
+Create new News post.
+### api/news/<int:id>
+Get details of a news post.
+### api/news/<int:id>/edit
+Edit a News post.
+### api/news/<int:id>/delete
+Delete a News post.
+### api/projects/create
+Create new project post.
+### api/projects
+Get a list of the projects.
+### api/projects/<int:id>
+Get details of project post.
+### api/projects/<int:id>/edit
+Edit project post.
+### api/projects/<int:id>/delete
+Delete project post.
+### api/team
+Get a list of the team members.
+### api/team/add
+Add new team member.
+### api/team/<int:id>
+Get details of a team member.
+### api/team/<int:id>/edit
+Edit details of a team member.
+### api/team/<int:id>/delete
+Delete a team member.
+### api/users
+Get a list of the users.
+### api/users/<int:id>
+Get the details of a user.
+### api/users/<int:id>/edit
+Edit the details of a user.
+### api/users/<int:id>/delete
+Delete a user.
+### api/contact
+Contact us form.
 
 
