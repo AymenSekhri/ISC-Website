@@ -88,7 +88,6 @@ class UsersManager(object):
         if SessionQuery.first().expiration_date < timezone.now():
             return ErrorCodes.SESSIONUSERS.NOT_VALID_USER
         userPriv = SessionQuery.first().uid.privLevel
-        print("User Level : " + str(userPriv))
         if userPriv == 0:
             return ErrorCodes.SESSIONUSERS.USER_PRIV_LEVEL0
         elif userPriv == 1:

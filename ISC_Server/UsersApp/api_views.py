@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .API_Functionality import *
+from .PostsManager import *
 
 
 # Create your views here.
@@ -90,7 +91,7 @@ def APICreatePost(request):
             if myform.is_valid():
                 myform_cleaned = myform.cleaned_data
                 return JsonResponse(data = {'Status': 0,
-                                            'Data': EventManager.createPost(user_id,POST_TYPE.NEWS,
+                                            'Data': PostManager.createPost(user_id,POST_TYPE.NEWS,
                                                                                  myform_cleaned['title'],
                                                                                  myform_cleaned['content'],
                                                                                  myform_cleaned['tags'])})
@@ -99,23 +100,18 @@ def APICreatePost(request):
 
 def APIGetPostsList(request):
    if request.method == "GET":
-        if myform.is_valid():
-            myform_cleaned = myform.cleaned_data
-            return JsonResponse(data = {'Status': 0,
-                                        'Data': EventManager.getPostsList(POST_TYPE.NEWS)})
-        return HttpResponse(status=400)
+        return JsonResponse(data = {'Status': 0,
+                                        'Data': PostManager.getPostsList(POST_TYPE.NEWS)})
    return HttpResponse(status=400)
 
 def APIGetPostDetails(request,id):
    if request.method == "GET":
-        if myform.is_valid():
-            result , data = EventManager.getPostDetails(id)
-            if result == ErrorCodes.POSTS.VALID_POST:
-                return JsonResponse(data = {'Status': 0,
-                                        'Data': data})
-            else:
-                return HttpResponse(status=404)
-        return HttpResponse(status=400)
+        result , data = PostManager.getPostDetails(id)
+        if result == ErrorCodes.POSTS.VALID_POST:
+            return JsonResponse(data = {'Status': 0,
+                                    'Data': data})
+        else:
+            return HttpResponse(status=404)
    return HttpResponse(status=400)
 
 def APIEditPost(request,id):
@@ -125,9 +121,9 @@ def APIEditPost(request,id):
             myform = PostsForm(request.POST)
             if myform.is_valid():
                 myform_cleaned = myform.cleaned_data
-                result , data = EventManager.getPostDetails(id)
+                result , data = PostManager.getPostDetails(id)
                 if result == ErrorCodes.POSTS.VALID_POST:
-                    return JsonResponse(data = {'Status':EventManager.editPost( id,
+                    return JsonResponse(data = {'Status':PostManager.editPost( id,
                                                                                 myform_cleaned['title'],
                                                                                 myform_cleaned['content'],
                                                                                 myform_cleaned['tags'])})
@@ -137,17 +133,13 @@ def APIEditPost(request,id):
    return HttpResponse(status=400)
 
 def APIDeletePost(request,id):
-   if request.method == "POST":
+   if request.method == "GET":
         if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
             user_id = request.COOKIES['user_id']
-            myform = PostsForm(request.POST)
-            if myform.is_valid():
-                myform_cleaned = myform.cleaned_data
-                result , data = EventManager.getPostDetails(id)
-                if result == ErrorCodes.POSTS.VALID_POST:
-                    return JsonResponse(data = {'Status':EventManager.deletePost(id)})
-                else:
-                    return HttpResponse(status=404)
-            return HttpResponse(status=400)
+            result , data = PostManager.getPostDetails(id)
+            if result == ErrorCodes.POSTS.VALID_POST:
+                return JsonResponse(data = {'Status':PostManager.deletePost(id)})
+            else:
+                return HttpResponse(status=404)
    return HttpResponse(status=400)
 

@@ -29,12 +29,12 @@ urlpatterns = [
     path('api/events/<int:id>/postpone', API.APIPostponeEvent, name='postpone-event-api'),
     path('api/events/<int:id>/enroll', API.APIEnrollEvent, name='enroll-event-api'),
     path('api/events/<int:id>/decision', API.APIMakeDecision, name='make-decision-api'),
-
-    path('api/news/', API.APIMakeDecision, name=''),
-    path('api/news/create', API.APIMakeDecision, name=''),
-    path('api/news/<int:id>', API.APIMakeDecision, name=''),
-    path('api/news/<int:id>/edit', API.APIMakeDecision, name=''),
-    path('api/news/<int:id>/delete', API.APIMakeDecision, name=''),
+    
+    path('api/news/', API.APIGetPostsList, name='get-posts-list-api'),
+    path('api/news/create', API.APICreatePost, name='create-post-api'),
+    path('api/news/<int:id>', API.APIGetPostDetails, name='get-post-api'),
+    path('api/news/<int:id>/edit', API.APIEditPost, name='edit-post-api'),
+    path('api/news/<int:id>/delete', API.APIDeletePost, name='delete-post-api'),
 
     path('api/projects', API.APIMakeDecision, name=''),
     path('api/projects/create', API.APIMakeDecision, name=''),

@@ -24,7 +24,7 @@ class PostManager(object):
                          'user':x.user_id,
                          'tags': x.tags,
                          'date': x.posting_date}
-            posts.append(eventInfo)
+            posts.append(postInfo)
         return posts
 
     def getPostDetails(id):
@@ -43,7 +43,8 @@ class PostManager(object):
             return ErrorCodes.POSTS.INVALID_POST, {}
 
     def editPost(postID,title,content,tags):
-        post = Posts.objects.filter(id = postID)
+        post = Posts.objects.filter(id = postID).first()
+        print(postID)
         post.title = title
         post.content = content
         post.tags = tags
