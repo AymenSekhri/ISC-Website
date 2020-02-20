@@ -16,17 +16,15 @@ def printf(text,color):
      print(Style.RESET_ALL)
 
 def getCurrentUserInfo(request):
-    if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
-        user_id = request.COOKIES['user_id']
-        userQuery = UsersManager.getUserFromId(user_id)
-        return JsonResponse({'login':1,
-                                'id':userQuery.id,
-                                'firstName':userQuery.firstName,
-                                'familyName':userQuery.familyName,
-                                'email':userQuery.email,
-                                'number':userQuery.number,
-                                'privLevel':userQuery.privLevel})
-    return JsonResponse({'login':0})
+    user_id = request.COOKIES['user_id']
+    userQuery = UsersManager.getUserFromId(user_id)
+    return JsonResponse({'login':1,
+                            'id':userQuery.id,
+                            'firstName':userQuery.firstName,
+                            'familyName':userQuery.familyName,
+                            'email':userQuery.email,
+                            'number':userQuery.number,
+                            'privLevel':userQuery.privLevel})
 
 def register(request):
     myform = RegisterForm(request.POST)
@@ -76,15 +74,13 @@ def login(request):
         return HttpResponse(status=400)
 
 def logout(request):
-    if checkPrivLevel(request,PRIVILEGE_LEVEL_4):
-        response = JsonResponse({'Status':1})
-        user_id = request.COOKIES['user_id']
-        session_id = request.COOKIES['session_id']
-        UsersManager.deleteSession(user_id,session_id)
-        response.delete_cookie('session_id','')
-        response.delete_cookie('user_id','')
-        return response
-    return HttpResponse(status=400)
+    response = JsonResponse({'Status':1})
+    user_id = request.COOKIES['user_id']
+    session_id = request.COOKIES['session_id']
+    UsersManager.deleteSession(user_id,session_id)
+    response.delete_cookie('session_id','')
+    response.delete_cookie('user_id','')
+    return response
 
 def forgotPassword(request):
     myform = ForgotForm(request.POST)
