@@ -4,8 +4,8 @@ from .API_Functionality import *
 
 
 
-# Create your views here.
 
+#Authentication
 def APIGetLoginInfo(request):
     if request.method == "GET":
         if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
@@ -37,6 +37,7 @@ def APIResetPassword(request):
         return ResetPassword(request)
     return HttpResponse(status=400)
 
+#Events
 def APICreateEvent(request):
     if request.method == "POST":
         if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
@@ -83,6 +84,7 @@ def APIPostponeEvent(request,id):
             return postponeEvent(id, request)
    return HttpResponse(status=400)
 
+#News
 def APICreateNewsPost(request):
    if request.method == "POST":
         if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
@@ -111,6 +113,7 @@ def APIDeleteNewsPost(request,id):
             return deletePost(id, POST_TYPE.NEWS, request)
    return HttpResponse(status=400)
 
+#Projects
 def APICreateProjectPost(request):
    if request.method == "POST":
         if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
@@ -139,3 +142,26 @@ def APIDeleteProjectPost(request,id):
             return deletePost(id, POST_TYPE.PROJECT,request)
    return HttpResponse(status=400)
 
+# Team
+def APIAddToTheTeam(request):
+   if request.method == "POST":
+        if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
+            return addMember(request)
+   return HttpResponse(status=400)
+
+def APIGetTeamList(request):
+   if request.method == "GET":
+        return getMembers()
+   return HttpResponse(status=400)
+
+def APIEditTeamMember(request,id):
+   if request.method == "POST":
+        if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
+            return editMember(id, request)
+   return HttpResponse(status=400)
+
+def APIDeleteTeamMember(request,id):
+   if request.method == "GET":
+        if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
+            return deleteMember(id, request)
+   return HttpResponse(status=400)

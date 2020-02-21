@@ -46,6 +46,12 @@ class ErrorCodes(object):
         VALID_POST = 0
         INVALID_POST = 1
 
+    class TEAMUSERS(object):
+        VALID_USER = 0
+        INVALID_USER = 1
+        DUPLICATED_USER = 2
+
+
     
 
 
