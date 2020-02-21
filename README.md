@@ -30,7 +30,7 @@ python manage.py runserver 0.0.0.0:80
 
 ## api/register
 Register new user.
-### Request:POST
+#### Request:POST
 * firstName[max=30,min=3]</br>
 * familyName[max=30,min=3]</br>
 * email</br>
@@ -38,31 +38,53 @@ Register new user.
 * pass2[min=8]</br>
 * number[max=20]</br>
 * year[max=4]</br>
-### Response
-*Status</br>
-### Status Codes
-SUCCESS = 0</br>
-USEREXISTS = 1</br>
-EMAILEXISTS = 2</br>
-PASSMISSMATCH = 3</br>
+#### Response
+* Status</br>
+#### Status Codes
+* SUCCESS = 0</br>
+* USEREXISTS = 1</br>
+* EMAILEXISTS = 2</br>
+* PASSMISSMATCH = 3</br>
 ## api/login
 Signin.
-### Request:POST
+#### Request:POST
 * email
 * password
-### Response
+#### Response
 * Status
-### Status Codes
+#### Status Codes
 * SUCCESS = 0
 * EMAIL_NOT_FOUND = 1
 * PASS_MISMATCH = 2
 
 This api sets "session_id" and "user_id" in response cookie.
+
 ## api/logout
 Signout.
+#### Request:GET
+#### Response
+* Status
+#### Status Codes
+* SUCCESS = 0
+
+Requires logged in user and valid session_id in cookies otherwise 400 htttp status error is returned.
 ## api/loginInfo
 Get information about the user of current session.
-### api/forgotpassword
+#### Request:GET
+#### Response
+* Status
+* Data
+	* id
+	* firstName
+	* familyName
+	* email
+	* number
+	* privLevel
+#### Status Codes
+* SUCCESS = 0
+
+Requires logged in user and valid session_id in cookies otherwise 400 htttp status error is returned.
+## api/forgotpassword
 Forgot password form.
 ## api/resetpassword
 Resetpassword form.
