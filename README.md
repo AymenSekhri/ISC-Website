@@ -30,7 +30,7 @@ python manage.py runserver 0.0.0.0:80
 
 ## api/register
 Register new user.
-#### Request:POST
+#### Request: POST
 * firstName[max=30,min=3]</br>
 * familyName[max=30,min=3]</br>
 * email</br>
@@ -47,7 +47,7 @@ Register new user.
 * PASSMISSMATCH = 3</br>
 ## api/login
 Signin.
-#### Request:POST
+#### Request: POST
 * email
 * password
 #### Response
@@ -61,16 +61,16 @@ This api sets "session_id" and "user_id" in response cookie.
 
 ## api/logout
 Signout.
-#### Request:GET
+#### Request: GET
 #### Response
 * Status
 #### Status Codes
 * SUCCESS = 0
 
-Requires logged in user and valid session_id in cookies otherwise 400 htttp status error is returned.
+This API requires logged in user and valid session_id in cookies otherwise 400 htttp status code is returned.
 ## api/loginInfo
 Get information about the user of current session.
-#### Request:GET
+#### Request: GET
 #### Response
 * Status
 * Data
@@ -83,11 +83,32 @@ Get information about the user of current session.
 #### Status Codes
 * SUCCESS = 0
 
-Requires logged in user and valid session_id in cookies otherwise 400 htttp status error is returned.
+This API requires logged in user and valid session_id in cookies otherwise 400 htttp status code is returned.
 ## api/forgotpassword
 Forgot password form.
+#### Request: POST
+* email
+#### Response
+* Status
+#### Status Codes
+* SUCCESS = 0
+* EMAIL_NOT_FOUND = 1
+* INVALID_TOKEN = 2
+
+This API sends the token to the user's email, which will be used to change password in the 'api/resetpassword' API.
 ## api/resetpassword
 Resetpassword form.
+
+#### Request: POST
+* password
+* token
+#### Response
+* Status
+#### Status Codes
+* SUCCESS = 0
+* EMAIL_NOT_FOUND = 1
+* INVALID_TOKEN = 2
+
 ## api/events
 Get list of all events.
 ## api/events/create
