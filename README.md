@@ -1,6 +1,4 @@
-# ISC-Server
-
-## Information
+# Information
 
 - it is just one app for the whole website which is `UsersApp`. The app `MainApp` was used just for testing.
 - You can access admin page and view/edit/delete database's items via the link `localhost/admin`
@@ -21,18 +19,18 @@ ISC-Server/ISC_Server/UsersApp/static/UsersApp/
 ```
 - When you issue a password reset the token will be printed in the console screen (green color) since i have not setup the the email server yet.
 
-## Installation
+# Installation
 
 ```
 python pip install -r requirements.txt
 python manage.py runserver 0.0.0.0:80
 ```
 
-## API list
+# API list
 
-### api/register
+## api/register
 Register new user.
-#### Request:POST
+### Request:POST
 * firstName[max=30,min=3]</br>
 * familyName[max=30,min=3]</br>
 * email</br>
@@ -40,89 +38,89 @@ Register new user.
 * pass2[min=8]</br>
 * number[max=20]</br>
 * year[max=4]</br>
-#### Response
+### Response
 *Status</br>
-#### Status Codes
+### Status Codes
 SUCCESS = 0</br>
 USEREXISTS = 1</br>
 EMAILEXISTS = 2</br>
 PASSMISSMATCH = 3</br>
-### api/login
+## api/login
 Signin.
-#### Request:POST
+### Request:POST
 * email
 * password
-#### Response
+### Response
 * Status
-#### Status Codes
+### Status Codes
 * SUCCESS = 0
 * EMAIL_NOT_FOUND = 1
 * PASS_MISMATCH = 2
 
 This api sets "session_id" and "user_id" in response cookie.
-### api/logout
+## api/logout
 Signout.
-### api/loginInfo
+## api/loginInfo
 Get information about the user of current session.
 ### api/forgotpassword
 Forgot password form.
-### api/resetpassword
+## api/resetpassword
 Resetpassword form.
-### api/events
+## api/events
 Get list of all events.
-### api/events/create
+## api/events/create
 Create new event.
-### api/events/<int:id>
+## api/events/<int:id>
 Get information about an event.
-### api/events/<int:id>/manage
+## api/events/<int:id>/manage
 Cancel/delete event or send email to accepted users.
-### api/events/<int:id>/list
+## api/events/<int:id>/list
 Get list of users who enrolled the event.
-### api/events/<int:id>/postpone
+## api/events/<int:id>/postpone
 Postpone an event or postpone enrollment deadline.
-### api/events/<int:id>/enroll
+## api/events/<int:id>/enroll
 Enroll an event.
-### api/events/<int:id>/decision
+## api/events/<int:id>/decision
 Make decision about an enrollment.
-### api/news
+## api/news
 Get a list of the news.
-### api/news/create
+## api/news/create
 Create new News post.
-### api/news/<int:id>
+## api/news/<int:id>
 Get details of a news post.
-### api/news/<int:id>/edit
+## api/news/<int:id>/edit
 Edit a News post.
-### api/news/<int:id>/delete
+## api/news/<int:id>/delete
 Delete a News post.
-### api/projects/create
+## api/projects/create
 Create new project post.
-### api/projects
+## api/projects
 Get a list of the projects.
-### api/projects/<int:id>
+## api/projects/<int:id>
 Get details of project post.
-### api/projects/<int:id>/edit
+## api/projects/<int:id>/edit
 Edit project post.
-### api/projects/<int:id>/delete
+## api/projects/<int:id>/delete
 Delete project post.
-### api/team
+## api/team
 Get a list of the team members.
-### api/team/add
+## api/team/add
 Add new team member.
-### api/team/<int:id>
+## api/team/<int:id>
 Get details of a team member.
-### api/team/<int:id>/edit
+## api/team/<int:id>/edit
 Edit details of a team member.
-### api/team/<int:id>/delete
+## api/team/<int:id>/delete
 Delete a team member.
-### api/users
+## api/users
 Get a list of the users.
-### api/users/<int:id>
+## api/users/<int:id>
 Get the details of a user.
-### api/users/<int:id>/edit
+## api/users/<int:id>/edit
 Edit the details of a user.
-### api/users/<int:id>/delete
+## api/users/<int:id>/delete
 Delete a user.
-### api/contact
+## api/contact
 Contact us form.
 
 
