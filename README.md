@@ -95,7 +95,7 @@ Forgot password form.
 * EMAIL_NOT_FOUND = 1
 * INVALID_TOKEN = 2
 
-This API sends the token to the user's email, which will be used to change password in the 'api/resetpassword' API.
+This API sends the token to the user's email, which will be used to change password in 'api/resetpassword' API.
 ## api/resetpassword
 Resetpassword form.
 
@@ -111,18 +111,97 @@ Resetpassword form.
 
 ## api/events
 Get list of all events.
+#### Request: GET
+#### Response
+* Status
+#### Status Codes
+* SUCCESS = 0
+
 ## api/events/create
 Create new event.
+
+#### Request: POST
+* eventName
+* description
+* deadline_date (format: "D-M-Y")
+* event_date (format: "D-M-Y H:M")
+* maxNumberOfEnrolment
+* enrollmentData
+
+#### Response
+* Status
+#### Status Codes
+* SUCCESS = 0
+* EVENTEXISTS = 1
+* INVALIDDATEFORMAT = 2
+* EVENTDOESNOTEXISTS = 3
+
+This API requires logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 htttp status code is returned.</br>
+The 'enrollmentData' will contain the question that will be asked to enroll the event.</br>
+
 ## api/events/<int:id>
 Get information about an event.
+#### Request: GET
+#### Response
+* Status
+#### Status Codes
+* SUCCESS = 0
+If an event's id that doesn't exist is being accessed, a 404 http status code will be returned.</br>
+
 ## api/events/<int:id>/manage
 Cancel/delete event or send email to accepted users.
+
+#### Request: POST
+* cmd
+
+#### Response
+* Status
+#### Status Codes
+* SUCCESS = 0
+* EVENTDOESNOTEXISTS = 1
+
+This API requires logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 htttp status code is returned.</br>
+To Cancel an event send cmd='cnl'<br>
+To Remove an event send cmd='rm'<br>
+
 ## api/events/<int:id>/list
 Get list of users who enrolled the event.
+#### Request: GET
+#### Response
+* Status
+#### Status Codes
+* SUCCESS = 0
+
 ## api/events/<int:id>/postpone
 Postpone an event or postpone enrollment deadline.
+#### Request: POST
+* cmd
+* newDate (format: "D-M-Y" or "D-M-Y H:M")
+#### Response
+* Status
+#### Status Codes
+* SUCCESS = 0
+* EVENTEXISTS = 1
+* INVALIDDATEFORMAT = 2
+* EVENTDOESNOTEXISTS = 3
+
+This API requires logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 htttp status code is returned.</br>
+To Postpone an event send cmd='pse' and newDate with format "D-M-Y H:M"<br>
+To Postpone Enrollment Deadline send cmd='pdl' and newDate with format "D-M-Y"<br>
+
+
 ## api/events/<int:id>/enroll
 Enroll an event.
+
+
+
+
+
+
+
+
+
+
 ## api/events/<int:id>/decision
 Make decision about an enrollment.
 ## api/news
