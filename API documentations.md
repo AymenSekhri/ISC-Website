@@ -39,7 +39,7 @@ Signout.
 #### Status Codes
 * SUCCESS = 0
 
-This API requires a logged in user and valid session_id in cookies otherwise 400 htttp status code is returned.
+This API requires a logged in user and valid session_id in cookies otherwise 400 http status code is returned.
 ## api/loginInfo
 Get information about the user of current session.
 #### Request: GET
@@ -55,7 +55,7 @@ Get information about the user of current session.
 #### Status Codes
 * SUCCESS = 0
 
-This API requires a logged in user and valid session_id in cookies otherwise 400 htttp status code is returned.
+This API requires a logged in user and valid session_id in cookies otherwise 400 http status code is returned.
 ## api/forgotpassword
 Forgot password form.
 #### Request: POST
@@ -117,7 +117,7 @@ Create new event.
 * INVALIDDATEFORMAT = 2
 * EVENTDOESNOTEXISTS = 3
 
-This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 htttp status code is returned.</br>
+This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 http status code is returned.</br>
 The 'enrollmentData' will contain the question that will be asked to enroll the event.</br>
 
 ## api/events/<int:id>
@@ -153,7 +153,7 @@ Cancel/delete event or send email to accepted users.
 * SUCCESS = 0
 * EVENTDOESNOTEXISTS = 1
 
-This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 htttp status code is returned.</br>
+This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 http status code is returned.</br>
 To Cancel an event send cmd='cnl'<br>
 To Remove an event send cmd='rm'<br>
 
@@ -187,7 +187,7 @@ Postpone an event or postpone enrollment deadline.
 * INVALIDDATEFORMAT = 2
 * EVENTDOESNOTEXISTS = 3
 
-This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 htttp status code is returned.</br>
+This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 http status code is returned.</br>
 To Postpone an event send cmd='pse' and newDate with format "D-M-Y H:M"<br>
 To Postpone Enrollment Deadline send cmd='pdl' and newDate with format "D-M-Y"<br>
 
@@ -207,7 +207,7 @@ Enroll an event.
 * ENROLLMENTDOESNOTEXISTS = 4
 * ENROLLMENTPASTDEADLINE = 5
 
-This API requires a logged in user and valid session_id in cookies otherwise 400 htttp status code is returned.</br>
+This API requires a logged in user and valid session_id in cookies otherwise 400 http status code is returned.</br>
 The 'response' field will contain the answers of the question from that associated to the event.</br>
 
 
@@ -226,12 +226,12 @@ Make decision about an enrollment.
 * INVALIDDATEFORMAT = 2
 * EVENTDOESNOTEXISTS = 3
 
-This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 htttp status code is returned.</br>
+This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 http status code is returned.</br>
 This API will apply the decision on the user specified by 'userID' field which is enrolled the event specified by the event' id <int:id> in the URL.</br>
 The 'decision' can be either of the following values :
-	* PENDING = 0
-    * ACCEPTED = 1
-    * REJECTED = 2
+* PENDING = 0
+* ACCEPTED = 1
+* REJECTED = 2
 
 ## api/news
 Get a list of the news.
@@ -262,7 +262,7 @@ Create new News post.
 #### Status Codes
 * SUCCESS = 0
 
-This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 htttp status code is returned.</br>
+This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 http status code is returned.</br>
 
 ## api/news/<int:id>
 Get details of a news post.
@@ -297,7 +297,7 @@ Edit a News post.
 #### Status Codes
 * SUCCESS = 0
 
-This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 htttp status code is returned.</br>
+This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 http status code is returned.</br>
 If a post's id that doesn't exist is being accessed, a 404 http status code will be returned.</br>
 
 ## api/news/<int:id>/delete
@@ -309,7 +309,7 @@ Delete a News post.
 #### Status Codes
 * SUCCESS = 0
 
-This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 htttp status code is returned.</br>
+This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 http status code is returned.</br>
 If a post's id that doesn't exist is being accessed, a 404 http status code will be returned.</br>
 
 ## api/projects/create
@@ -325,7 +325,7 @@ Create new project post.
 #### Status Codes
 * SUCCESS = 0
 
-This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 htttp status code is returned.</br>
+This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 http status code is returned.</br>
 
 ## api/projects
 Get a list of the projects.
@@ -377,7 +377,7 @@ Edit project post.
 #### Status Codes
 * SUCCESS = 0
 
-This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 htttp status code is returned.</br>
+This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 http status code is returned.</br>
 If a post's id that doesn't exist is being accessed, a 404 http status code will be returned.</br>
 
 ## api/projects/<int:id>/delete
@@ -389,7 +389,7 @@ Delete project post.
 #### Status Codes
 * SUCCESS = 0
 
-This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 htttp status code is returned.</br>
+This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 http status code is returned.</br>
 If a post's id that doesn't exist is being accessed, a 404 http status code will be returned.</br>
 
 ## api/team
@@ -428,7 +428,7 @@ Add new team member.
 * INVALID_USER = 1
 * DUPLICATED_USER = 2
 
-This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 htttp status code is returned.</br>
+This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 http status code is returned.</br>
 
 ## api/team/<int:id>/edit
 Edit details of a team member.
@@ -446,7 +446,7 @@ Edit details of a team member.
 * INVALID_USER = 1
 
 
-This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 htttp status code is returned.</br>
+This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 http status code is returned.</br>
 If a member's id that doesn't exist is being accessed, a 404 http status code will be returned.</br>
 
 ## api/team/<int:id>/delete
@@ -458,7 +458,7 @@ Delete a team member.
 #### Status Codes
 * SUCCESS = 0
 
-This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 htttp status code is returned.</br>
+This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 http status code is returned.</br>
 If a member's id that doesn't exist is being accessed, a 404 http status code will be returned.</br>
 
 ## api/users
@@ -477,7 +477,7 @@ Get a list of the users.
 #### Status Codes
 * SUCCESS = 0
 
-This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 htttp status code is returned.</br>
+This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 http status code is returned.</br>
 
 ## api/users/<int:id>
 Get the details of a user.
@@ -498,7 +498,7 @@ Get the details of a user.
 #### Status Codes
 * SUCCESS = 0
 
-This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 htttp status code is returned.</br>
+This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 http status code is returned.</br>
 If a user's id that doesn't exist is being accessed, a 404 http status code will be returned.</br>
 
 ## api/users/<int:id>/edit
@@ -524,7 +524,7 @@ Delete a user.
 #### Status Codes
 * SUCCESS = 0
 
-This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 htttp status code is returned.</br>
+This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 http status code is returned.</br>
 If a user's id that doesn't exist is being accessed, a 404 http status code will be returned.</br>
 
 ## api/contact
