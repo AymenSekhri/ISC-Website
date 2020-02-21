@@ -742,6 +742,138 @@ class MembersTest(TestCase):
         newClient.cookies = cookie
         response = newClient.get(url)
         return response
+
+
+class UsersControlPanelTest(TestCase):
+    """Tests for the application views."""
+
+    # Django requires an explicit setup() when running tests in PTVS
+    @classmethod
+    def setUpClass(cls):
+        super(UsersControlPanelTest, cls).setUpClass()
+        django.setup()
+
+    def setUp(cls):
+        pass
+    
+    def test_editAndUpgradeUser(cls):
+        #create admin user
+        loginCookie, userAgent, userIDAdmin = cls.RegisterAndLogin(0)
+        #get users list
+        response = cls.getRequest(reverse('get-users-api'),
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'], 0 , "should get the list")
+        membersList = response.json()['Data']
+        #create user
+        loginCookie2, userAgent2, userID = cls.RegisterAndLogin(1)
+        #get users list
+        response = cls.getRequest(reverse('get-users-api'),
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'], 0 , "should get the list")
+        membersList2 = response.json()['Data']
+        cls.assertEqual(len(membersList2), len(membersList)+1,"new user should be added")
+        #edit user
+
+        info_edited = {'firstName':"Aymen",
+                'familyName':"Sekhri",
+                'email':'aymen.sekhri@live.fr',
+                'number':'1234653468'}
+        #edit user
+        response = cls.postRequest(reverse("edit-user-api",kwargs={'id':userID}),
+                    info_edited,
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'],0 , "user details should be edited")
+        #upgrade user
+        response = cls.postRequest(reverse("upgrade-user-api",kwargs={'id':userID}),
+                    {'newLevel':2},
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'],0 , "user level should be changed")
+        #get user details
+        response = cls.getRequest(reverse('get-user-api',kwargs={'id':userID}),
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'], 0 , "should get user details")
+        userInfo = response.json()['Data']
+        #check list
+        cls.assertEqual(userInfo['firstName'], info_edited['firstName'] , "should be same")
+        cls.assertEqual(userInfo['familyName'], info_edited['familyName'] , "should be same")
+        cls.assertEqual(userInfo['email'], info_edited['email'] , "should be same")
+        cls.assertEqual(userInfo['number'], info_edited['number'] , "should be same")
+        cls.assertEqual(userInfo['privLevel'], 2 , "privilege level should be changed")
+
+    def test_deleteUser(cls):
+        #create admin user
+        loginCookie, userAgent, userIDAdmin = cls.RegisterAndLogin(0)
+        
+        #create user
+        loginCookie2, userAgent2, userID = cls.RegisterAndLogin(1)
+        #get users list
+        response = cls.getRequest(reverse('get-users-api'),
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'], 0 , "should get the list")
+        membersList = response.json()['Data']
+        #delete user
+        response = cls.getRequest(reverse('delete-user-api',kwargs={'id':userID}),
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'], 0 , "should delete the user")
+        #get users list
+        response = cls.getRequest(reverse('get-users-api'),
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'], 0 , "should get the list")
+        membersList2 = response.json()['Data']
+        cls.assertEqual(len(membersList2), len(membersList)-1,"new user should be added")
+        #get user details
+        response = cls.getRequest(reverse('get-user-api',kwargs={'id':userID}),
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,404)
+
+    def RegisterAndLogin(cls,num):
+        test_email= ["test@gmail.com","test1@gmail.com"]
+        test_password = "pass_test/test_123456"
+        test_userAgent = "TestUserAgent//Firefox."
+        registrationResponse = cls.addUser(test_email[num],test_password,num)
+        cls.assertEqual(registrationResponse.status_code,200)
+        cls.assertEqual(registrationResponse.json()['Status'],ErrorCodes.REGISTER_INPUTS.NONE)
+
+        form_data = {"email":test_email[num],"password":test_password}
+        newClient = Client(HTTP_USER_AGENT=test_userAgent)
+        loginResponse = newClient.post(reverse("login-api"), data=form_data)
+        cls.assertEqual(loginResponse.status_code,200)
+        cls.assertEqual(loginResponse.json()['Status'],ErrorCodes.LOGIN_INPUTS.NONE)
+
+        response = cls.getRequest(reverse("loginInfo-api"), test_userAgent, loginResponse.cookies)
+        cls.assertEqual(response.status_code,200)
+        return loginResponse.cookies , test_userAgent, response.json()['id']
+
+    
+    def addUser(cls,email,passrd,num):
+        if num == 0 :
+            form_data = {'firstName':"thisismyfirstName",'familyName':"ThisMyFamName",'email':email,
+                    'pass1':passrd,'pass2':passrd,'number':"100",'year':"2020"}
+            return cls.client.post(reverse("register-api"),data=form_data)
+        elif num == 1:
+            form_data = {'firstName':"thisismysecondfirstName",'familyName':"ThisMysecondFamName",'email':email,
+                    'pass1':passrd,'pass2':passrd,'number':"100",'year':"2020"}
+            return cls.client.post(reverse("register-api"),data=form_data)
+
+    def postRequest(cls,url,data,userAgent,cookie):
+        newClient = Client(HTTP_USER_AGENT=userAgent)
+        newClient.cookies = cookie
+        response = newClient.post(url,data=data)
+        return response
+
+    def getRequest(cls,url,userAgent,cookie):
+        newClient = Client(HTTP_USER_AGENT=userAgent)
+        newClient.cookies = cookie
+        response = newClient.get(url)
+        return response
 class EnrolementDecision(object):
     PENDING = 0
     ACCEPTED = 1

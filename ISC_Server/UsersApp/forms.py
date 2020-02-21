@@ -75,3 +75,13 @@ class EditMemberFrom(forms.Form):
     title = forms.CharField()
     bio = forms.CharField()
     contacts = forms.CharField()
+
+class EditUserFrom(forms.Form):
+    firstName = forms.CharField()
+    familyName = forms.CharField()
+    email = forms.CharField()
+    number = forms.CharField()
+
+class UpgradeUserForm(forms.Form):
+    newLevel = forms.IntegerField()
+

@@ -165,3 +165,65 @@ def APIDeleteTeamMember(request,id):
         if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
             return deleteMember(id, request)
    return HttpResponse(status=400)
+
+#users
+def APIGetUsersList(request):
+   if request.method == "GET":
+        if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
+            return JsonResponse(data = {'Status': 0,
+                                'Data': UsersManager.getUsersList()})
+        return HttpResponse(status=400)
+   return HttpResponse(status=400)
+
+def APIGetUserDetails(request, id):
+   if request.method == "GET":
+       result ,data = UsersManager.getUserDetails(id)
+       if result == ErrorCodes.TEAMUSERS.VALID_USER:
+           return JsonResponse(data = {'Status': 0,
+                                'Data': data})
+       else:
+            return HttpResponse(status=404)
+   return HttpResponse(status=400)
+
+def APIEditUserProfile(request, id):
+   if request.method == "POST":
+       if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
+            myform = EditUserFrom(request.POST)
+            if myform.is_valid():
+                myform_cleaned = myform.cleaned_data
+                result ,data = UsersManager.getUserDetails(id)
+                if result == ErrorCodes.TEAMUSERS.VALID_USER:
+                    return JsonResponse(data = {'Status':UsersManager.editUser( id,
+                                                                                myform_cleaned['firstName'],
+                                                                                myform_cleaned['familyName'],
+                                                                                myform_cleaned['email'],
+                                                                                myform_cleaned['number'])})
+                else:
+                    return HttpResponse(status=404)
+            return HttpResponse(status=400)
+   return HttpResponse(status=400)
+
+def APIDeleteUser(request, id):
+   if request.method == "GET":
+       if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
+            result ,data = UsersManager.getUserDetails(id)
+            if result == ErrorCodes.TEAMUSERS.VALID_USER:
+                return JsonResponse(data = {'Status':UsersManager.deleteUser(id)})
+            else:
+                return HttpResponse(status=404)
+   return HttpResponse(status=400)
+
+def APIUpgradeUser(request, id):
+   if request.method == "POST":
+       if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
+            myform = UpgradeUserForm(request.POST)
+            if myform.is_valid():
+                myform_cleaned = myform.cleaned_data
+                result ,data = UsersManager.getUserDetails(id)
+                if result == ErrorCodes.TEAMUSERS.VALID_USER:
+                    return JsonResponse(data = {'Status':UsersManager.upgradeUser(id, myform_cleaned['newLevel'])})
+                else:
+                    return HttpResponse(status=404)
+            return HttpResponse(status=400)
+   return HttpResponse(status=400)
+
