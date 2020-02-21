@@ -3,6 +3,7 @@ from .forms import *
 from .UsersManager import UsersManager
 from .EventManager import EventManager
 from .PostsManager import *
+from .TeamManager import *
 from .ErrorCodes import ErrorCodes
 from colorama import Fore, Back, Style,init
 from django.shortcuts import redirect
@@ -240,6 +241,50 @@ def deletePost(id, type, request):
         return JsonResponse(data = {'Status':PostManager.deletePost(id)})
     else:
         return HttpResponse(status=404)
+
+#members
+
+def editMember(id, request):
+    user_id = request.COOKIES['user_id']
+    myform = EditMemberFrom(request.POST)
+    if myform.is_valid():
+        myform_cleaned = myform.cleaned_data
+        if TeamManager.checkTeamMember(id) == ErrorCodes.TEAMUSERS.VALID_USER:
+            return JsonResponse(data = {'Status':TeamManager.editMember( id,
+                                                                        myform_cleaned['title'],
+                                                                        myform_cleaned['bio'],
+                                                                        myform_cleaned['contacts'])})
+        else:
+            return HttpResponse(status=404)
+    return HttpResponse(status=400)
+
+def addMember(request):
+    user_id = request.COOKIES['user_id']
+    myform = AddToTeamFrom(request.POST)
+    if myform.is_valid():
+        myform_cleaned = myform.cleaned_data
+        if TeamManager.checkMemberUserID(myform_cleaned['userID']) == ErrorCodes.TEAMUSERS.INVALID_USER:
+            return JsonResponse(data = {'Status': 0,
+                                        'Data': TeamManager.AddMember(
+                                                                        myform_cleaned['userID'],
+                                                                        myform_cleaned['title'],
+                                                                        myform_cleaned['bio'],
+                                                                        myform_cleaned['contacts'])})
+        else:
+            return JsonResponse(data = {'Status': ErrorCodes.TEAMUSERS.DUPLICATED_USER, 'Data': {}})
+    return HttpResponse(status=400)
+
+def getMembers():
+    return JsonResponse(data = {'Status': 0,
+                                'Data': TeamManager.getTeamList()})
+
+def deleteMember(id, request):
+    user_id = request.COOKIES['user_id']
+    if TeamManager.checkTeamMember(id) == ErrorCodes.TEAMUSERS.VALID_USER:
+        return JsonResponse(data = {'Status':TeamManager.deleteMember(id)})
+    else:
+        return HttpResponse(status=404)
+
 def checkPrivLevel(request,level):
     if ('user_id' in request.COOKIES) and ('session_id' in request.COOKIES) and ('HTTP_USER_AGENT' in request.META):
         user_id = request.COOKIES['user_id']

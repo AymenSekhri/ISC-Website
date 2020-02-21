@@ -1,12 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .API_Functionality import *
-from .TeamManager import *
 
 
 
-# Create your views here.
 
+#Authentication
 def APIGetLoginInfo(request):
     if request.method == "GET":
         if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
@@ -38,6 +37,7 @@ def APIResetPassword(request):
         return ResetPassword(request)
     return HttpResponse(status=400)
 
+#Events
 def APICreateEvent(request):
     if request.method == "POST":
         if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
@@ -84,6 +84,7 @@ def APIPostponeEvent(request,id):
             return postponeEvent(id, request)
    return HttpResponse(status=400)
 
+#News
 def APICreateNewsPost(request):
    if request.method == "POST":
         if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
@@ -112,6 +113,7 @@ def APIDeleteNewsPost(request,id):
             return deletePost(id, POST_TYPE.NEWS, request)
    return HttpResponse(status=400)
 
+#Projects
 def APICreateProjectPost(request):
    if request.method == "POST":
         if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
@@ -141,55 +143,25 @@ def APIDeleteProjectPost(request,id):
    return HttpResponse(status=400)
 
 # Team
-
 def APIAddToTheTeam(request):
    if request.method == "POST":
         if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
-            user_id = request.COOKIES['user_id']
-            myform = AddToTeamFrom(request.POST)
-            if myform.is_valid():
-                myform_cleaned = myform.cleaned_data
-                if TeamManager.checkMemberUserID(myform_cleaned['userID']) == ErrorCodes.TEAMUSERS.INVALID_USER:
-                    return JsonResponse(data = {'Status': 0,
-                                                'Data': TeamManager.AddMember(
-                                                                                myform_cleaned['userID'],
-                                                                                myform_cleaned['title'],
-                                                                                myform_cleaned['bio'],
-                                                                                myform_cleaned['contacts'])})
-                else:
-                    return JsonResponse(data = {'Status': ErrorCodes.TEAMUSERS.DUPLICATED_USER, 'Data': {}})
-            return HttpResponse(status=400)
+            return addMember(request)
    return HttpResponse(status=400)
 
 def APIGetTeamList(request):
    if request.method == "GET":
-        return JsonResponse(data = {'Status': 0,
-                                    'Data': TeamManager.getTeamList()})
+        return getMembers()
    return HttpResponse(status=400)
 
 def APIEditTeamMember(request,id):
    if request.method == "POST":
         if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
-            user_id = request.COOKIES['user_id']
-            myform = EditMemberFrom(request.POST)
-            if myform.is_valid():
-                myform_cleaned = myform.cleaned_data
-                if TeamManager.checkTeamMember(id) == ErrorCodes.TEAMUSERS.VALID_USER:
-                    return JsonResponse(data = {'Status':TeamManager.editMember( id,
-                                                                                myform_cleaned['title'],
-                                                                                myform_cleaned['bio'],
-                                                                                myform_cleaned['contacts'])})
-                else:
-                    return HttpResponse(status=404)
-            return HttpResponse(status=400)
+            return editMember(id, request)
    return HttpResponse(status=400)
 
 def APIDeleteTeamMember(request,id):
    if request.method == "GET":
         if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
-            user_id = request.COOKIES['user_id']
-            if TeamManager.checkTeamMember(id) == ErrorCodes.TEAMUSERS.VALID_USER:
-                return JsonResponse(data = {'Status':TeamManager.deleteMember(id)})
-            else:
-                return HttpResponse(status=404)
+            return deleteMember(id, request)
    return HttpResponse(status=400)
