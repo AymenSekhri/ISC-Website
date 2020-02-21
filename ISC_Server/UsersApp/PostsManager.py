@@ -33,7 +33,6 @@ class PostManager(object):
             x = query.first()
             postInfo = {'id':x.id,
                         'title':x.title,
-                        'type':x.type,
                         'user':x.user_id,
                         'tags': x.tags,
                         'date': x.posting_date,

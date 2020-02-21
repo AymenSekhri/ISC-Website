@@ -8,10 +8,21 @@ from django.utils import timezone
 
 
 class EventManager(object):
+    def isValidDate(date):
+        try:
+            timezone.datetime.strptime(formData['event_date'], "%d-%m-%Y %H:%M")
+            return True
+        except :
+            return False
+        
 
     def validateEvent(formData):
         if Event.objects.filter(eventName = formData['eventName']).exists():
             return ErrorCodes.EVENT_INPUTS.EVENTEXISTS
+        if EventManager.isValidDate(formData['deadline_date']+ " 23:59"):
+            return ErrorCodes.EVENT_INPUTS.INVALIDDATEFORMAT
+        if EventManager.isValidDate(formData['event_date']):
+            return ErrorCodes.EVENT_INPUTS.INVALIDDATEFORMAT
         return ErrorCodes.EVENT_INPUTS.NONE
 
     def createNewEvent(formData):
@@ -44,9 +55,9 @@ class EventManager(object):
             enrollment = enrollmentQuery.first()
             enrollment.decision = decision
             enrollment.save()
-            return ErrorCodes.EVENTENROLMENT_INPUTS.NONE
+            return ErrorCodes.EVENT_INPUTS.NONE
         else:
-            return ErrorCodes.EVENTENROLMENT_INPUTS.EVENTDOESNOTEXISTS        
+            return ErrorCodes.EVENT_INPUTS.EVENTDOESNOTEXISTS        
 
     def getListOfEvents():
         events = []
@@ -109,25 +120,29 @@ class EventManager(object):
         return enrolment
 
     def postponeEvent(eventID,newDate):
+        if EventManager.isValidDate(newDate):
+            return ErrorCodes.EVENT_INPUTS.INVALIDDATEFORMAT
         eventQuery = Event.objects.filter(id = eventID)
         if eventQuery.exists():
             event = eventQuery.first()
             event.event_date = timezone.datetime.strptime(newDate, "%d-%m-%Y %H:%M")
             event.status = EventStatus.POSTPONED
             event.save()
-            return ErrorCodes.EVENTMANAGMENT_INPUTS.NONE
+            return ErrorCodes.EVENT_INPUTS.NONE
         else:
-            return ErrorCodes.EVENTMANAGMENT_INPUTS.EVENTDOESNOTEXISTS
+            return ErrorCodes.EVENT_INPUTS.EVENTDOESNOTEXISTS
 
     def postponeDeadline(eventID,newDate):
+        if EventManager.isValidDate(newDate):
+            return ErrorCodes.EVENT_INPUTS.INVALIDDATEFORMAT
         eventQuery = Event.objects.filter(id = eventID)
         if eventQuery.exists():
             event = eventQuery.first()
             event.enrolemntDeadline_date = timezone.datetime.strptime(newDate+ " 23:59", "%d-%m-%Y %H:%M")
             event.save()
-            return ErrorCodes.EVENTMANAGMENT_INPUTS.NONE
+            return ErrorCodes.EVENT_INPUTS.NONE
         else:
-            return ErrorCodes.EVENTMANAGMENT_INPUTS.EVENTDOESNOTEXISTS
+            return ErrorCodes.EVENT_INPUTS.EVENTDOESNOTEXISTS
 
     def cancelEvent(eventID):
         eventQuery = Event.objects.filter(id = eventID)

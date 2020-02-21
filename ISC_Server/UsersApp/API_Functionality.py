@@ -20,13 +20,14 @@ def printf(text,color):
 def getCurrentUserInfo(request):
     user_id = request.COOKIES['user_id']
     userQuery = UsersManager.getUserFromId(user_id)
-    return JsonResponse({'login':1,
+    return JsonResponse({'Status':0,
+                         'Data':{
                             'id':userQuery.id,
                             'firstName':userQuery.firstName,
                             'familyName':userQuery.familyName,
                             'email':userQuery.email,
                             'number':userQuery.number,
-                            'privLevel':userQuery.privLevel})
+                            'privLevel':userQuery.privLevel}})
 
 def register(request):
     myform = RegisterForm(request.POST)
@@ -76,7 +77,7 @@ def login(request):
         return HttpResponse(status=400)
 
 def logout(request):
-    response = JsonResponse({'Status':1})
+    response = JsonResponse({'Status':0})
     user_id = request.COOKIES['user_id']
     session_id = request.COOKIES['session_id']
     UsersManager.deleteSession(user_id,session_id)
@@ -375,4 +376,4 @@ PRIVILEGE_LEVEL_4 = 4
 class POST_TYPE(object):
         PROJECT = 0
         NEWS = 1
-#TODO: Do logs for all operations specially the ones with 400 error 'couse it's probably hacking attempts
+#TODO: Do logs for all operations specially the ones with 400 error 'cause it's probably hacking attempts
