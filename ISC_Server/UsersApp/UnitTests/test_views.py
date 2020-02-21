@@ -605,6 +605,143 @@ class PostsTest(TestCase):
         response = newClient.get(url)
         return response
 
+class MembersTest(TestCase):
+    """Tests for the application views."""
+
+    # Django requires an explicit setup() when running tests in PTVS
+    @classmethod
+    def setUpClass(cls):
+        super(MembersTest, cls).setUpClass()
+        django.setup()
+
+    def setUp(cls):
+        pass
+    
+    def test_addNewMemberAndDelete(cls):
+        #create user
+        loginCookie, userAgent, userID = cls.RegisterAndLogin()
+        #get posts list
+        response = cls.getRequest(reverse('get-team-api'),
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'], 0 , "should get the list")
+        membersList = response.json()['Data']
+        #Create new member
+        info = {'userID':userID,
+                'title':'DevMonks Member',
+                'bio':'Malware Analys',
+                'contacts':'GitHub:aymen-sekhri'}
+        response = cls.postRequest(reverse("add-member-api"),
+                    info,
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENTENROLMENT_INPUTS.NONE , "member should be added")
+        memberID = response.json()['Data']
+        #get posts list
+        response = cls.getRequest(reverse('get-team-api'),
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'], 0 , "should get the list")
+        membersList2 = response.json()['Data']
+        cls.assertEqual(len(membersList2), len(membersList)+1 , "should be added")
+        #check list
+        memberSearch = list(filter(lambda person: person['userID'] == userID, membersList2))
+        cls.assertEqual(memberSearch[0]['title'], info['title'] , "should be same")
+        cls.assertEqual(memberSearch[0]['bio'], info['bio'] , "should be same")
+        cls.assertEqual(memberSearch[0]['contacts'], info['contacts'] , "should be same")
+        #delete member
+        response = cls.getRequest(reverse('delete-member-api',kwargs={'id':memberID}),
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'], 0 , "should be deleted")
+        #get posts list
+        response = cls.getRequest(reverse('get-team-api'),
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'], 0 , "should get the list")
+        membersList2 = response.json()['Data']
+        memberSearch = list(filter(lambda person: person['userID'] == userID, membersList2))
+        cls.assertEqual(len(memberSearch), 0 , "no user should be found")
+
+    def test_editMember(cls):
+        #create user
+        loginCookie, userAgent, userID = cls.RegisterAndLogin()
+        #get posts list
+        response = cls.getRequest(reverse('get-team-api'),
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'], 0 , "should get the list")
+        membersList = response.json()['Data']
+        #Create new member
+        info = {'userID':userID,
+                'title':'DevMonks Member',
+                'bio':'Malware Analyses',
+                'contacts':'GitHub:aymen-sekhri'}
+        response = cls.postRequest(reverse("add-member-api"),
+                    info,
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENTENROLMENT_INPUTS.NONE , "member should be added")
+        memberID = response.json()['Data']
+        #edit member
+        info_edited = {
+                        'title':'ISC President',
+                        'bio':'IA Engineer',
+                        'contacts':'Facebook:aymen-sekhri'}
+        response = cls.postRequest(reverse("edit-member-api",kwargs={'id':memberID}),
+                    info_edited,
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'],0 , "member should be edited")
+        #get members list
+        response = cls.getRequest(reverse('get-team-api'),
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'], 0 , "should get the list")
+        membersList2 = response.json()['Data']
+        cls.assertEqual(len(membersList2), len(membersList)+1 , "should be added")
+        #check list
+        memberSearch = list(filter(lambda person: person['userID'] == userID, membersList2))
+        cls.assertEqual(memberSearch[0]['title'], info_edited['title'] , "should be same")
+        cls.assertEqual(memberSearch[0]['bio'], info_edited['bio'] , "should be same")
+        cls.assertEqual(memberSearch[0]['contacts'], info_edited['contacts'] , "should be same")
+        
+
+    def RegisterAndLogin(cls):
+        test_email= "test@gmail.com"
+        test_password = "pass_test/test_123456"
+        test_userAgent = "TestUserAgent//Firefox."
+        registrationResponse = cls.addUser(test_email,test_password)
+        cls.assertEqual(registrationResponse.status_code,200)
+        cls.assertEqual(registrationResponse.json()['Status'],ErrorCodes.REGISTER_INPUTS.NONE)
+
+        form_data = {"email":test_email,"password":test_password}
+        newClient = Client(HTTP_USER_AGENT=test_userAgent)
+        loginResponse = newClient.post(reverse("login-api"), data=form_data)
+        cls.assertEqual(loginResponse.status_code,200)
+        cls.assertEqual(loginResponse.json()['Status'],ErrorCodes.LOGIN_INPUTS.NONE)
+
+        response = cls.getRequest(reverse("loginInfo-api"), test_userAgent, loginResponse.cookies)
+        cls.assertEqual(response.status_code,200)
+        return loginResponse.cookies , test_userAgent, response.json()['id']
+
+    
+    def addUser(cls,email,passrd):
+        form_data = {'firstName':"thisismyfirstName",'familyName':"ThisMyFamName",'email':email,
+                'pass1':passrd,'pass2':passrd,'number':"100",'year':"2020"}
+        return cls.client.post(reverse("register-api"),data=form_data)
+
+    def postRequest(cls,url,data,userAgent,cookie):
+        newClient = Client(HTTP_USER_AGENT=userAgent)
+        newClient.cookies = cookie
+        response = newClient.post(url,data=data)
+        return response
+
+    def getRequest(cls,url,userAgent,cookie):
+        newClient = Client(HTTP_USER_AGENT=userAgent)
+        newClient.cookies = cookie
+        response = newClient.get(url)
+        return response
 class EnrolementDecision(object):
     PENDING = 0
     ACCEPTED = 1

@@ -41,12 +41,11 @@ urlpatterns = [
     path('api/projects/<int:id>', API.APIGetNewsPostDetails, name='get-project-api'),
     path('api/projects/<int:id>/edit', API.APIEditNewsPost, name='edit-project-api'),
     path('api/projects/<int:id>/delete', API.APIDeleteNewsPost, name='delete-project-api'),
-
-    path('api/team/', API.APIMakeDecision, name=''),
-    path('api/team/add', API.APIMakeDecision, name=''),
-    path('api/team/<int:id>', API.APIMakeDecision, name=''),
-    path('api/team/<int:id>/edit', API.APIMakeDecision, name=''),
-    path('api/team/<int:id>/delete', API.APIMakeDecision, name=''),
+    
+    path('api/team/', API.APIGetTeamList, name='get-team-api'),
+    path('api/team/add', API.APIAddToTheTeam, name='add-member-api'),
+    path('api/team/<int:id>/edit', API.APIEditTeamMember, name='edit-member-api'),
+    path('api/team/<int:id>/delete', API.APIDeleteTeamMember, name='delete-member-api'),
 
     path('api/users', API.APIMakeDecision, name=''),
     path('api/users/<int:id>', API.APIMakeDecision, name=''),

@@ -68,3 +68,10 @@ class AddToTeamFrom(forms.Form):
     userID = forms.IntegerField()
     title = forms.CharField()
     bio = forms.CharField()
+    contacts = forms.CharField()
+
+
+class EditMemberFrom(forms.Form):
+    title = forms.CharField()
+    bio = forms.CharField()
+    contacts = forms.CharField()

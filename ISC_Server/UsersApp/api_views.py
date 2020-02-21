@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .API_Functionality import *
+from .TeamManager import *
 
 
 
@@ -139,3 +140,56 @@ def APIDeleteProjectPost(request,id):
             return deletePost(id, POST_TYPE.PROJECT,request)
    return HttpResponse(status=400)
 
+# Team
+
+def APIAddToTheTeam(request):
+   if request.method == "POST":
+        if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
+            user_id = request.COOKIES['user_id']
+            myform = AddToTeamFrom(request.POST)
+            if myform.is_valid():
+                myform_cleaned = myform.cleaned_data
+                if TeamManager.checkMemberUserID(myform_cleaned['userID']) == ErrorCodes.TEAMUSERS.INVALID_USER:
+                    return JsonResponse(data = {'Status': 0,
+                                                'Data': TeamManager.AddMember(
+                                                                                myform_cleaned['userID'],
+                                                                                myform_cleaned['title'],
+                                                                                myform_cleaned['bio'],
+                                                                                myform_cleaned['contacts'])})
+                else:
+                    return JsonResponse(data = {'Status': ErrorCodes.TEAMUSERS.DUPLICATED_USER, 'Data': {}})
+            return HttpResponse(status=400)
+   return HttpResponse(status=400)
+
+def APIGetTeamList(request):
+   if request.method == "GET":
+        return JsonResponse(data = {'Status': 0,
+                                    'Data': TeamManager.getTeamList()})
+   return HttpResponse(status=400)
+
+def APIEditTeamMember(request,id):
+   if request.method == "POST":
+        if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
+            user_id = request.COOKIES['user_id']
+            myform = EditMemberFrom(request.POST)
+            if myform.is_valid():
+                myform_cleaned = myform.cleaned_data
+                if TeamManager.checkTeamMember(id) == ErrorCodes.TEAMUSERS.VALID_USER:
+                    return JsonResponse(data = {'Status':TeamManager.editMember( id,
+                                                                                myform_cleaned['title'],
+                                                                                myform_cleaned['bio'],
+                                                                                myform_cleaned['contacts'])})
+                else:
+                    return HttpResponse(status=404)
+            return HttpResponse(status=400)
+   return HttpResponse(status=400)
+
+def APIDeleteTeamMember(request,id):
+   if request.method == "GET":
+        if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
+            user_id = request.COOKIES['user_id']
+            if TeamManager.checkTeamMember(id) == ErrorCodes.TEAMUSERS.VALID_USER:
+                return JsonResponse(data = {'Status':TeamManager.deleteMember(id)})
+            else:
+                return HttpResponse(status=404)
+   return HttpResponse(status=400)
