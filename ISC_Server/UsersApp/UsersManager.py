@@ -142,7 +142,7 @@ class UsersManager(object):
         for x in UsersDB.objects.all():
             memberInfo = {'id':x.id,
                           'firstName':x.firstName,
-                          'lastName': x.familyName,
+                          'familyName': x.familyName,
                           'number': x.number,
                           'year': x.year}
             members.append(memberInfo)
@@ -157,7 +157,7 @@ class UsersManager(object):
                             'familyName': x.familyName,
                             #'picture': x.picture,
                             'privLevel': x.privLevel,
-                            'regDate': x.regDate,
+                            'regDate': str(x.regDate),
                             'email': x.email,
                             'number': x.number,
                             'year': x.year}

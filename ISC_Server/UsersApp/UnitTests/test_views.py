@@ -120,8 +120,8 @@ class LoginAndRegisterTest(TestCase):
         cls.assertEqual(loginResponse.json()['Status'],ErrorCodes.REGISTER_INPUTS.NONE)
 
         homeResponse = cls.getLoginInfo(cls.test_userAgent,loginResponse.cookies)
-        cls.assertEqual(homeResponse.json()['login'],1)
-        cls.assertEqual(homeResponse.json()['firstName'],cls.test_name.lower())
+        cls.assertEqual(homeResponse.json()['Status'],0)
+        cls.assertEqual(homeResponse.json()['Data']['firstName'],cls.test_name.lower())
 
     def test_RegisterAndFaildLoginPassword(cls):
         cls.addUser(cls.test_email,cls.test_password)
@@ -451,8 +451,8 @@ class EventsTest(TestCase):
         cls.assertEqual(loginResponse.json()['Status'],ErrorCodes.LOGIN_INPUTS.NONE)
 
         response = cls.getRequest(reverse("loginInfo-api"), test_userAgent, loginResponse.cookies)
-        cls.assertEqual(response.status_code,200)
-        return loginResponse.cookies , test_userAgent, response.json()['id']
+        cls.assertEqual(response.json()['Status'],0)
+        return loginResponse.cookies , test_userAgent, response.json()['Data']['id']
 
     
     def addUser(cls,email,passrd):
@@ -584,8 +584,8 @@ class PostsTest(TestCase):
         cls.assertEqual(loginResponse.json()['Status'],ErrorCodes.LOGIN_INPUTS.NONE)
 
         response = cls.getRequest(reverse("loginInfo-api"), test_userAgent, loginResponse.cookies)
-        cls.assertEqual(response.status_code,200)
-        return loginResponse.cookies , test_userAgent, response.json()['id']
+        cls.assertEqual(response.json()['Status'],0)
+        return loginResponse.cookies , test_userAgent, response.json()['Data']['id']
 
     
     def addUser(cls,email,passrd):
@@ -722,8 +722,8 @@ class MembersTest(TestCase):
         cls.assertEqual(loginResponse.json()['Status'],ErrorCodes.LOGIN_INPUTS.NONE)
 
         response = cls.getRequest(reverse("loginInfo-api"), test_userAgent, loginResponse.cookies)
-        cls.assertEqual(response.status_code,200)
-        return loginResponse.cookies , test_userAgent, response.json()['id']
+        cls.assertEqual(response.json()['Status'],0)
+        return loginResponse.cookies , test_userAgent, response.json()['Data']['id']
 
     
     def addUser(cls,email,passrd):
@@ -849,8 +849,8 @@ class UsersControlPanelTest(TestCase):
         cls.assertEqual(loginResponse.json()['Status'],ErrorCodes.LOGIN_INPUTS.NONE)
 
         response = cls.getRequest(reverse("loginInfo-api"), test_userAgent, loginResponse.cookies)
-        cls.assertEqual(response.status_code,200)
-        return loginResponse.cookies , test_userAgent, response.json()['id']
+        cls.assertEqual(response.json()['Status'],0)
+        return loginResponse.cookies , test_userAgent, response.json()['Data']['id']
 
     
     def addUser(cls,email,passrd,num):

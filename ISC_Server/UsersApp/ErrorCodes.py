@@ -20,6 +20,8 @@ class ErrorCodes(object):
     class EVENT_INPUTS(object):
         NONE = 0
         EVENTEXISTS = 1
+        INVALIDDATEFORMAT = 2
+        EVENTDOESNOTEXISTS = 3
 
     class EVENTENROLMENT_INPUTS(object):
         NONE = 0
@@ -27,7 +29,7 @@ class ErrorCodes(object):
         EVENTDOESNOTEXISTS = 2
         MAXNUMBEROFENROLMENTS = 3
         ENROLLMENTDOESNOTEXISTS = 4
-        ENROLLMENTPASTDEADLINE = 4
+        ENROLLMENTPASTDEADLINE = 5
 
     class EVENTMANAGMENT_INPUTS(object):
         NONE = 0
