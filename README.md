@@ -32,8 +32,34 @@ python manage.py runserver 0.0.0.0:80
 
 ### api/register
 Register new user.
+#### Request:POST
+* firstName[max=30,min=3]</br>
+* familyName[max=30,min=3]</br>
+* email</br>
+* pass1[min=8]</br>
+* pass2[min=8]</br>
+* number[max=20]</br>
+* year[max=4]</br>
+#### Response
+*Status</br>
+#### Status Codes
+SUCCESS = 0</br>
+USEREXISTS = 1</br>
+EMAILEXISTS = 2</br>
+PASSMISSMATCH = 3</br>
 ### api/login
 Signin.
+#### Request:POST
+* email
+* password
+#### Response
+* Status
+#### Status Codes
+* SUCCESS = 0
+* EMAIL_NOT_FOUND = 1
+* PASS_MISMATCH = 2
+
+This api sets "session_id" and "user_id" in response cookie.
 ### api/logout
 Signout.
 ### api/loginInfo
