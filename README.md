@@ -33,3 +33,4 @@ python manage.py runserver 0.0.0.0:80
 * Build Contact us from.
 * Set up email server and add send email code in required APIs.
 * Log requests
+# [API Documentation](https://github.com/AymenSekhri/ISC-Server/blob/master/API%20documentations.md)
