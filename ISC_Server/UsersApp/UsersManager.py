@@ -137,6 +137,52 @@ class UsersManager(object):
         if tokenQuery.exists() :
             tokenQuery.delete()
 
+    def getUsersList():
+        members = []
+        for x in UsersDB.objects.all():
+            memberInfo = {'id':x.id,
+                          'firstName':x.firstName,
+                          'lastName': x.familyName,
+                          'number': x.number,
+                          'year': x.year}
+            members.append(memberInfo)
+        return members
+
+    def getUserDetails(id):
+        query = UsersDB.objects.filter(id = id)
+        if query.exists():
+            x = query.first()
+            memberInfo = {  'id':x.id,
+                            'firstName':x.firstName,
+                            'familyName': x.familyName,
+                            #'picture': x.picture,
+                            'privLevel': x.privLevel,
+                            'regDate': x.regDate,
+                            'email': x.email,
+                            'number': x.number,
+                            'year': x.year}
+            return ErrorCodes.TEAMUSERS.VALID_USER,memberInfo
+        return ErrorCodes.TEAMUSERS.INVALID_USER, {}
+
+    def editUser(id,firstName,familyName,email,number):
+        member = UsersDB.objects.filter(id = id).first()
+        member.firstName = firstName
+        member.familyName = familyName
+        member.email = email
+        member.number = number
+        member.save()
+        return ErrorCodes.TEAMUSERS.VALID_USER
+
+    def upgradeUser(id, newLevel):
+        member = UsersDB.objects.filter(id = id).first()
+        member.privLevel = newLevel
+        member.save()
+        return ErrorCodes.TEAMUSERS.VALID_USER
+
+    def deleteUser(id):
+        member = UsersDB.objects.filter(id = id).first()
+        member.delete()
+        return ErrorCodes.TEAMUSERS.VALID_USER
 
         
     

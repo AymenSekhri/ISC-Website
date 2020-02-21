@@ -165,3 +165,35 @@ def APIDeleteTeamMember(request,id):
         if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
             return deleteMember(id, request)
    return HttpResponse(status=400)
+
+#users
+def APIGetUsersList(request):
+   if request.method == "GET":
+       if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
+            return getUsersList(request)
+   return HttpResponse(status=400)
+
+def APIGetUserDetails(request, id):
+   if request.method == "GET":
+       if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
+            return getUserDetails(id)
+   return HttpResponse(status=400)
+
+def APIEditUserProfile(request, id):
+   if request.method == "POST":
+       if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
+            return editUserProfile(id, request)
+   return HttpResponse(status=400)
+
+def APIDeleteUser(request, id):
+   if request.method == "GET":
+       if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
+            return deleteUser(id)
+   return HttpResponse(status=400)
+
+def APIUpgradeUser(request, id):
+   if request.method == "POST":
+       if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
+            return upgradeUser(id, request)
+   return HttpResponse(status=400)
+

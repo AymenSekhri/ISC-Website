@@ -285,6 +285,55 @@ def deleteMember(id, request):
     else:
         return HttpResponse(status=404)
 
+#users
+def getUsersList(request):
+    if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
+        return JsonResponse(data = {'Status': 0,
+                            'Data': UsersManager.getUsersList()})
+    return HttpResponse(status=400)
+
+def getUserDetails(id):
+    result ,data = UsersManager.getUserDetails(id)
+    if result == ErrorCodes.TEAMUSERS.VALID_USER:
+        return JsonResponse(data = {'Status': 0,
+                             'Data': data})
+    else:
+         return HttpResponse(status=404)
+
+def editUserProfile(id, request):
+    myform = EditUserFrom(request.POST)
+    if myform.is_valid():
+        myform_cleaned = myform.cleaned_data
+        result ,data = UsersManager.getUserDetails(id)
+        if result == ErrorCodes.TEAMUSERS.VALID_USER:
+            return JsonResponse(data = {'Status':UsersManager.editUser( id,
+                                                                        myform_cleaned['firstName'],
+                                                                        myform_cleaned['familyName'],
+                                                                        myform_cleaned['email'],
+                                                                        myform_cleaned['number'])})
+        else:
+            return HttpResponse(status=404)
+    return HttpResponse(status=400)
+
+def deleteUser(id):
+    result ,data = UsersManager.getUserDetails(id)
+    if result == ErrorCodes.TEAMUSERS.VALID_USER:
+        return JsonResponse(data = {'Status':UsersManager.deleteUser(id)})
+    else:
+        return HttpResponse(status=404)
+
+def upgradeUser(id, request):
+    myform = UpgradeUserForm(request.POST)
+    if myform.is_valid():
+        myform_cleaned = myform.cleaned_data
+        result ,data = UsersManager.getUserDetails(id)
+        if result == ErrorCodes.TEAMUSERS.VALID_USER:
+            return JsonResponse(data = {'Status':UsersManager.upgradeUser(id, myform_cleaned['newLevel'])})
+        else:
+            return HttpResponse(status=404)
+    return HttpResponse(status=400)
+
+
 def checkPrivLevel(request,level):
     if ('user_id' in request.COOKIES) and ('session_id' in request.COOKIES) and ('HTTP_USER_AGENT' in request.META):
         user_id = request.COOKIES['user_id']

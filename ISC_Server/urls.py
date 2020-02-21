@@ -47,11 +47,11 @@ urlpatterns = [
     path('api/team/<int:id>/edit', API.APIEditTeamMember, name='edit-member-api'),
     path('api/team/<int:id>/delete', API.APIDeleteTeamMember, name='delete-member-api'),
 
-    path('api/users', API.APIMakeDecision, name=''),
-    path('api/users/<int:id>', API.APIMakeDecision, name=''),
-    path('api/users/<int:id>/edit', API.APIMakeDecision, name=''),
-    path('api/users/<int:id>/delete', API.APIMakeDecision, name=''),
-    path('api/users/<int:id>/upgrade', API.APIMakeDecision, name=''),
+    path('api/users', API.APIGetUsersList, name='get-users-api'),
+    path('api/users/<int:id>', API.APIGetUserDetails, name='get-user-api'),
+    path('api/users/<int:id>/edit', API.APIEditUserProfile, name='edit-user-api'),
+    path('api/users/<int:id>/delete', API.APIDeleteUser, name='delete-user-api'),
+    path('api/users/<int:id>/upgrade', API.APIUpgradeUser, name='upgrade-user-api'),
 
     path('api/contact', API.APIMakeDecision, name=''),
 
