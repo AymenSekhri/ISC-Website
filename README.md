@@ -28,9 +28,10 @@ python manage.py runserver 0.0.0.0:80
 
 # TODO list
 
-* Model for notifications.
+* Add a model for notifications.
+* Add Upload Profile Picture feature.
 * Adjust Privilege levels for each API.
-* Build Contact us from.
-* Set up email server and add send email code in required APIs.
+* Build 'Contact us' from.
+* Set up email server and add 'send email' code in the required APIs.
 * Log requests
 # [API Documentation](https://github.com/AymenSekhri/ISC-Server/blob/master/API%20documentations.md)
