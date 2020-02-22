@@ -33,5 +33,5 @@ python manage.py runserver 0.0.0.0:80
 * Adjust Privilege levels for each API.
 * Build 'Contact us' from.
 * Set up email server and add 'send email' code in the required APIs.
-* Log requests
+* Log requests.
 # [API Documentation](https://github.com/AymenSekhri/ISC-Server/blob/master/API%20documentations.md)
