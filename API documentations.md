@@ -1,7 +1,7 @@
 # API list
 ### NOTE:
 * The request arguments must be sent in the same order as shown and same names (case sensetive).
-* If get http 400 status code in the response, you screwed up something :
+* If you get http 400 status code in the response, you screwed up something :
 	* You sent the request arguments wrong (see the fist note).
 	* You sent the wrong request type (POST or GET).
 	* No cookie has been sent with the request (for some APIs).
