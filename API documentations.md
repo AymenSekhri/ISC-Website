@@ -1,5 +1,14 @@
 # API list
-
+### NOTE:
+* The request arguments must be sent in the same order as shown and same names (case sensetive).
+* If get http 400 status code in the response, you screwed up something :
+	* You sent the request arguments wrong (see the fist note).
+	* You sent the wrong request type (POST or GET).
+	* No cookie has been sent with the request (for some APIs).
+	* The coockie sent doesn't contain valid session token.
+	* The sent user agent is invalid.
+	* The user that performed the action doesn't have the permission to.
+	
 ## api/register
 Register new user.
 #### Request: POST
@@ -173,6 +182,8 @@ Get list of users who enrolled the event.
 	
 #### Status Codes
 * SUCCESS = 0
+
+This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 http status code is returned.</br>
 
 ## api/events/<int:id>/postpone
 Postpone an event or postpone enrollment deadline.
