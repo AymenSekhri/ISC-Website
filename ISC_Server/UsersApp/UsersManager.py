@@ -14,7 +14,7 @@ class UsersManager(object):
                             familyName=cleaned_form['familyName'],
                             email=cleaned_form['email'],
                             password=PasswordManager.hashPassword(cleaned_form['pass1']),
-                            privLevel = 0,
+                            privLevel = 0xFFFFFFFF,
                             number = cleaned_form['number'],
                             year = cleaned_form['year'])
 
@@ -75,30 +75,21 @@ class UsersManager(object):
 
     def checkSession(user_id,session_id,userAgent):
         if str.isdigit(user_id) == False:
-            return ErrorCodes.SESSIONUSERS.NOT_VALID_USER
+            return False,0
         if session_id == '':
-            return ErrorCodes.SESSIONUSERS.NOT_VALID_USER
+            return False,0
         SessionQuery = SessionsDB.objects.filter(token=session_id)
         if SessionQuery.count() != 1:
-            return ErrorCodes.SESSIONUSERS.NOT_VALID_USER
+            return False,0
         if SessionQuery.first().uid_id != int(user_id):
-            return ErrorCodes.SESSIONUSERS.NOT_VALID_USER
+            return False,0
         if PasswordManager.chekPassword(userAgent,SessionQuery.first().key) == False:
-            return ErrorCodes.SESSIONUSERS.NOT_VALID_USER
+            return False,0
         if SessionQuery.first().expiration_date < timezone.now():
-            return ErrorCodes.SESSIONUSERS.NOT_VALID_USER
-        userPriv = SessionQuery.first().uid.privLevel
-        if userPriv == 0:
-            return ErrorCodes.SESSIONUSERS.USER_PRIV_LEVEL0
-        elif userPriv == 1:
-            return ErrorCodes.SESSIONUSERS.USER_PRIV_LEVEL1
-        elif userPriv == 2:
-            return ErrorCodes.SESSIONUSERS.USER_PRIV_LEVEL2
-        elif userPriv == 3:
-            return ErrorCodes.SESSIONUSERS.USER_PRIV_LEVEL3
-        elif userPriv == 4:
-            return ErrorCodes.SESSIONUSERS.USER_PRIV_LEVEL4
-        return ErrorCodes.SESSIONUSERS.NOT_VALID_USER 
+            return False,0
+
+        return True, SessionQuery.first().uid.privLevel
+        
     
     def deleteSession(user_id,session_id):
         Query = SessionsDB.objects.filter(uid_id = user_id, token=session_id)
@@ -156,11 +147,11 @@ class UsersManager(object):
                             'firstName':x.firstName,
                             'familyName': x.familyName,
                             #'picture': x.picture,
-                            'privLevel': x.privLevel,
                             'regDate': str(x.regDate),
                             'email': x.email,
                             'number': x.number,
-                            'year': x.year}
+                            'year': x.year,
+                            'permissions':UsersManager.getPermissions(x.privLevel)}
             return ErrorCodes.TEAMUSERS.VALID_USER,memberInfo
         return ErrorCodes.TEAMUSERS.INVALID_USER, {}
 
@@ -183,6 +174,100 @@ class UsersManager(object):
         member = UsersDB.objects.filter(id = id).first()
         member.delete()
         return ErrorCodes.TEAMUSERS.VALID_USER
+
+    def getPermissions(userPermission):
+        permissions ={'CreateEvent': False,
+                       'PostponeEvent': False,
+                       'ManageEvent': False,
+                       'EnrollEvent': False,
+                       'ViewEnrollments': False,
+                       'Decision': False,
+                       'CreateNews': False,
+                       'EditNews': False,
+                       'DeleteNews': False,
+                       'CreateProject': False,
+                       'EditProject': False,
+                       'DeleteProject': False,
+                       'TeamAdd': False,
+                       'TeamEdit': False,
+                       'TeamDelete': False,
+                       'UsersList': False,
+                       'ViewUserInfo': False,
+                       'EditUserInfo': False,
+                       'DeleteUser': False,
+                       'ChangeUserPermission': False}
+
+        
+        if (userPermission & UserPermission.ChangeUserPermission):
+            permissions['ChangeUserPermission'] = True
+        if (userPermission & UserPermission.CreateEvent):
+            permissions['CreateEvent'] = True
+        if (userPermission & UserPermission.CreateNews):
+            permissions['CreateNews'] = True
+        if (userPermission & UserPermission.CreateProject):
+            permissions['CreateProject'] = True
+        if (userPermission & UserPermission.Decision):
+            permissions['Decision'] = True
+        if (userPermission & UserPermission.DeleteNews):
+            permissions['DeleteNews'] = True
+        if (userPermission & UserPermission.DeleteProject):
+            permissions['DeleteProject'] = True
+        if (userPermission & UserPermission.DeleteUser):
+            permissions['DeleteUser'] = True
+        if (userPermission & UserPermission.EditNews):
+            permissions['EditNews'] = True
+        if (userPermission & UserPermission.EditProject):
+            permissions['EditProject'] = True
+        if (userPermission & UserPermission.TeamEdit):
+            permissions['EditTeam'] = True
+        if (userPermission & UserPermission.EditUserInfo):
+            permissions['EditUserInfo'] = True
+        if (userPermission & UserPermission.EditUserInfo):
+            permissions['EditUserInfo'] = True
+        if (userPermission & UserPermission.ManageEvent):
+            permissions['ManageEvent'] = True
+        if (userPermission & UserPermission.PostponeEvent):
+            permissions['PostponeEvent'] = True
+        if (userPermission & UserPermission.TeamAdd):
+            permissions['TeamAdd'] = True
+        if (userPermission & UserPermission.TeamDelete):
+            permissions['TeamDelete'] = True
+        if (userPermission & UserPermission.UsersList):
+            permissions['UsersList'] = True
+        if (userPermission & UserPermission.ViewEnrollments):
+            permissions['ViewEnrollments'] = True
+        if (userPermission & UserPermission.ViewUserInfo):
+            permissions['ViewUserInfo'] = True
+        return permissions
+
+class UserPermission(object):
+    VALIDUSER = 0
+    CreateEvent = 0x01
+    PostponeEvent = 0x02
+    ManageEvent = 0x04
+    EnrollEvent	= 0x08
+    ViewEnrollments = 0x10
+    Decision = 0x20
+
+    CreateNews	= 0x40
+    EditNews	= 0x80	
+    DeleteNews	= 0x100
+
+    CreateProject = 0x200
+    EditProject	= 0x400
+    DeleteProject = 0x800
+
+    TeamAdd	 = 0x1000
+    TeamEdit = 0x2000
+    TeamDelete = 0x4000
+
+    UsersList = 0x8000
+    ViewUserInfo = 0x10000
+    EditUserInfo = 0x20000
+    DeleteUser	= 0x40000
+    ChangeUserPermission = 0x80000
+
+    
 
         
     
