@@ -521,7 +521,7 @@ class PostsTest(TestCase):
         cls.assertEqual(postdetails['content'], post1['content'],"post should be unchanged")
         cls.assertEqual(postdetails['tags'], post1['tags'],"post should be unchanged")
         #get post details
-        response = cls.deleteRequest(reverse('delete-post-api',kwargs={'id':postID}),
+        response = cls.deleteRequest(reverse('get-post-api',kwargs={'id':postID}),
                     userAgent,loginCookie)
         cls.assertEqual(response.status_code,200)
         cls.assertEqual(response.json()['Status'], ErrorCodes.POSTS.VALID_POST , "post should be deleted")
@@ -561,6 +561,144 @@ class PostsTest(TestCase):
 
         #get post details
         response = cls.getRequest(reverse('get-post-api',kwargs={'id':postID}),
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'], ErrorCodes.POSTS.VALID_POST , "should get post details")
+        postdetails = response.json()['Data']
+        cls.assertEqual(postdetails['title'], post_edited['title'],"post should be changed now")
+        cls.assertEqual(postdetails['content'], post_edited['content'],"post should be changed now")
+        cls.assertEqual(postdetails['tags'], post_edited['tags'],"post should be changed now")
+
+    def RegisterAndLogin(cls):
+        test_email= "test@gmail.com"
+        test_password = "pass_test/test_123456"
+        test_userAgent = "TestUserAgent//Firefox."
+        registrationResponse = cls.addUser(test_email,test_password)
+        cls.assertEqual(registrationResponse.status_code,200)
+        cls.assertEqual(registrationResponse.json()['Status'],ErrorCodes.REGISTER_INPUTS.NONE)
+
+        form_data = {"email":test_email,"password":test_password}
+        newClient = Client(HTTP_USER_AGENT=test_userAgent)
+        loginResponse = newClient.post(reverse("login-api"), data=form_data)
+        cls.assertEqual(loginResponse.status_code,200)
+        cls.assertEqual(loginResponse.json()['Status'],ErrorCodes.LOGIN_INPUTS.NONE)
+
+        response = cls.getRequest(reverse("loginInfo-api"), test_userAgent, loginResponse.cookies)
+        cls.assertEqual(response.json()['Status'],0)
+        return loginResponse.cookies , test_userAgent, response.json()['Data']['id']
+
+    
+    def addUser(cls,email,passrd):
+        form_data = {'firstName':"thisismyfirstName",'familyName':"ThisMyFamName",'email':email,
+                'pass1':passrd,'pass2':passrd,'number':"100",'year':"2020"}
+        return cls.client.post(reverse("register-api"),data=form_data)
+
+    def postRequest(cls,url,data,userAgent,cookie):
+        newClient = Client(HTTP_USER_AGENT=userAgent)
+        newClient.cookies = cookie
+        response = newClient.post(url,data=data)
+        return response
+
+    def getRequest(cls,url,userAgent,cookie):
+        newClient = Client(HTTP_USER_AGENT=userAgent)
+        newClient.cookies = cookie
+        response = newClient.get(url)
+        return response
+
+    def deleteRequest(cls,url,userAgent,cookie):
+        newClient = Client(HTTP_USER_AGENT=userAgent)
+        newClient.cookies = cookie
+        response = newClient.delete(url)
+        return response
+
+class ProjectsTest(TestCase):
+    """Tests for the application views."""
+
+    # Django requires an explicit setup() when running tests in PTVS
+    @classmethod
+    def setUpClass(cls):
+        super(ProjectsTest, cls).setUpClass()
+        django.setup()
+
+    def setUp(cls):
+        pass
+    
+    def test_createAndDeletePost(cls):
+        #create user
+        loginCookie, userAgent, userID = cls.RegisterAndLogin()
+        #get posts list
+        response = cls.getRequest(reverse('get-project-list-api'),
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'], ErrorCodes.POSTS.VALID_POST , "should get the list")
+        postsList = response.json()['Data']
+        #create post
+        post1 = {'title':'ISC New Website in Beta Test',
+                 'content':'Please try this website and report any bugs',
+                 'tags':'dev, web, ISC'}
+        response = cls.postRequest(reverse("create-project-api"),
+                    post1,
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENTENROLMENT_INPUTS.NONE , "should create the post")
+        postID = response.json()['Data']
+        #get posts list
+        response = cls.getRequest(reverse('get-project-list-api'),
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'], ErrorCodes.POSTS.VALID_POST , "should get the list")
+        postsList2 = response.json()['Data']
+        cls.assertEqual(len(postsList2), len(postsList)+1 ,"one post should be added")
+        #get post details
+        response = cls.getRequest(reverse('get-project-api',kwargs={'id':postID}),
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'], ErrorCodes.POSTS.VALID_POST , "should get post details")
+        postdetails = response.json()['Data']
+        cls.assertEqual(postdetails['title'], post1['title'],"post should be unchanged")
+        cls.assertEqual(postdetails['content'], post1['content'],"post should be unchanged")
+        cls.assertEqual(postdetails['tags'], post1['tags'],"post should be unchanged")
+        #get post details
+        response = cls.deleteRequest(reverse('get-project-api',kwargs={'id':postID}),
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'], ErrorCodes.POSTS.VALID_POST , "post should be deleted")
+        #get post details
+        response = cls.getRequest(reverse('get-project-api',kwargs={'id':postID}),
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,404)
+
+    def test_editPost(cls):
+        #create user
+        loginCookie, userAgent, userID = cls.RegisterAndLogin()
+        #get posts list
+        response = cls.getRequest(reverse('get-project-list-api'),
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'], ErrorCodes.POSTS.VALID_POST , "should get the list")
+        postsList = response.json()['Data']
+        #create post
+        post1 = {'title':'ISC New Website in Beta Test',
+                 'content':'Please try this website and report any bugs',
+                 'tags':'dev, web, ISC'}
+        response = cls.postRequest(reverse("create-post-api"),
+                    post1,
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENTENROLMENT_INPUTS.NONE , "should create the post")
+        postID = response.json()['Data']
+        #edit post
+        post_edited = {'title':'ISC New Website Ready',
+                 'content':'No you can use the website freely',
+                 'tags':'dev, web, ISC'}
+        response = cls.postRequest(reverse("edit-project-api",kwargs={'id':postID}),
+                    post_edited,
+                    userAgent,loginCookie)
+        cls.assertEqual(response.status_code,200)
+        cls.assertEqual(response.json()['Status'],ErrorCodes.EVENTENROLMENT_INPUTS.NONE , "post should be edited")
+
+        #get post details
+        response = cls.getRequest(reverse('get-project-api',kwargs={'id':postID}),
                     userAgent,loginCookie)
         cls.assertEqual(response.status_code,200)
         cls.assertEqual(response.json()['Status'], ErrorCodes.POSTS.VALID_POST , "should get post details")
@@ -656,7 +794,7 @@ class MembersTest(TestCase):
         cls.assertEqual(memberSearch[0]['bio'], info['bio'] , "should be same")
         cls.assertEqual(memberSearch[0]['contacts'], info['contacts'] , "should be same")
         #delete member
-        response = cls.deleteRequest(reverse('delete-member-api',kwargs={'id':memberID}),
+        response = cls.deleteRequest(reverse('get-member-api',kwargs={'id':memberID}),
                     userAgent,loginCookie)
         cls.assertEqual(response.status_code,200)
         cls.assertEqual(response.json()['Status'], 0 , "should be deleted")
@@ -831,7 +969,7 @@ class UsersControlPanelTest(TestCase):
         cls.assertEqual(response.json()['Status'], 0 , "should get the list")
         membersList = response.json()['Data']
         #delete user
-        response = cls.deleteRequest(reverse('delete-user-api',kwargs={'id':userID}),
+        response = cls.deleteRequest(reverse('get-user-api',kwargs={'id':userID}),
                     userAgent,loginCookie)
         cls.assertEqual(response.status_code,200)
         cls.assertEqual(response.json()['Status'], 0 , "should delete the user")

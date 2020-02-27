@@ -315,14 +315,10 @@ Get details of a news post.
 
 If a post's id that doesn't exist is being accessed, a 404 http status code will be returned.</br>
 
-## api/news/<int:id>/edit
-Edit a News post.
+## api/news/<int:id>
+Delete a News post.
 
-#### Request: POST
-* title
-* content
-* tags
-
+#### Request: DELETE
 #### Response
 * Status
 #### Status Codes
@@ -331,10 +327,15 @@ Edit a News post.
 This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 http status code is returned.</br>
 If a post's id that doesn't exist is being accessed, a 404 http status code will be returned.</br>
 
-## api/news/<int:id>/delete
-Delete a News post.
 
-#### Request: DELETE
+## api/news/<int:id>/edit
+Edit a News post.
+
+#### Request: POST
+* title
+* content
+* tags
+
 #### Response
 * Status
 #### Status Codes
@@ -395,14 +396,10 @@ Get details of project post.
 
 If a post's id that doesn't exist is being accessed, a 404 http status code will be returned.</br>
 
-## api/projects/<int:id>/edit
-Edit project post.
+## api/projects/<int:id>
+Delete project post.
 
-#### Request: POST
-* title
-* content
-* tags
-
+#### Request: DELETE
 #### Response
 * Status
 #### Status Codes
@@ -411,10 +408,14 @@ Edit project post.
 This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 http status code is returned.</br>
 If a post's id that doesn't exist is being accessed, a 404 http status code will be returned.</br>
 
-## api/projects/<int:id>/delete
-Delete project post.
+## api/projects/<int:id>/edit
+Edit project post.
 
-#### Request: DELETE
+#### Request: POST
+* title
+* content
+* tags
+
 #### Response
 * Status
 #### Status Codes
@@ -480,7 +481,7 @@ Edit details of a team member.
 This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 http status code is returned.</br>
 If a member's id that doesn't exist is being accessed, a 404 http status code will be returned.</br>
 
-## api/team/<int:id>/delete
+## api/team/<int:id>
 Delete a team member.
 
 #### Request: DELETE
@@ -552,6 +553,17 @@ Get the details of a user.
 This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 http status code is returned.</br>
 If a user's id that doesn't exist is being accessed, a 404 http status code will be returned.</br>
 
+## api/users/<int:id>
+Delete a user.
+
+#### Request: DELETE
+#### Response
+* Status
+#### Status Codes
+* SUCCESS = 0
+
+This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 http status code is returned.</br>
+If a user's id that doesn't exist is being accessed, a 404 http status code will be returned.</br>
 ## api/users/<int:id>/edit
 Edit the details of a user.
 
@@ -566,17 +578,7 @@ Edit the details of a user.
 #### Status Codes
 * SUCCESS = 0
 
-## api/users/<int:id>/delete
-Delete a user.
 
-#### Request: DELETE
-#### Response
-* Status
-#### Status Codes
-* SUCCESS = 0
-
-This API requires a logged in user with appropriate privilege level and valid session_id in cookies otherwise 400 http status code is returned.</br>
-If a user's id that doesn't exist is being accessed, a 404 http status code will be returned.</br>
 
 ## api/contact
 Contact us form.

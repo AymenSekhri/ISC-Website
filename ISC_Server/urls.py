@@ -34,23 +34,20 @@ urlpatterns = [
     path('api/news/create', API.APICreateNewsPost, name='create-post-api'),
     path('api/news/<int:id>', API.APIGetNewsPostDetails, name='get-post-api'),
     path('api/news/<int:id>/edit', API.APIEditNewsPost, name='edit-post-api'),
-    path('api/news/<int:id>/delete', API.APIDeleteNewsPost, name='delete-post-api'),
 
     path('api/projects', API.APIGetNewsPostsList, name='get-project-list-api'),
     path('api/projects/create', API.APICreateNewsPost, name='create-project-api'),
     path('api/projects/<int:id>', API.APIGetNewsPostDetails, name='get-project-api'),
     path('api/projects/<int:id>/edit', API.APIEditNewsPost, name='edit-project-api'),
-    path('api/projects/<int:id>/delete', API.APIDeleteNewsPost, name='delete-project-api'),
     
     path('api/team/', API.APIGetTeamList, name='get-team-api'),
     path('api/team/add', API.APIAddToTheTeam, name='add-member-api'),
+    path('api/team/<int:id>', API.APIDeleteMember, name='get-member-api'),
     path('api/team/<int:id>/edit', API.APIEditTeamMember, name='edit-member-api'),
-    path('api/team/<int:id>/delete', API.APIDeleteTeamMember, name='delete-member-api'),
 
     path('api/users', API.APIGetUsersList, name='get-users-api'),
     path('api/users/<int:id>', API.APIGetUserDetails, name='get-user-api'),
     path('api/users/<int:id>/edit', API.APIEditUserProfile, name='edit-user-api'),
-    path('api/users/<int:id>/delete', API.APIDeleteUser, name='delete-user-api'),
     path('api/users/<int:id>/upgrade', API.APIUpgradeUser, name='upgrade-user-api'),
 
     path('api/contact', API.APIMakeDecision, name=''),

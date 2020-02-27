@@ -100,18 +100,15 @@ def APIGetNewsPostsList(request):
 def APIGetNewsPostDetails(request,id):
    if request.method == "GET":
         return getPostDetails(id,POST_TYPE.NEWS)
+   elif request.method == "DELETE":
+        if checkPrivLevel(request,UserPermission.DeleteNews):
+            return deletePost(id, POST_TYPE.NEWS, request)
    return HttpResponse(status=400)
 
 def APIEditNewsPost(request,id):
    if request.method == "POST":
         if checkPrivLevel(request,UserPermission.EditNews):
             return editPost(id,POST_TYPE.NEWS, request)
-   return HttpResponse(status=400)
-
-def APIDeleteNewsPost(request,id):
-   if request.method == "DELETE":
-        if checkPrivLevel(request,UserPermission.DeleteNews):
-            return deletePost(id, POST_TYPE.NEWS, request)
    return HttpResponse(status=400)
 
 #Projects
@@ -129,6 +126,9 @@ def APIGetProjectPostsList(request):
 def APIGetProjectPostDetails(request,id):
    if request.method == "GET":
         return getPostDetails(id,POST_TYPE.PROJECT)
+   elif request.method == "DELETE":
+        if checkPrivLevel(request,UserPermission.DeleteProject):
+            return deletePost(id, POST_TYPE.PROJECT,request)
    return HttpResponse(status=400)
 
 def APIEditProjectPost(request,id):
@@ -137,17 +137,17 @@ def APIEditProjectPost(request,id):
             return editPost(id,POST_TYPE.PROJECT, request)
    return HttpResponse(status=400)
 
-def APIDeleteProjectPost(request,id):
-   if request.method == "DELETE":
-        if checkPrivLevel(request,UserPermission.DeleteProject):
-            return deletePost(id, POST_TYPE.PROJECT,request)
-   return HttpResponse(status=400)
-
 # Team
 def APIAddToTheTeam(request):
    if request.method == "POST":
         if checkPrivLevel(request,UserPermission.TeamAdd):
             return addMember(request)
+   return HttpResponse(status=400)
+
+def APIDeleteMember(request,id):
+   if request.method == "DELETE":
+        if checkPrivLevel(request,UserPermission.TeamDelete):
+            return deleteMember(id, request)
    return HttpResponse(status=400)
 
 def APIGetTeamList(request):
@@ -161,12 +161,6 @@ def APIEditTeamMember(request,id):
             return editMember(id, request)
    return HttpResponse(status=400)
 
-def APIDeleteTeamMember(request,id):
-   if request.method == "DELETE":
-        if checkPrivLevel(request,UserPermission.TeamDelete):
-            return deleteMember(id, request)
-   return HttpResponse(status=400)
-
 #users
 def APIGetUsersList(request):
    if request.method == "GET":
@@ -178,18 +172,15 @@ def APIGetUserDetails(request, id):
    if request.method == "GET":
        if checkPrivLevel(request,UserPermission.ViewUserInfo):
             return getUserDetails(id)
+   elif request.method == "DELETE":
+       if checkPrivLevel(request,UserPermission.DeleteUser):
+            return deleteUser(id)
    return HttpResponse(status=400)
 
 def APIEditUserProfile(request, id):
    if request.method == "POST":
        if checkPrivLevel(request,UserPermission.EditUserInfo):
             return editUserProfile(id, request)
-   return HttpResponse(status=400)
-
-def APIDeleteUser(request, id):
-   if request.method == "DELETE":
-       if checkPrivLevel(request,UserPermission.DeleteUser):
-            return deleteUser(id)
    return HttpResponse(status=400)
 
 def APIUpgradeUser(request, id):
