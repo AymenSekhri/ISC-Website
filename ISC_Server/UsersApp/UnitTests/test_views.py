@@ -521,7 +521,7 @@ class PostsTest(TestCase):
         cls.assertEqual(postdetails['content'], post1['content'],"post should be unchanged")
         cls.assertEqual(postdetails['tags'], post1['tags'],"post should be unchanged")
         #get post details
-        response = cls.getRequest(reverse('delete-post-api',kwargs={'id':postID}),
+        response = cls.deleteRequest(reverse('delete-post-api',kwargs={'id':postID}),
                     userAgent,loginCookie)
         cls.assertEqual(response.status_code,200)
         cls.assertEqual(response.json()['Status'], ErrorCodes.POSTS.VALID_POST , "post should be deleted")
@@ -605,6 +605,12 @@ class PostsTest(TestCase):
         response = newClient.get(url)
         return response
 
+    def deleteRequest(cls,url,userAgent,cookie):
+        newClient = Client(HTTP_USER_AGENT=userAgent)
+        newClient.cookies = cookie
+        response = newClient.delete(url)
+        return response
+
 class MembersTest(TestCase):
     """Tests for the application views."""
 
@@ -650,7 +656,7 @@ class MembersTest(TestCase):
         cls.assertEqual(memberSearch[0]['bio'], info['bio'] , "should be same")
         cls.assertEqual(memberSearch[0]['contacts'], info['contacts'] , "should be same")
         #delete member
-        response = cls.getRequest(reverse('delete-member-api',kwargs={'id':memberID}),
+        response = cls.deleteRequest(reverse('delete-member-api',kwargs={'id':memberID}),
                     userAgent,loginCookie)
         cls.assertEqual(response.status_code,200)
         cls.assertEqual(response.json()['Status'], 0 , "should be deleted")
@@ -737,6 +743,12 @@ class MembersTest(TestCase):
         response = newClient.post(url,data=data)
         return response
 
+    def deleteRequest(cls,url,userAgent,cookie):
+        newClient = Client(HTTP_USER_AGENT=userAgent)
+        newClient.cookies = cookie
+        response = newClient.delete(url)
+        return response
+
     def getRequest(cls,url,userAgent,cookie):
         newClient = Client(HTTP_USER_AGENT=userAgent)
         newClient.cookies = cookie
@@ -819,7 +831,7 @@ class UsersControlPanelTest(TestCase):
         cls.assertEqual(response.json()['Status'], 0 , "should get the list")
         membersList = response.json()['Data']
         #delete user
-        response = cls.getRequest(reverse('delete-user-api',kwargs={'id':userID}),
+        response = cls.deleteRequest(reverse('delete-user-api',kwargs={'id':userID}),
                     userAgent,loginCookie)
         cls.assertEqual(response.status_code,200)
         cls.assertEqual(response.json()['Status'], 0 , "should delete the user")
@@ -868,6 +880,12 @@ class UsersControlPanelTest(TestCase):
         newClient = Client(HTTP_USER_AGENT=userAgent)
         newClient.cookies = cookie
         response = newClient.post(url,data=data)
+        return response
+
+    def deleteRequest(cls,url,userAgent,cookie):
+        newClient = Client(HTTP_USER_AGENT=userAgent)
+        newClient.cookies = cookie
+        response = newClient.delete(url)
         return response
 
     def getRequest(cls,url,userAgent,cookie):
