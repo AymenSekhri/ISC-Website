@@ -8,7 +8,7 @@ class UsersDB(models.Model):
     familyName = models.CharField(max_length=30)
     email = models.EmailField()
     password = models.CharField(max_length=256)
-    privLevel = models.SmallIntegerField(default = 4)
+    privLevel = models.IntegerField(default = 4)
     number = models.CharField(max_length=20)
     year = models.CharField(max_length=4)
     regDate = models.DateField(default=timezone.now)

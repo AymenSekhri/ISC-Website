@@ -60,7 +60,27 @@ Get information about the user of current session.
 	* familyName
 	* email
 	* number
-	* privLevel
+	* permissions
+		* CreateEvent
+		* PostponeEvent
+		* ManageEvent
+		* EnrollEvent
+		* ViewEnrollments
+		* Decision
+		* CreateNews
+		* EditNews
+		* DeleteNews
+		* CreateProject
+		* EditProject
+		* DeleteProject
+		* TeamAdd
+		* TeamEdit
+		* TeamDelete
+		* UsersList
+		* ViewUserInfo
+		* EditUserInfo
+		* DeleteUser
+		* ChangeUserPermission
 #### Status Codes
 * SUCCESS = 0
 
@@ -500,11 +520,31 @@ Get the details of a user.
 	* id
 	* firstName
 	* familyName
-	* privLevel
 	* regDate
 	* email
 	* number
 	* year
+	* permissions
+		* CreateEvent
+		* PostponeEvent
+		* ManageEvent
+		* EnrollEvent
+		* ViewEnrollments
+		* Decision
+		* CreateNews
+		* EditNews
+		* DeleteNews
+		* CreateProject
+		* EditProject
+		* DeleteProject
+		* TeamAdd
+		* TeamEdit
+		* TeamDelete
+		* UsersList
+		* ViewUserInfo
+		* EditUserInfo
+		* DeleteUser
+		* ChangeUserPermission
 	
 #### Status Codes
 * SUCCESS = 0

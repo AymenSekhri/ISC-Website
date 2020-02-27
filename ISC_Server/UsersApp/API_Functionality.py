@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .forms import *
-from .UsersManager import UsersManager
-from .EventManager import EventManager
+from .UsersManager import *
+from .EventManager import *
 from .PostsManager import *
 from .TeamManager import *
 from .ErrorCodes import ErrorCodes
@@ -27,7 +27,7 @@ def getCurrentUserInfo(request):
                             'familyName':userQuery.familyName,
                             'email':userQuery.email,
                             'number':userQuery.number,
-                            'privLevel':userQuery.privLevel}})
+                            'permissions':UsersManager.getPermissions(userQuery.privLevel)}})
 
 def register(request):
     myform = RegisterForm(request.POST)
@@ -288,10 +288,8 @@ def deleteMember(id, request):
 
 #users
 def getUsersList(request):
-    if checkPrivLevel(request,PRIVILEGE_LEVEL_0):
-        return JsonResponse(data = {'Status': 0,
+    return JsonResponse(data = {'Status': 0,
                             'Data': UsersManager.getUsersList()})
-    return HttpResponse(status=400)
 
 def getUserDetails(id):
     result ,data = UsersManager.getUserDetails(id)
@@ -340,38 +338,53 @@ def checkPrivLevel(request,level):
         user_id = request.COOKIES['user_id']
         session_id = request.COOKIES['session_id']
         userAgent = request.META['HTTP_USER_AGENT']
-        if level == PRIVILEGE_LEVEL_0:
-            if UsersManager.checkSession(user_id,session_id,userAgent) == ErrorCodes.SESSIONUSERS.USER_PRIV_LEVEL0:
-                return True
-        elif level == PRIVILEGE_LEVEL_1:
-            if  ((level == ErrorCodes.SESSIONUSERS.USER_PRIV_LEVEL0) or
-                 (level == ErrorCodes.SESSIONUSERS.USER_PRIV_LEVEL1)):
-                return True
-        elif level == PRIVILEGE_LEVEL_2:
-             if  ((level == ErrorCodes.SESSIONUSERS.USER_PRIV_LEVEL0) or
-                  (level == ErrorCodes.SESSIONUSERS.USER_PRIV_LEVEL1) or
-                  (level == ErrorCodes.SESSIONUSERS.USER_PRIV_LEVEL2)):
-                return True
-        elif level == PRIVILEGE_LEVEL_3:
-            if  ((level == ErrorCodes.SESSIONUSERS.USER_PRIV_LEVEL0) or
-                 (level == ErrorCodes.SESSIONUSERS.USER_PRIV_LEVEL1) or
-                 (level == ErrorCodes.SESSIONUSERS.USER_PRIV_LEVEL2) or
-                 (level == ErrorCodes.SESSIONUSERS.USER_PRIV_LEVEL3)):
-                return True
-        elif level == PRIVILEGE_LEVEL_4:
-            if  ((level == ErrorCodes.SESSIONUSERS.USER_PRIV_LEVEL0) or
-                 (level == ErrorCodes.SESSIONUSERS.USER_PRIV_LEVEL1) or
-                 (level == ErrorCodes.SESSIONUSERS.USER_PRIV_LEVEL2) or
-                 (level == ErrorCodes.SESSIONUSERS.USER_PRIV_LEVEL3) or
-                 (level == ErrorCodes.SESSIONUSERS.USER_PRIV_LEVEL4)):
-                return True
+        isValidUser, userPermission = UsersManager.checkSession(user_id,session_id,userAgent)
+        if isValidUser == False:
+            return False
+        elif (level == UserPermission.VALIDUSER) and (isValidUser == True):
+            return True
+        elif (level == UserPermission.ChangeUserPermission) and (userPermission & UserPermission.ChangeUserPermission):
+            return True
+        elif (level == UserPermission.CreateEvent) and (userPermission & UserPermission.CreateEvent):
+            return True
+        elif (level == UserPermission.CreateNews) and (userPermission & UserPermission.CreateNews):
+            return True
+        elif (level == UserPermission.CreateProject) and (userPermission & UserPermission.CreateProject):
+            return True
+        elif (level == UserPermission.Decision) and (userPermission & UserPermission.Decision):
+            return True
+        elif (level == UserPermission.DeleteNews) and (userPermission & UserPermission.DeleteNews):
+            return True
+        elif (level == UserPermission.DeleteProject) and (userPermission & UserPermission.DeleteProject):
+            return True
+        elif (level == UserPermission.DeleteUser) and (userPermission & UserPermission.DeleteUser):
+            return True
+        elif (level == UserPermission.EditNews) and (userPermission & UserPermission.EditNews):
+            return True
+        elif (level == UserPermission.EditProject) and (userPermission & UserPermission.EditProject):
+            return True
+        elif (level == UserPermission.TeamEdit) and (userPermission & UserPermission.TeamEdit):
+            return True
+        elif (level == UserPermission.EditUserInfo) and (userPermission & UserPermission.EditUserInfo):
+            return True
+        elif (level == UserPermission.EnrollEvent) and (userPermission & UserPermission.EnrollEvent):
+            return True
+        elif (level == UserPermission.ManageEvent) and (userPermission & UserPermission.ManageEvent):
+            return True
+        elif (level == UserPermission.PostponeEvent) and (userPermission & UserPermission.PostponeEvent):
+            return True
+        elif (level == UserPermission.TeamAdd) and (userPermission & UserPermission.TeamAdd):
+            return True
+        elif (level == UserPermission.TeamDelete) and (userPermission & UserPermission.TeamDelete):
+            return True
+        elif (level == UserPermission.UsersList) and (userPermission & UserPermission.UsersList):
+            return True
+        elif (level == UserPermission.ViewEnrollments) and (userPermission & UserPermission.ViewEnrollments):
+            return True
+        elif (level == UserPermission.ViewUserInfo) and (userPermission & UserPermission.ViewUserInfo):
+            return True
         return False
 
-PRIVILEGE_LEVEL_0 = 0
-PRIVILEGE_LEVEL_1 = 1
-PRIVILEGE_LEVEL_2 = 2
-PRIVILEGE_LEVEL_3 = 3
-PRIVILEGE_LEVEL_4 = 4
 
 class POST_TYPE(object):
         PROJECT = 0
