@@ -334,7 +334,7 @@ If a post's id that doesn't exist is being accessed, a 404 http status code will
 ## api/news/<int:id>/delete
 Delete a News post.
 
-#### Request: GET
+#### Request: DELETE
 #### Response
 * Status
 #### Status Codes
@@ -414,7 +414,7 @@ If a post's id that doesn't exist is being accessed, a 404 http status code will
 ## api/projects/<int:id>/delete
 Delete project post.
 
-#### Request: GET
+#### Request: DELETE
 #### Response
 * Status
 #### Status Codes
@@ -483,7 +483,7 @@ If a member's id that doesn't exist is being accessed, a 404 http status code wi
 ## api/team/<int:id>/delete
 Delete a team member.
 
-#### Request: GET
+#### Request: DELETE
 #### Response
 * Status
 #### Status Codes
@@ -569,7 +569,7 @@ Edit the details of a user.
 ## api/users/<int:id>/delete
 Delete a user.
 
-#### Request: GET
+#### Request: DELETE
 #### Response
 * Status
 #### Status Codes

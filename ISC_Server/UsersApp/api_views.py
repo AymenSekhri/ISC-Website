@@ -109,7 +109,7 @@ def APIEditNewsPost(request,id):
    return HttpResponse(status=400)
 
 def APIDeleteNewsPost(request,id):
-   if request.method == "GET":
+   if request.method == "DELETE":
         if checkPrivLevel(request,UserPermission.DeleteNews):
             return deletePost(id, POST_TYPE.NEWS, request)
    return HttpResponse(status=400)
@@ -138,7 +138,7 @@ def APIEditProjectPost(request,id):
    return HttpResponse(status=400)
 
 def APIDeleteProjectPost(request,id):
-   if request.method == "GET":
+   if request.method == "DELETE":
         if checkPrivLevel(request,UserPermission.DeleteProject):
             return deletePost(id, POST_TYPE.PROJECT,request)
    return HttpResponse(status=400)
@@ -162,7 +162,7 @@ def APIEditTeamMember(request,id):
    return HttpResponse(status=400)
 
 def APIDeleteTeamMember(request,id):
-   if request.method == "GET":
+   if request.method == "DELETE":
         if checkPrivLevel(request,UserPermission.TeamDelete):
             return deleteMember(id, request)
    return HttpResponse(status=400)
@@ -187,7 +187,7 @@ def APIEditUserProfile(request, id):
    return HttpResponse(status=400)
 
 def APIDeleteUser(request, id):
-   if request.method == "GET":
+   if request.method == "DELETE":
        if checkPrivLevel(request,UserPermission.DeleteUser):
             return deleteUser(id)
    return HttpResponse(status=400)
