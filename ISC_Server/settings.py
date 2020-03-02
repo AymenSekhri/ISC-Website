@@ -28,9 +28,12 @@ DEBUG = True #TODO: SECURITY WARNING: don't run with debug turned on in producti
 ALLOWED_HOSTS = ['*']
 
 
+
+
 # Application references
 # https://docs.djangoproject.com/en/2.1/ref/settings/#std:setting-INSTALLED_APPS
 INSTALLED_APPS = [
+    'corsheaders',
     'ISC_Server.MainApp',
     'ISC_Server.UsersApp',
     # Add your apps here to enable them
@@ -42,9 +45,16 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
+################## FOR DEVELPMENTS ONLY #######################
+#TODO: DISABLE THIS IN PRODUCTIONS
+CORS_ORIGIN_ALLOW_ALL = True
+###############################################################
+
 # Middleware framework
 # https://docs.djangoproject.com/en/2.1/topics/http/middleware/
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

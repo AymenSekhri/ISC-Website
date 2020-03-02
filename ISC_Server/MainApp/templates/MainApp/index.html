@@ -1,21 +1,27 @@
+<!DOCTYPE html>
 <html>
-<head><title></title></head>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  
+  $("button").click(function(){
 
+    $.post("http://localhost/api/login",
+    {
+      email: "aymeneeen@live.fr",
+	  password: "Sekhriiii",
+    },
+    function(data,status){
+      alert("Data:");
+    });
+  });
+});
+</script>
+</head>
 <body>
-   
-    {% if login == 1 %}
-        welcome {{username}} !<br />
-    {%else %}
-         Welcome to the home page !<br />
-    {% endif %}
-    <a href="{% url 'register-page' %}">Register</a><br />
-    <a href="{% url 'login-page' %}">Login</a><br />
-    <a href="{% url 'logout-page' %}">Logout</a><br />
-    <a href="{% url 'forgot-pass-page' %}">forgot Password?</a><br />
-    <a href="admin">Admin</a><br />
-    
 
-
+<button>Send an HTTP POST request to a page and get the result back</button>
 
 </body>
 </html>
