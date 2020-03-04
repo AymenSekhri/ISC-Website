@@ -9,6 +9,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from .MainApp import views as MainApp_views
 from .UsersApp import api_views as API
 from .UsersApp import page_views as FrontPages
+from .MainApp import views as TestPages
 
 urlpatterns = [
     #path('', MainApp_views.Home, name='home-page'),
@@ -58,4 +59,10 @@ urlpatterns = [
     path('login', FrontPages.Login, name='login-page'),
     path('forgotpassword', FrontPages.ForgotPassword, name='forgot-pass-page'),
     path('resetpassword', FrontPages.ResetPassword, name='reset-pass-page'),
+
+    ####### TESTING #######
+    path('test', TestPages.Home, name='test-page'),
+
+
+
 ]

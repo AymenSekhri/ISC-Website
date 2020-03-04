@@ -1,7 +1,13 @@
 from django.shortcuts import render
+from .API_Functionality import *
 
 def Home(request):
-    return render(request,"UsersApp/index.html")
+    if request.method == "GET":
+        #check if user is logged
+        if checkPrivLevel(request, UserPermission.VALIDUSER):
+            return render(request,"UsersApp/index.html")
+        else:#in case if user not logged go to login
+            return render(request,"UsersApp/login.html")
 
 def Login(request):
     return render(request,"UsersApp/login.html")
